@@ -58,25 +58,26 @@
 
 #### 二 语义块特征无监督提取
 ##### 1）基于块的语义分析
-HNC(hierarchical network of concepts，概念层次网络)语义块定义：
+**HNC**(hierarchical network of concepts，概念层次网络)语义块定义：
    语义块是下一级语义的构成单位，包含核心部分和说明部分。语义块以其要素命名。认为汉语以“字义基元化，词义组合化”方式构造新词，因此可构建概念表述体系。
 HNC就是 以削减模糊为实现目标的第一步 来描述语言感知的过程。认为无限的自然语言语句可以用有限的句类物理表达式表达。
 ##### 2）无监督方法
 ###### ①无监督学习
 ML（machine learning），根据所获取的经验数据指导后续行为，其中获取经验数据的主体是机器，知道后续行为的也是机器。<br>
-**取得经验数据→分析推理，从数据中获得特定特征的概率分布，从分布中抽取泛化的信息→指导后续行为**
+*取得经验数据→分析推理，从数据中获得特定特征的概率分布，从分布中抽取泛化的信息→指导后续行为*
 
->A computer program is said to learn from experience E with respect to some class of tasks T and performance measure P,if its performance at tasks in T,as measured by P,improves with experiencce E.<br>
+>**A computer program is said to learn from experience E with respect to some class of tasks T and performance measure P,if its performance at tasks in T,as measured by P,improves with experiencce E.**<br>
 E:经验，已存在的数据，机器处理的对象<br>
 T：任务，根据它机器选择要处理的对象及处理的方式方法<br>
 P：表现，机器根据它判断学习的有效性。分为 ACCURACY 和 COMPUTATIONAL COMPLEXITY<br>
+
 **无监督学习、监督学习、半监督学习**
 
 ###### ②文本理解
 文本，特指经济器编码的字符序列。自然语言理解包含  1）语法分析；2）语义分析；3）逻辑推理 三个步骤。
 ##### 3）无监督分词
 实质上，将无标注语料视为训练集进行学习，后将该语料视为测试集进行分割。
->MI（mutual information，互信息）指两个事件集合之间的相关性。一般而言，信道中总存在噪声和干扰，信源发出消息x，通过信道后信宿收到由干扰作用引起的某种变形的y。信宿收到y后**推测**信源发出x的概率，这个过程被称为**后验概率p（x|y）**。信源发出x的概率p（x）为**先验概率**。
+>**MI（mutual information，互信息）**指两个事件集合之间的相关性。一般而言，信道中总存在噪声和干扰，信源发出消息x，通过信道后信宿收到由干扰作用引起的某种变形的y。信宿收到y后**推测**信源发出x的概率，这个过程被称为**后验概率p（x|y）**。信源发出x的概率p（x）为**先验概率**。
 
 #### 三 情感语义块特征的生成
 “语义块”源自对语料中文本的完全切分。方法特点包括：<br>
@@ -87,8 +88,13 @@ P：表现，机器根据它判断学习的有效性。分为 ACCURACY 和 COMPU
 ##### 后缀树生成
 *后缀树就是 将一个给定字符串的所有后缀全部压入一个Trie后，将只有单个叶子的节点压缩，形成一棵树。*<br>
 步骤如下：<br>
-**得到字符串的所有后缀→对所有非空后缀进行排序→将公有前缀进行合并。**
+*得到字符串的所有后缀→对所有非空后缀进行排序→将公有前缀进行合并。*
 ##### 查找最长公共部分
-**找到最深非叶节点，最深非叶节点所经历的字符，串起来就是最长重复子串**
+*找到最深非叶节点，最深非叶节点所经历的字符，串起来就是最长重复子串*
+
+### 第二节 情感特种采集系统
+引言
+![情感特征采集系统](H:\weihoujing\01 Others)
+
 
 
