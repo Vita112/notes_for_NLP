@@ -93,8 +93,8 @@ P：表现，机器根据它判断学习的有效性。分为 ACCURACY 和 COMPU
 *找到最深非叶节点，最深非叶节点所经历的字符，串起来就是最长重复子串*
 
 ### 第二节 情感特种采集系统
-引言
-![情感特征采集系统](H:\weihoujing\01 Others)
+引言<br>
+[情感特征采集系统](https://baijiahao.baidu.com/s?id=1607616924306765100&wfr=spider&for=pc)
 
 
 
