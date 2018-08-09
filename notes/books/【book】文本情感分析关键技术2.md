@@ -14,8 +14,8 @@
 * TCP/IP,transmission control protocol/internet protocol,网络通信协议。
 #### 二 网络挖掘
 * 网络挖掘步骤
-*（一）前处理<br>
+* 前处理<br>
 抽样、归类、特征选择
-*（二）数据挖掘<br>
+* 数据挖掘<br>
 算法
-*（三）后处理<br>
+* 后处理<br>
