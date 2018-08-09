@@ -17,7 +17,7 @@ This paper shows that by extending the distant supervision to a  more diverse se
  * limits:<br>①domains with limited or no usage of emojis,②the table do not capture the dynamicx of emoji usage.
   Multitask learning with simultaneous on multiple datasets has shown promissing results. 
  ## 3. Method 
-+ pretraining
++ pretraining<br>
      this paper use data from Twitter from 2013.1.1 to 2017.6.1, but any dataset with emoji occurrences 
      could be used.
      hypothesis:the content obtained from URL is important for understanding the emotional
