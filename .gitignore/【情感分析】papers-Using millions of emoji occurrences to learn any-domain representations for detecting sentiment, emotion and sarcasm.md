@@ -1,21 +1,20 @@
 # Using millions of emoji occurrences to learn any-domain representations for detecting sentiment, emotion and sarcasm
-
 ## Abstract 
-  This paper shows that by extending the distant supervision to a  more diverse set of noisy labels, the 
+This paper shows that by extending the distant supervision to a  more diverse set of noisy labels, the 
   models can learn richer representations.
   ## 1. Introduction
   This paper shows that extending the distant supervision to a more set of noisy labels enable the models
   to learn richer representations of emotional content in text.
-  **contributions**<br>
-    show how millions of emoji occurrence can be used to pretain models to learn a richer emotional
-    representation than traditionally obtained through distant supervision.
+ **contributions**<br>
+  show how millions of emoji occurrence can be used to pretain models to learn a richer emotional
+  representation than traditionally obtained through distant supervision.
 ## 2. Related work
   >method1:<br>prior work has used theories of emotion such as Ekman's six basic emotions and Plutchik's eight basic 
   emotions.<br>
-  **weakness:**requir an understanding of the emotional content of each expresion,which is difficult and 
-  time-consuing;prone to misinterpretations and may omit important details.<br>
-  method2:<br>learn emoji embeddings from the words describing the emoji semantics in official emoji tables.
-  **limits:**①domains with limited or no usage of emojis,②the table do not capture the dynamicx of emoji usage.
+ **weakness:**requir an understanding of the emotional content of each expresion,which is difficult and 
+ time-consuing;prone to misinterpretations and may omit important details.<br>
+ method2:<br>learn emoji embeddings from the words describing the emoji semantics in official emoji tables.
+ **limits:**①domains with limited or no usage of emojis,②the table do not capture the dynamicx of emoji usage.
   Multitask learning with simultaneous on multiple datasets has shown promissing results. 
  ## 3. Method 
   + pretraining
@@ -23,7 +22,7 @@
      could be used.
      hypothesis:the content obtained from URL is important for understanding the emotional
      content of the text.
-   **Address training data in the following way:**
+   **Address training data in the following way:**<br>
         for each unique emoji type,this paper save a separate tweet for the pretraining with that emoji type as
         the label,which make the pretraining task a single-label classification.
    + model
