@@ -1,15 +1,15 @@
-> Title  Using millions of emoji occurrences to learn any-domain representations for detecting sentiment, emotion and sarcasm
+# Title  Using millions of emoji occurrences to learn any-domain representations for detecting sentiment, emotion and sarcasm
 
->Abstract 
+## Abstract 
   This paper shows that by extending the distant supervision to a  more diverse set of noisy labels, the 
   models can learn richer representations.
-> 1. Introduction
+  ## 1. Introduction
   This paper shows that extending the distant supervision to a more set of noisy labels enable the models
   to learn richer representations of emotional content in text.
-  > contributions
+  >contributions
     show how millions of emoji occurrence can be used to pretain models to learn a richer emotional
     representation than traditionally obtained through distant supervision.
-> 2. Related work
+## 2. Related work
   method1:prior work has used theories of emotion such as Ekman's six basic emotions and Plutchik's eight basic 
   emotions.
   weakness:requir an understanding of the emotional content of each expresion,which is difficult and 
@@ -17,7 +17,7 @@
   method2:learn emoji embeddings from the words describing the emoji semantics in official emoji tables.
   limits:①domains with limited or no usage of emojis,②the table do not capture the dynamicx of emoji usage.
   Multitask learning with simultaneous on multiple datasets has shown promissing results. 
-  > 3. Method 
+ ## 3. Method 
     >pretraining
      this paper use data from Twitter from 2013.1.1 to 2017.6.1, but any dataset with emoji occurrences 
      could be used.
