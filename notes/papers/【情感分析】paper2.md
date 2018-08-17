@@ -1,2 +1,18 @@
-### Affect-LM:A Neural Language Model for Customizable Affective Text Generation
-# 英文论文，为便于理解和梳理，笔记使用中文。#
+# Affect-LM:A Neural Language Model for Customizable Affective Text Generation
+*英文论文，为便于理解和梳理，笔记使用中文。*
+
+## 摘要
+虽然基于LSTM的语言模型在困惑度指标上达到了目前最好的性能，但语言模型中的情感因素却没有引起人们的重视。<br>
+论文在多个对话数据集上进行实验，定义了五类情感色彩sad、angry、anxiety、negative emotion、positive emotion，且在模型中
+引入了控制情感强度的参数，*实现了生成不同级别、特定情感色彩的语言模型构建*。在评价指标方面，除使用评价语言模型常用的困惑度外，
+作者还在Amazosn’s Mechanical Turk山进行了类似对话系统评价的众包打分。<br>
+论文的亮点在于**首先实现在语言模型中引入情感因素，实现情感色彩和情感强度的双重定义；对对话系统中的回复生成任务具有借鉴意义**。
+
+* 论文链接：http://www.aclweb.org/anthology/P/P17/P17-1059.pdf
+
+## 背景介绍
+理解人类口语中的情感生成过程对于理解口语系统，特别是对话系统和会话代理器十分重要。<br>
+已有研究显示，回归神经网络语言模型在表现上优于基于N-gram的语言模型。
+*什么是N-gram？如何理解？*<br>
+为了不影响本文论述重点，请参考N-gram模型详解.md
+
