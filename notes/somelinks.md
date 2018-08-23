@@ -1,4 +1,5 @@
 # coursera
 * applied text mining in Python 
 https://www.coursera.org/learn/python-text-mining
-# CrashCourse
+# Youtube
+* CrashCourse_COMPUTER SCIENCE
