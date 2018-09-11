@@ -9,4 +9,6 @@ NLP入门学习路线：https://www.zhihu.com/question/66411848/answer/242751803
   情感分析和对话系统
 ## 国外大学网络视频资源
 * 斯坦福大学  https://web.stanford.edu/class/cs224n/index.html
+## 在线书籍&论文下载
+http://gen.lib.rus.ec/
 
