@@ -12,3 +12,7 @@ NLP入门学习路线：https://www.zhihu.com/question/66411848/answer/242751803
 ## 在线书籍&论文下载
 http://gen.lib.rus.ec/
 
+## papers
++ 一个神经概率语言模型-begio2003  https://www.cnblogs.com/Dream-Fish/p/3950024.html
+
+
