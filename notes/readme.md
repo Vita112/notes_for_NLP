@@ -1,3 +1,5 @@
++ some notes about papers and books I have read
++ some links of online learning 
 ## coursera
 * applied text mining in Python 
 https://www.coursera.org/learn/python-text-mining
