@@ -94,5 +94,8 @@ flattended context-sensitive path tree(FCPT):cpt修改版，只有单个in 和 o
 + qian：使用constituent dependencies的信息来动态决定树跨度。
 
 + sun & han：feature-enriched tree kernel，在句法树中，使用一套判别特征为nodes注释
-总结图。![]()
+总结图。![syntactic_parse_tree_kernel](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/RelationExtraction/a%20survey%20on%20RE/pictures/syntactic_parse_tree_kernel.png)
+
+
+
 
