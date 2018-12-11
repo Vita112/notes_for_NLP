@@ -58,11 +58,11 @@ features based on semantic resouces：一个例子：一个个人亲属关系触
 关系实例被表征为sequences，kernel计算任意2个序列之间的共享序列的数量。
 +  Bunescu and Mooney：把第1个标注的词序列考虑到句子中的第2个标注中。生成每个单词的特征向量，每个关系实例被表征为特征向量的序列，一个特征向量对一个单词。特征来自以下domains：
 
-![features domains]()
+![features domains](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/RelationExtraction/a%20survey%20on%20RE/pictures/features_domains_for_kernel_method.jpg)
 
 下图显示了关系实例的特征向量序列，此处每一行是一个特征向量。
-![特征向量序列]()
-![特征向量序列s,t的说明]()
+![特征向量序列](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/RelationExtraction/a%20survey%20on%20RE/pictures/Example_of_sequence_of_feature_vectors.jpg)
+![特征向量序列s,t的说明](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/RelationExtraction/a%20survey%20on%20RE/pictures/interpretation_for_sequencsS%2CT_of_featrue_vectors.jpg)
 
 作者将RELATION KERNEL定义为4个subkernel的总和，每个描述一种特定的类型，基于生成的subsequence kernel。公式表示为
 rK(s; t) = fbK(s; t) + bK(s; t) + baK(s; t) + mK(s; t)<br>
