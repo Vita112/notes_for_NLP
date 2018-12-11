@@ -65,9 +65,9 @@ features based on semantic resouces：一个例子：一个个人亲属关系触
 ![特征向量序列s,t的说明]()
 
 作者将RELATION KERNEL定义为4个subkernel的总和，每个描述一种特定的类型，基于生成的subsequence kernel。公式表示为
-> rK(s; t) = fbK(s; t) + bK(s; t) + baK(s; t) + mK(s; t)<br>
-  fbK:fore-between subkernel, 计数$s_{f}s{}'_{b}$ 和 $t_{f}t{}'_{b}$共享子序列.(president PER of ORG)<br>
-  bK:between subkernel，计数 $s{}'_{b}$ 和 $t{}'_{b}$  共享子序列。(PER joined ORG)<br>
-  baK:between after subkernel, 计数 $s{}'_{b} s_{a}$ 和 $t{}'_{b}t_{a}$ 共享子序列。(PER chairman of ORG announced)<br>
-  mK：modifier subkernel, 当2个实体标注间没有其他单词，且第一个标注作为修饰器时，计数 $x_{1}x_{2}$和$y_{1}y_{2}$间的共享子序列数量。
+rK(s; t) = fbK(s; t) + bK(s; t) + baK(s; t) + mK(s; t)<br>
+fbK:fore-between subkernel, 计数$s_{f}s{}'_{b}$ 和 $t_{f}t{}'_{b}$共享子序列.(president PER of ORG)<br>
+bK:between subkernel，计数 $s{}'_{b}$ 和 $t{}'_{b}$  共享子序列。(PER joined ORG)<br>
+baK:between after subkernel, 计数 $s{}'_{b} s_{a}$ 和 $t{}'_{b}t_{a}$ 共享子序列。(PER chairman of ORG announced)<br>
+mK：modifier subkernel, 当2个实体标注间没有其他单词，且第一个标注作为修饰器时，计数 $x_{1}x_{2}$和$y_{1}y_{2}$间的共享子序列数量。
 
