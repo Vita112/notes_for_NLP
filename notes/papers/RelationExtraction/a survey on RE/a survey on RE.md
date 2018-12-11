@@ -65,9 +65,34 @@ features based on semantic resouces：一个例子：一个个人亲属关系触
 ![特征向量序列s,t的说明](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/RelationExtraction/a%20survey%20on%20RE/pictures/interpretation_for_sequencsS%2CT_of_featrue_vectors.jpg)
 
 作者将RELATION KERNEL定义为4个subkernel的总和，每个描述一种特定的类型，基于生成的subsequence kernel。公式表示为:
-rK(s; t) = fbK(s; t) + bK(s; t) + baK(s; t) + mK(s; t).
-fbK:fore-between subkernel, 计数fore-between patterns,例如(president PER of ORG).<br>
+rK(s; t) = fbK(s; t) + bK(s; t) + baK(s; t) + mK(s; t).<br>
+>fbK:fore-between subkernel, 计数fore-between patterns,例如(president PER of ORG).<br>
 bK:between subkernel，计数between patterns,例如(PER joined ORG).<br>
 baK:between after subkernel, 计数between after patterns，例如(PER chairman of ORG announced).<br>
 mK：modifier subkernel, 当2个实体标注间没有其他单词，且第一个标注作为修饰器时，计数 $x_{1}x_{2},y_{1}y_{2}$ 间的共享子序列数量。
+
+使用基于这种关系kernel(rK)的SVM分类器。
+
+#### 2.2.2 syntactic tree kernel
+
+句子的结构属性通常由它的成分解析树编码，受context free grammar(CFG)支配。
++ collins&duffy：convolution parse tree kernel计算任意2个句法树之间的相似性，计算两个句法解析树之间共享的子树。
+
+在一转换空间中，一个句法树T的映像是：$h(T)=\left \[ h_{1}(T),h_{2}(T),\cdots ,h_{n}(T)\right ]$.其中$h_{i}(T)$代表在句法树T中第i个子树出现的次数，n代表可能子树的数量。计算公式见原文。
++ zhang et al.:描述了5种情形来为一个给定关系实例构建一个树表征。
+
+>最小完全树(MCT):一个由2个实体的最小共同祖先构成的完全子树；<br>
+path-enclosed tree(PT):包含尸体的最小的subtree。<br>
+context-sensitive path tree(CPT)：PT的扩展版，包含第一个实体的左边一个词和第二个实体的右边一个词。<br>
+flattened path-enclosed tree(FPT)：pt修改版，只有单个in 和 out 弧线的 non-pos non-terminal nodes 会被忽略。<br>
+flattended context-sensitive path tree(FCPT):cpt修改版，只有单个in 和 out 弧线的 non-pos non-terminal nodes 会被忽略.
+
+其中，当用来计算Kt时，pt是表现最好的。
++ zhou et al.: 为RE自动决定一个动态的上下文敏感树跨度。
+
+通过扩展pt，提出了上下文敏感的卷积树核，该核除了考虑上下文无关的子树外，还考虑上下文敏感的子树作为它们的上下文。
++ qian：使用constituent dependencies的信息来动态决定树跨度。
+
++ sun & han：feature-enriched tree kernel，在句法树中，使用一套判别特征为nodes注释
+总结图。![]()
 
