@@ -55,4 +55,19 @@ features based on semantic resouces：一个例子：一个个人亲属关系触
 ### 2.2 kernel methods
 在基于kernel方法中，kernel function被设计用于计算2个关系实体之间的representations的相似度，使用SVM进行分类。
 #### 2.2.1 sequence kernel
-+  Bunescu and Mooney：把第1个标注的词序列考虑到句子中的第2个标注中。生成每个单词的特征向量，每个关系实例被表征为特征向量的序列，一个特征向量对一个单词。
+关系实例被表征为sequences，kernel计算任意2个序列之间的共享序列的数量。
++  Bunescu and Mooney：把第1个标注的词序列考虑到句子中的第2个标注中。生成每个单词的特征向量，每个关系实例被表征为特征向量的序列，一个特征向量对一个单词。特征来自以下domains：
+
+![features domains]()
+
+下图显示了关系实例的特征向量序列，此处每一行是一个特征向量。
+![特征向量序列]()
+![特征向量序列s,t的说明]()
+
+作者将RELATION KERNEL定义为4个subkernel的总和，每个描述一种特定的类型，基于生成的subsequence kernel。公式表示为
+rK(s; t) = fbK(s; t) + bK(s; t) + baK(s; t) + mK(s; t)<br>
+fbK:fore-between subkernel, 计数$s_{f}s{}'_{b}$ 和 $t_{f}t{}'_{b}$共享子序列.(president PER of ORG)<br>
+bK:between subkernel，计数 $s{}'_{b}$ 和 $t{}'_{b}$  共享子序列。(PER joined ORG)<br>
+baK:between after subkernel, 计数 $s{}'_{b} s_{a}$ 和 $t{}'_{b}t_{a}$ 共享子序列。(PER chairman of ORG announced)<br>
+mK：modifier subkernel, 当2个实体标注间没有其他单词，且第一个标注作为修饰器时，计数 $x_{1}x_{2}$和$y_{1}y_{2}$间的共享子序列数量。
+
