@@ -68,8 +68,8 @@ features based on semantic resouces：一个例子：一个个人亲属关系触
 rK(s; t) = fbK(s; t) + bK(s; t) + baK(s; t) + mK(s; t).
 fbK:fore-between subkernel, 计数$s_{f}{s}'_{b}$
 
-之间间的共享子序列(president PER of ORG).<br>
-bK:between subkernel，计数${s}'_{b},{t}'_{b}$之间的共享子序列。(PER joined ORG).<br>
-baK:between after subkernel, 计数 ${s}'_{b} s_{a},t{}'_{b}t_{a}$之间的共享子序列(PER chairman of ORG announced).<br>
+之间间的共享子序列(president PER of ORG).
+bK:between subkernel，计数${s}'_{b},{t}'_{b}$之间的共享子序列。(PER joined ORG).
+baK:between after subkernel, 计数 ${s}'_{b} s_{a},t{}'_{b}t_{a}$之间的共享子序列(PER chairman of ORG announced).
 mK：modifier subkernel, 当2个实体标注间没有其他单词，且第一个标注作为修饰器时，计数$x_{1}x_{2},y_{1}y_{2}$间的共享子序列数量。
 
