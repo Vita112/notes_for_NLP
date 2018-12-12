@@ -1,5 +1,5 @@
 ## abstract
-随着互联网信息的快速发展，每天有海量的数字文本信息生成，包括论文，公开研究成果，博客，问答论坛等。自动抽取隐藏在这些文本信息背后的**知识**，将提高个人以及企业的工作效率。**RE**的任务是 _identify these relations between entities automatically._ 本文将介绍关系抽取任务中，重要的supervised，semi-supervised and unsupervised RE techniques。以及 open information extraction and distance supervision.
+随着互联网信息的快速发展，每天有海量的数字文本信息生成，包括论文，公开研究成果，博客，问答论坛等。自动抽取隐藏在这些文本信息背后的**知识**，将提高个人以及企业的工作效率。**RE**的任务是 _identify these relations between entities automatically._ 本文将介绍关系抽取任务中一些重要的方法：supervised,semi-supervised,unsupervised RE techniques,and open information extraction,distance supervision.
 ## 1. Introduction
 IE的主要目标是从给定文本库中抽取某种特定信息，输出一个结构性知识库，比如一个关系表，或者XML文件。通常用户想从文本中抽取的信息有三种：
 + named entities
@@ -96,6 +96,7 @@ flattended context-sensitive path tree(FCPT):cpt修改版，只有单个in 和 o
 + sun & han：feature-enriched tree kernel，在句法树中，使用一套判别特征为nodes注释。
 
 总结图如下：
+
 ![syntactic_parse_tree_kernel](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/RelationExtraction/a%20survey%20on%20RE/pictures/syntactic_parse_tree_kernel.png)
 
 #### 2.2.3 dependency tree kernel
@@ -104,7 +105,7 @@ flattended context-sensitive path tree(FCPT):cpt修改版，只有单个in 和 o
 
 对于在句子中的每一对实体标注，它们考虑到了包含标注的 句子依存树的最小子树。在依存树中每个节点通过传统特征，如pos tag，chunk tag等，得到加强。形式上，一个关系实例通过拥有节点{t0……tn}的加强型依存树表示，每一个node $t_i$拥有特征Φ($t_i$)={v1……vd}.下图是一个例句的依存树，在右边图的情况下，t0\[c]=t\[{0,1}]={$t_1$,$t_2$},且$t_1$.p=$t_0$.为比较任何两个nodes$t_i$,$t_j$,定义了以下2个函数：<br>
 
-![dependency tree]()
+![dependency tree](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/RelationExtraction/a%20survey%20on%20RE/pictures/dependency_tree.png)
 >matching function:当一些重要的特征在$t_i$,$t_j$见共享时，返回1；否则返回0；similarity function：当在$t_i$,$t_j$间返回一个正值相似得分。
 + 当一对matching nodes被找到时，它们的孩子的所有可能matching的子序列也会被找到。在这样的matching 子序列中所有节点的相似得分总和相加后，得到孩子节点的整个相似性。
 
@@ -122,8 +123,9 @@ flattended context-sensitive path tree(FCPT):cpt修改版，只有单个in 和 o
 + wang：使用a sub-kernel defined using relation topics。
 
 ### 2.3 evaluation
-如图。
-![]()
+如下图：
+
+![evaluation_for_supervised_methods](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/RelationExtraction/a%20survey%20on%20RE/pictures/evaluation_for_supervised_methods.png)
 
 从precision，recall，F-measure of non-NONE classes 三方面评估。尽管通过不同的方式使用了相同的数据，但是，5次交叉验证中使用的实际拆分/折叠可能不同。我们得知：基于kernel的方法 比基于feature的方法 表现更优秀；其中，基于句法树kernel方法表现最好。
 
@@ -156,13 +158,13 @@ flattended context-sensitive path tree(FCPT):cpt修改版，只有单个in 和 o
 + n-ary relation extraction：多于2个以上的实体间的关系通常被认为是 `复杂，高阶或n元关系`。
 
 McDonald et al. ：used well-studied binary RE to initially find relations between all possible entity pairs.`THEN`, find 最大的圈子maximal cliques in this graph such that each clique corresponds to some valid n-ary relation.在biomedical domain 数据集上演示了这种方法的效果。*另一个视角是：将n-ary RE 问题看作是一个 语义角色标注的e问题*。
-+ Cross-sentence Relation Extraction句际关系抽取:Swampillai and Stevenson **感兴趣，可看相关论文**
++ Cross-sentence Relation Extraction句际关系抽取:Swampillai and Stevenson   **感兴趣，可看相关论文**
 
 proposed an approach to extract both intra-sentential and inter-sentential relations。作者在处理句际关系问题时，使用了句内关系所用的结构化特征，比如parse tree paths，和技术。通过`co-reference resolution`可以解决大多数问题。
 + Convolutional Deep Neural Network：
 
 zeng：Relation classification via convolutional deep neural network。employed a convolutional DNN to extract lexical and sentence level feature。
-+ Cross-lingual Annotation Projection跨语言注释投影**另一个感兴趣方向**
++ Cross-lingual Annotation Projection跨语言注释投影    **另一个感兴趣方向**
 
 A cross-lingual annotation projection approach for relation detection by Kim，使用平行语料库，实现从源丰富的源语言到源稀少的目标语言的关系注释。Kim&Lee提出一种基于图的投影方法，该方法利用由实体和上下文信息共同构建一个graph，并以交互方式操作。
 + Domain Adaptation：
