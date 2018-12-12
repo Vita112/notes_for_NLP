@@ -25,7 +25,7 @@ Mention level:将实体对和包含他的句子作为输入，然后识别该实
 ### 1.3 previous survey
 + sarawagi  《Information extraction. Foundations and trends in databases》
 + Abreu et al. 《A review on relation extraction with an eye on portuguese》cavers various RE techniques used for portuguese language.
-+  Zhou et al. 《 Biomedical relation extraction:From binary to complex》surveys most of the recent biomedicalRE approaches
++ Zhou et al. 《 Biomedical relation extraction:From binary to complex》surveys most of the recent biomedicalRE approaches
 
 ## 2. supervised approaches
 关注mention level的关系抽取，要求标记数据，其中每对实体引用都标记有一种预定义关系类型(包含NONE)。通常被阐述为一个`muti-class classification problem`，每一类都对应一个不同的关系类型。
@@ -93,9 +93,13 @@ flattended context-sensitive path tree(FCPT):cpt修改版，只有单个in 和 o
 通过扩展pt，提出了上下文敏感的卷积树核，该核除了考虑上下文无关的子树外，还考虑上下文敏感的子树作为它们的上下文。
 + qian：使用constituent dependencies的信息来动态决定树跨度。
 
-+ sun & han：feature-enriched tree kernel，在句法树中，使用一套判别特征为nodes注释
-总结图。![syntactic_parse_tree_kernel](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/RelationExtraction/a%20survey%20on%20RE/pictures/syntactic_parse_tree_kernel.png)
++ sun & han：feature-enriched tree kernel，在句法树中，使用一套判别特征为nodes注释。
 
+总结图如下：
+![syntactic_parse_tree_kernel](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/RelationExtraction/a%20survey%20on%20RE/pictures/syntactic_parse_tree_kernel.png)
 
+#### dependency tree kernel
+
++ culotta & sorensen：提出一个kernel来计算2个依存树之间的相似性，是为shallow parse tree representation浅解析树表示定义的tree kernel的扩展。
 
 
