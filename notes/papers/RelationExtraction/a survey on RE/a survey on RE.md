@@ -28,7 +28,7 @@ Mention level:将实体对和包含他的句子作为输入，然后识别该实
 + Zhou et al. 《 Biomedical relation extraction:From binary to complex》surveys most of the recent biomedicalRE approaches
 
 ## 2. supervised approaches
-关注mention level的关系抽取，要求标记数据，其中每对实体引用都标记有一种预定义关系类型(包含NONE)。通常被阐述为一个`muti-class classification problem`，每一类都对应一个不同的关系类型。
+关注mention level的关系抽取，要求标记数据，其中每对实体引用都标记有一种预定义关系类型(包含NONE)。通常被阐述为一个`muti-class classification problem`，每一类都对应一个不同的关系类型。基本假设是：训练数据集和测试数据集来自相同的分布。
 ### 2.1 feature-based methods
 对于标注数据中的每一个关系实体，生成一个特征集合，训练出一个分类器，用于分类新的关系实体。
 + Kambhatla : 训练了一个maximum entropy分类器，包含49 classes。
@@ -98,8 +98,74 @@ flattended context-sensitive path tree(FCPT):cpt修改版，只有单个in 和 o
 总结图如下：
 ![syntactic_parse_tree_kernel](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/RelationExtraction/a%20survey%20on%20RE/pictures/syntactic_parse_tree_kernel.png)
 
-#### dependency tree kernel
+#### 2.2.3 dependency tree kernel
 
 + culotta & sorensen：提出一个kernel来计算2个依存树之间的相似性，是为shallow parse tree representation浅解析树表示定义的tree kernel的扩展。
 
+对于在句子中的每一对实体标注，它们考虑到了包含标注的 句子依存树的最小子树。在依存树中每个节点通过传统特征，如pos tag，chunk tag等，得到加强。形式上，一个关系实例通过拥有节点{t0……tn}的加强型依存树表示，每一个node $t_i$拥有特征Φ($t_i$)={v1……vd}.下图是一个例句的依存树，在右边图的情况下，t0\[c]=t\[{0,1}]={$t_1$,$t_2$},且$t_1$.p=$t_0$.为比较任何两个nodes$t_i$,$t_j$,定义了以下2个函数：<br>
 
+![dependency tree]()
+>matching function:当一些重要的特征在$t_i$,$t_j$见共享时，返回1；否则返回0；similarity function：当在$t_i$,$t_j$间返回一个正值相似得分。
++ 当一对matching nodes被找到时，它们的孩子的所有可能matching的子序列也会被找到。在这样的matching 子序列中所有节点的相似得分总和相加后，得到孩子节点的整个相似性。
+
++ harabagiu et al.:使用propbank 和 framenet 利用从浅语义解析器中得到的语义信息，来加强这个依存树。
+
+#### 2.2.4 dependency graph path kernel
++ Bunescu and Mooney：提出一种基于kernel的新的依存路径。
+
+直观来说，使用依存图2个实体间的最短路径，可以获得 明确断言一个句子中2个实体间的关系的 所要求的信息。kernel被设计用于捕获表示2个关系实例的 最短依存路径间的 相似性。由于完全的词汇化路径可能导致数据稀疏，因此，对单词进行了不同程度的泛化，将单词类别化为单词类，比如pos tag，泛化的pos tag等。缩短依赖路径核计算2个关系实例间共享的常用路径特征的数量。`这种依存路径核强化了这种限制：2个路径应该由完全相同的nodes`。
+
+#### 2.2.5 composite kernels
+一个复合的kernel可以把有单个kernel捕获到的信息结合起来。例如，结合由tree kernels捕获的句法信息 和 由sequence kernel捕获到的词汇信息。kernel结合的有效方法有：sum，product，linear combination。
++ zhang：结合句法树kernel 和 实体kernel，构建了2个复合kernel。
++ zhao&grishman：结合来自nlp过程中的3个不同层次的信息，这样出现在一个层次的processing error 可以被 其他层次的信息 解决。
++ wang：使用a sub-kernel defined using relation topics。
+
+### 2.3 evaluation
+如图。
+![]()
+
+从precision，recall，F-measure of non-NONE classes 三方面评估。尽管通过不同的方式使用了相同的数据，但是，5次交叉验证中使用的实际拆分/折叠可能不同。我们得知：基于kernel的方法 比基于feature的方法 表现更优秀；其中，基于句法树kernel方法表现最好。
+
+## 3 joint extraction of entities and relations
+上节中介绍的方法都基于这样一种假设： the knowledge about boundaries and types of entity mentions are known before hand.先定义实体mention和实体类型，然后在使用RE技术。这种‘pipeline’方法容易出现传递错误propagation errors from extracting entity mentions phase to extracting relations phase。以下方法的目的是避免这种传递错误的出现。
+### 3.1 integer linear programminig based approach
++ roth&yih：提出一个模型，首先为实体抽取学习独立的局部分类器，然后RE。
+
+在推论过程中，有一个限制:如果接受局部分类器的建议，将违背之前所讲的域限制。为克服这种限制，提出了整数线性规划：它最小化 assignment cost function 和 constraint cost function的和。在使用了ILP做全局推论时，表现很好。
++ chan&roth：扩展原始的ILP框架，结合背景知识，比如关系类型的层次，共指信息等。
+### 3.2 graphical medels based approach
+### 3.3 card-pyramid parsing
+### 3.4 structured prediction
+
+## 4 semi-supervised approaches
+### 4.1 bootstrapping approaches
+### 4.2 active learning
+### 4.3 label propagation method
+### 4.4 other methods
+### 4.5 evaluation
+## 5 unsupervised relation extraction
+### 5.1 clustering based approaches
+### 5.2 other approaches
+## 6 open information extraction
+## 7 distant supervision
+## 8 recent advances in RE
++ universal schemas by riedel：使用通用范式，即现有结构化数据库的关系类型的联合，以及OPEN IE中使用的表面形式的所有可能关系类型。
+
+提出一种方法，从这些通用关系类型中学习不对成话语含义asymmetric implicature。但由于含义的不对称性，导致不可反推。
++ n-ary relation extraction：多于2个以上的实体间的关系通常被认为是 `复杂，高阶或n元关系`。
+
+McDonald et al. ：used well-studied binary RE to initially find relations between all possible entity pairs.`THEN`, find 最大的圈子maximal cliques in this graph such that each clique corresponds to some valid n-ary relation.在biomedical domain 数据集上演示了这种方法的效果。*另一个视角是：将n-ary RE 问题看作是一个 语义角色标注的e问题*。
++ Cross-sentence Relation Extraction句际关系抽取:Swampillai and Stevenson **感兴趣，可看相关论文**
+
+proposed an approach to extract both intra-sentential and inter-sentential relations。作者在处理句际关系问题时，使用了句内关系所用的结构化特征，比如parse tree paths，和技术。通过`co-reference resolution`可以解决大多数问题。
++ Convolutional Deep Neural Network：
+
+zeng：Relation classification via convolutional deep neural network。employed a convolutional DNN to extract lexical and sentence level feature。
++ Cross-lingual Annotation Projection跨语言注释投影**另一个感兴趣方向**
+
+A cross-lingual annotation projection approach for relation detection by Kim，使用平行语料库，实现从源丰富的源语言到源稀少的目标语言的关系注释。Kim&Lee提出一种基于图的投影方法，该方法利用由实体和上下文信息共同构建一个graph，并以交互方式操作。
++ Domain Adaptation：
+
+当训练数据集和测试数据集来自不同的分布，监督系统被用于分类out-of-domain数据时，监督方法出现降级。 Plank and Moschitti指出，通过将词聚类和潜在语义分析（LSA）得到的语义相似信息嵌入到句法树核中，可以提高基于核系统的域外性能。
+## 9 conclusion and future research directions
