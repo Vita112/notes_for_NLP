@@ -137,11 +137,50 @@ flattended context-sensitive path tree(FCPT):cpt修改版，只有单个in 和 o
 在推论过程中，有一个限制:如果接受局部分类器的建议，将违背之前所讲的域限制。为克服这种限制，提出了整数线性规划：它最小化 assignment cost function 和 constraint cost function的和。在使用了ILP做全局推论时，表现很好。
 + chan&roth：扩展原始的ILP框架，结合背景知识，比如关系类型的层次，共指信息等。
 ### 3.2 graphical medels based approach
-### 3.3 card-pyramid parsing
++ roth&yih:first attempt
+
+提出一个 实现识别实体和关系的局部独立分类器 的框架， 通过 一个二分有向无环图的贝叶斯信度网络，来编码实体和关系间的依存关系。在二部图中，实体被作为nodes在一个layer中，关系则作为nodes被表征在其他layer中。每一个关系实例节点$R_ij$从它的参数实体实例节点Ei,Ej有两个传入的边。给定描述句子的特征向量X，局部实体和关系分类器被用于分别计算Pr（Ei|X）和Pr（Rij|X），通过条件概率Pr(Rij|jEi，Ej )编码限制，限制可以从实体和关系标注语料库中被设置和预估。通过最大化贝叶斯网络中nodes的联合概率，获得实体和关系nodes的最可能的标签分配。作者使用2个具体关系进行试验发现：使用贝叶斯网络的关系分类的表现 比 独立关系分类器的 好。**这个结果并不适用于实体分类**。
++ yu&lam：framework based on undirected discriminative probabilistic graphical model。
+没有对 实体提及边界的知识 进行假设，而是把它作为 模型的一部分。
++ Singh：models co-refrences jointly with entity mentions and relations
+
+proposed a single，joint undirected graphical model，表征实体抽取、关系抽取和共指消解这三种任务的 各种依存。模型捕获文档中所有实体提及和他们之间的关系以及共指，通过扩展信度传播算法，在推理过程中稀疏变量域，作者解决了 模型中变量过多的 问题。
+### 3.3 card-pyramid parsing-joint extraction
++ Kate and Mooney：to jointly label the nodes in the card-pyramid graph. They propose a parsing algorithm analogous to the bottom-up CYK parsing algorithm for Context Free Grammar (CFG) parsing.新的解析算法要求的语法 被称为 card-pyramid grammar，包含以下生成类型：
+> Entity Productions of the form EntityType→Entity,e.g.per→leaders<br>
+Relation Productions of the form RelationType → EntityType1 EntityType2，e.g.PHYS → PER GPE
+
+示例句子的卡片-金字塔图如下：
+
+![Card-pyramid graph for our example sentence](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/RelationExtraction/a%20survey%20on%20RE/pictures/Card-pyramid_graph_for_our_example_sentence.jpg)
+
 ### 3.4 structured prediction
++ Li&Ji:提出了一种增量式联合框架an incremental joint framework，用于同时提取实体注释和关系，同时结合了实体注释的边界检测问题
+
+尽管使用了optimal  global decision，训练期间实体抽取和关系抽取间的交互问题仍被禁止。因此，作者建议将该问题重新表述为结构化预测问题。他们试图为一个给定的句子x∈X，预测一个输出y∈Y。线性模型为： 
+>${y}'=arg max f(x,y)\cdot \vec{w}$
+
+f(x,y)为描述整个句子结构的特诊向量。他们应用`beamsearch`来逐步扩展输入句子的部分构造，以找到得分最高的结构。该框架的**主要优势**在于：可以很容易的利用这2个任务的任意特征。一些用于实体提取的全局特征 试图捕获实体提及之间的长距离依赖关系，比如：
+```
+co-reference consistency:在同一个句子中，使用一些简单的启发式规则确定两个段之间的共同引用链接.
+neighbour coherence:两个相邻段的实体类型作为一个全局特征链接在一起.
+part-of-whole consitency:如果一个实体提及 在语义上是另一个提及的一部分，那么他们应该属于同一个实体类别。
+```
+一些用于RE的全局特征有：
+```
+triangle constraint:多个实体的提及不太可能完全与相同的关系类型连接。一个负特征用于惩罚包含此类结构的任何结构.
+inter-dependent compatibility:如果2个实体注释由一个依存链连接，他们倾向于有 与其他实体兼容 的关系。
+```
++ Miwa and Sasaki：a table structure represent entity and relation structures in a sentence。
+
+句子中单词数量为n，table是一个n\*n的 下三角矩阵lower triangular matrix。various 局部和全局特征 are captured to assign a score to any labels assignment in a table。
+### 3.5 evaluation
+大多数联合抽取实体和关系的方法，都比基本的`pipeline`方法表现好。联合模型灵活使用 关系信息来抽取实体。但由于没有一个单一的、标准的数据集来反应结果，各种联合模型的方法很难比较。
 
 ## 4 semi-supervised approaches
+major motivation：减少创建标注数据所需要的人工劳动；利用不需要投入大量精力的，无需标注的数据。
 ### 4.1 bootstrapping approaches
+
 ### 4.2 active learning
 ### 4.3 label propagation method
 ### 4.4 other methods
