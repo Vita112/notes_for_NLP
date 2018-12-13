@@ -180,16 +180,89 @@ inter-dependent compatibility:如果2个实体注释由一个依存链连接，�
 ## 4 semi-supervised approaches
 major motivation：减少创建标注数据所需要的人工劳动；利用不需要投入大量精力的，无需标注的数据。
 ### 4.1 bootstrapping approaches
+要求2个数据集：一个多量的未标注语料库；一个少量的未标注的关系类型的种子实例。
++ 第一个bootstrapping算法是DIOER(dual iterative pattern relation expansion),由Brin提出。
 
+该算法背后的直觉intuition是：pattern relation duality模式关系对偶。下图是DIPRE对偶迭代模式关系扩展的overview：
+![overview_of_DIPRE]()
+
+两个实体E1，E2间的 用于捕获关系类型R的 模式由一个5元素元组表征：(order,urlprefix,prefix,middle,suffix),其中，order是一个布尔值，其他都为字符串。
+例子：
+> a pattern is (true, \en.wikipedia.org/wiki/", City of, is capital of, state) and it matches a text like City of Mumbai is capital of Maharashtra state.
++ Agichtein and Gravano:基于DIPRE发展了一个叫`snowball`的系统。
+
+有2点优于dipre：
+>①模型表征和泛化;②模式和元组的评估。
+关于①，snowball的关键先进点之一是：在模式中包含命名实体标记（PER、ORG、LOC等）。在dipre模式中，要求prefix、suffix和middle strings完全匹配。这阻碍了模式的覆盖范围。在SNOWBALL中，文本中的细微变化，比如拼写错误和附加文章，不会导致错误匹配。在向量空间模型中使用词向量woed vector，2个上下文词向量间的点积越高，相似度越高。
+关于②，snowball丢弃了所有不够精确的patterns。一个方法是：过滤掉一些 最小数量的种子示例不支持的所有模式。snowball基于 认为2个NE中的1个比另一个更重要 的假设，为每个pattern计算置信度confidence，p的置信度被定义为：
+![confidence_defined_in_snowball](),此处，#positive_p and #negative_p are the numbers of positive and negative matches for p,respectively.由于每一个词迭代都丢弃了 低置信度的模式和元组，从而避免了很多不正确的抽取。
+
++ Gabbard et al. :explore the use of co-reference information
+
++ Mention level- Zhang:提出一种基于SVM的自举引导算法bootProject.通过放宽对多个特征“视图”的以下限制来 推广联合训练算法：互斥、条件独立性和分类充分性.
+
++  Sun :提出一个`二阶段`自举方法a two-stage bootstrapping approach
+
+观察到`dipre`和`snowball`在抽取general relations like EMP-ORG relation in ACE时，表现并不是很好。他们提出一个`二阶段`自举方法, the first stage is similar to SnowBall,the second stage将第一阶段学到的模式作为inputs,试图抽取更多nominals ,like manager, CEO, etc.基于这些学习的名词列表的特征 被合并到受监督的RE系统中.此外，一个多量的未标注语料库被用于学习`word clustering`，因此，出现在相似上下文中的words被分组到相同的cluster中。
+
++ **有一点需要注意**：基于bootstrapping的算法的表现依赖于`the choice of initial seed examples`。关于算法中种子样本的选择的分析参见` Vyas et al., Kozareva and Hovy`的论文。
 ### 4.2 active learning
+active learning 算法背后的关键思想是：允许学习算法查询某些选定未标记实例的真实标签。主动式学习通过很少的标注实例可以获得与监督学习方法相当的性能。
++ Sun and Grishman：LGCo-Testing
+
+为应用Co-Testing，它们提出`创建关系实例的两个视图view`。
+>a local view based on features，这些特征捕获 被连接的实例mentions和包含句子containning sentence的其他特征。<br>
+a global view based on 连接2个实例mentions的短语phrase的分布相似性，使用一个大型语料库。<br>
+在两个相似的phrase间，分布相似性将为这2个phrase分配很高的相似性，如果这些phrases被观察到出现在一个大型语料库中的相似上下文中。使用local view的feature可以训练`a maximum entropy classifier`。当一个分类器使用global view，使用分布相似性 寻找最近邻居的 一个最近邻分类器被使用。
 ### 4.3 label propagation method
++ Zhu and Ghahramani：graph based semi-supervised method
+
+数据中的标注和未标注实例被表征为一个graph中的带有edges的节点，edges反应了节点间的相似性。方法中，任何节点的标签信息通过加权edges迭代地被传递给临近的节点，最后，当传递过程收敛时，未标注样本的标签被推断出来。
++ Chen et al：第一个将label propagation method 应用于RE。将特征向量作为特征上的概率分布，利用JS散度计算任意两个关系实例之间的距离。2个实例间的相似性则与这个距离成反比。
+
++ label propagation的一个主要优点：未标注实例的标签不仅由临近的标注实例决定，还由邻近的未标注实例决定。
+
 ### 4.4 other methods
 ### 4.5 evaluation
+相比于捕获实体对的每一次提及，这些bootstrap based 技术创建了 一个展示一个特殊关系类型的实体提及对的 列表。通过验证所有抽取出的**对**
+，我们很容易测量precision，但是评估recall却很难。因此，需要考虑一个更小的未标注数据的子集。
 ## 5 unsupervised relation extraction
 ### 5.1 clustering based approaches
++ Hasegawa et al：propesed one of the earliest approaches,only require a NER tagger to identify named entities in the text.
+方法的步骤如下：
+```1 标注文本语料库中的NE;
+2 生成共现co-occurring NE，记录他们的上下文；
+3 计算step2中定义的所有NE对间的上下文相似性；
+4 使用上一步中计算的相似值，聚类NE对；
+5 因为每一个聚类代表一个relation，一个标签被自动分配给每一个聚类，来描述由他所表征的关系类型
+```
+解释几个概念：
+> Named Entity pairs and context
+> context similarity computations
+>clustering and labelling
 ### 5.2 other approaches
 ## 6 open information extraction
-## 7 distant supervision
++  Banko et al. :TextRunner consists of following 3 core modules
+>1. self-supervised learner
+>2. single pass extractor
+>3. redundancy-based assessor
+
+proposed to use CRF based, self-supervised sequence classifier O-CRF instead of Naive Bayes classifier used in
+TextRunner and observed better performance.
++ Fader et al.:ReVerb
+TextRunner有以下限制：
+>1. incoherent extracitons
+>2. uninformative extraction
+>3. overly-specific extractions
+为克服以上限制，ReVerb算法对要提取的关系短语提出以下两个约束：
+>syntactic constraint
+>lexical constraint
+## 7 distant supervision:combines advantages of both the paradigms : Supervised and Unsupervised
++ Mintz et al. :proposed Distant Supervision, used Freebase as a semantic database which stores pairs of entities for various relations.
+
+> 1. labelling heuristic
+>2. negative instances
+
 ## 8 recent advances in RE
 + universal schemas by riedel：使用通用范式，即现有结构化数据库的关系类型的联合，以及OPEN IE中使用的表面形式的所有可能关系类型。
 
