@@ -184,7 +184,7 @@ major motivation：减少创建标注数据所需要的人工劳动；利用不�
 + 第一个bootstrapping算法是DIOER(dual iterative pattern relation expansion),由Brin提出。
 
 该算法背后的直觉intuition是：pattern relation duality模式关系对偶。下图是DIPRE对偶迭代模式关系扩展的overview：
-![overview_of_DIPRE]()
+![overview_of_DIPRE](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/RelationExtraction/a%20survey%20on%20RE/pictures/overview_of_DIPRE.png)
 
 两个实体E1，E2间的 用于捕获关系类型R的 模式由一个5元素元组表征：(order,urlprefix,prefix,middle,suffix),其中，order是一个布尔值，其他都为字符串。
 例子：
@@ -195,7 +195,8 @@ major motivation：减少创建标注数据所需要的人工劳动；利用不�
 >①模型表征和泛化;②模式和元组的评估。
 关于①，snowball的关键先进点之一是：在模式中包含命名实体标记（PER、ORG、LOC等）。在dipre模式中，要求prefix、suffix和middle strings完全匹配。这阻碍了模式的覆盖范围。在SNOWBALL中，文本中的细微变化，比如拼写错误和附加文章，不会导致错误匹配。在向量空间模型中使用词向量woed vector，2个上下文词向量间的点积越高，相似度越高。
 关于②，snowball丢弃了所有不够精确的patterns。一个方法是：过滤掉一些 最小数量的种子示例不支持的所有模式。snowball基于 认为2个NE中的1个比另一个更重要 的假设，为每个pattern计算置信度confidence，p的置信度被定义为：
-![confidence_defined_in_snowball](),此处，#positive_p and #negative_p are the numbers of positive and negative matches for p,respectively.由于每一个词迭代都丢弃了 低置信度的模式和元组，从而避免了很多不正确的抽取。
+![confidence_defined_in_snowball](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/RelationExtraction/a%20survey%20on%20RE/pictures/confidence_defined_in_snowball.png),
+此处，#positive_p and #negative_p are the numbers of positive and negative matches for p,respectively.由于每一个词迭代都丢弃了 低置信度的模式和元组，从而避免了很多不正确的抽取。
 
 + Gabbard et al. :explore the use of co-reference information
 
