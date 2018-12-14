@@ -180,7 +180,13 @@ inter-dependent compatibility:如果2个实体注释由一个依存链连接，�
 ## 4 semi-supervised approaches
 major motivation：减少创建标注数据所需要的人工劳动；利用不需要投入大量精力的，无需标注的数据。
 ### 4.1 bootstrapping approaches
-要求2个数据集：一个多量的未标注语料库；一个少量的未标注的关系类型的种子实例。
+bootstrapping过程可形象化描述为：`对于给定的NLP任务，选取特定的有指导的，训练分类模型的方法`。要求2个数据集：一个多量的未标注语料库U；一个少量的有标注的关系类型的种子实例L，然后通过未标注数据集来逐步扩大标注数据集，从而训练出最后的分类器实现具体的NLP任务。是一个`使用少量的标注语料，获取到置信度较高的 多量的标注语料的 反复迭代过程`。大致过程如下：
+```
+1 使用已标注的数据集，应用选择的方法训练分类器h，h用于标注 未标记数据集中的标记分类，可能是一些启发式规则；
+2 使用h对U进行标注分类，从U中获取标注数据；
+3 从step2中获取的标注数据中，选择置信度较高的数据作为标注数据 ，加入到标注数据集中；
+4 重复上述过程，知道满足迭代结束的条件。
+```
 + 第一个bootstrapping算法是DIOER(dual iterative pattern relation expansion),由Brin提出。
 
 该算法背后的直觉intuition是：pattern relation duality模式关系对偶。下图是DIPRE对偶迭代模式关系扩展的overview：
@@ -231,15 +237,16 @@ a global view based on 连接2个实例mentions的短语phrase的分布相似性
 ### 5.1 clustering based approaches
 + Hasegawa et al：propesed one of the earliest approaches,only require a NER tagger to identify named entities in the text.
 方法的步骤如下：
-```1 标注文本语料库中的NE;
+```
+1 标注文本语料库中的NE;
 2 生成共现co-occurring NE，记录他们的上下文；
 3 计算step2中定义的所有NE对间的上下文相似性；
 4 使用上一步中计算的相似值，聚类NE对；
 5 因为每一个聚类代表一个relation，一个标签被自动分配给每一个聚类，来描述由他所表征的关系类型
 ```
 解释几个概念：
-> Named Entity pairs and context
-> context similarity computations
+>Named Entity pairs and context
+>context similarity computations
 >clustering and labelling
 ### 5.2 other approaches
 ## 6 open information extraction
@@ -261,7 +268,7 @@ TextRunner有以下限制：
 ## 7 distant supervision:combines advantages of both the paradigms : Supervised and Unsupervised
 + Mintz et al. :proposed Distant Supervision, used Freebase as a semantic database which stores pairs of entities for various relations.
 
-> 1. labelling heuristic
+>1. labelling heuristic
 >2. negative instances
 
 ## 8 recent advances in RE
