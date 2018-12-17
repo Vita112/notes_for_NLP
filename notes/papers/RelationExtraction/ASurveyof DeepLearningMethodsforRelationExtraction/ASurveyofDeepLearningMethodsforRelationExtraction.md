@@ -40,5 +40,6 @@ $$ J(\theta )=\sum_{I=1}^{T}logp(y_{i}|d_{i}^{j*},\theta )$$
 
 $$j*=argmax_{j}p(y_{i}|d^{j}_{i},\theta );j=1,2,\cdots ,q_{i}$$
 
+
 **但是**，由于在训练和预测过程中，模型**只使用最可能文档的实体对**，这意味着：**模型忽略了大量有用的，由袋子中其他的句子表达的数据和信息**。此问题在下一种方法中得到解决。
 #### 3.2 selective attention over instance(Lin et al 2016)
