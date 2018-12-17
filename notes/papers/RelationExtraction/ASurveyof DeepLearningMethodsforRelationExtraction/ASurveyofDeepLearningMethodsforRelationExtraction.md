@@ -38,8 +38,7 @@ multi-instance learning是一种监督学习的形式，其中一个标签被给
 其中西θ是神经网络的加权参数，损失函数为
 $$ J(\theta )=\sum_{I=1}^{T}logp(y_{i}|d_{i}^{j*},\theta )$$
 
-$$j*=argmax_{j}p(y_{i}|d^{j}_{i},\theta );j=1,2,\cdots ,q_{i}$$
-
+$j*=argmax_{j}p(y_{i}|d^{j}_{i},\theta );j=1,2,\cdots ,q_{i}$
 
 **但是**，由于在训练和预测过程中，模型**只使用最可能文档的实体对**，这意味着：**模型忽略了大量有用的，由袋子中其他的句子表达的数据和信息**。此问题在下一种方法中得到解决。
 #### 3.2 selective attention over instance(Lin et al 2016)
