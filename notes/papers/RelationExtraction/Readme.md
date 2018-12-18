@@ -34,4 +34,7 @@
 
 >模型名称：ResCNN-9
 
-## [reference link](https://blog.csdn.net/yuxuan_hulu/article/details/82783810)
+## reference link
++ [csdn](https://blog.csdn.net/yuxuan_hulu/article/details/82783810)
++ [zhihu](https://zhuanlan.zhihu.com/p/29970617)
+
