@@ -43,6 +43,20 @@ $j*=argmax_{j}p(y_{i}|d^{j}_{i},\theta )$;j=1,2,…… ,$q_i$
 **但是**，由于在训练和预测过程中，模型**只使用最可能文档的实体对**，这意味着：**模型忽略了大量有用的，由袋子中其他的句子表达的数据和信息**。此问题在下一种方法中得到解决。
 #### 3.2 selective attention over instance(Lin et al 2016)
 针对多实例问题，对包中所有多实例使用注意机制attention mechanism。
->包i中的每一个句子$d_{i}\_{j}$,首先使用PCNN 或者 CNN，被编码进一个向量表征$r_{i}\_{j}$；
->然后，通过对包中所有句子向量$(r_{i}\_{j},j=1,2,……,qi)$进行注意力加权平均
->模型为包i中的每一个实例$d_{i}\_{j}$计算一个加权$α_{j}$
+>包i中的每一个句子$d_{i}^{j}$,首先使用PCNN 或者 CNN，被编码进一个向量表征$r_{i}^{j}$；
+>然后，通过对包中所有句子向量$(r_{i}^{j},j=1,2,……,qi)$进行注意力加权平均
+>模型为包i中的每一个实例$d_{i}^{j}$计算一个加权$α_{j}$,α的值是动态的，在每个包中是不同的，并且依赖于关系类型和文本实例。
+>句子包的最终特征向量为:$$r_{i}=\sum_{j=1}^{q_{i}}\alpha \_{j}r\_{i}^{j}$$,*该模型能够从噪声句子中天然判别出重要的句子，并且利用包中所有信息进行关系分类预测*。
+#### 3.3 multi-instance multi-label CNNs(Jiang et al. 2016)
++ 解决了3.1 zeng的方法中存在的信息损失的问题，使用一个**跨文本最大池化层**cross-document max-pooling layer
++ 着手处理关系抽取中的multi-lable的问题。
+
+因为存在**overlapping relations supported by different documents**,这意味着同样一个实体对中可能存在多个关系。作者改动了模型(个人认为是 PCNN)的结构，在分段卷积神经网络的最后一层中，使用sigmoid activation function，而不是softmax activation function，这意味着，神经网络将独立地为每一个关系预测一个概率，而不是为所有关系预测一个概率分布。训练模型的loss定义如下：
+$$J(\theta )=\sum_{i=1}^{T}\sum_{r=1}^{R}y_{r}^{i}logp_{r}^{i}+(1+y_{r}^{i})log(1-p_{r}^{i})$$
+此处，R是关系类的数量，$p_{r}^{i}$是网络预测的包i中有关系r的概率，$y_{r}^{i}$是一个二分标签，表示包i中是否含有关系r。
+
+### 4 results
+观察发现：使用MIML CNN可以PCNN 的性能。然而，selective attention mechanism over PCNN model在所有模型中表现最好，模型鲁棒性最好，而且，在跨文本信息开采中效率更高。
+### 5 concluding remarks
++ Zeng 2016：试图通过使用关系路径和关系类联结，开发关系间的interaction。
++ RNNs方法是用很少，而直观上，RNNs 和 LSTMs 更天然地适合 NLP TASK。在未来，将试图使用LSTMs 来编码句子和关系。
