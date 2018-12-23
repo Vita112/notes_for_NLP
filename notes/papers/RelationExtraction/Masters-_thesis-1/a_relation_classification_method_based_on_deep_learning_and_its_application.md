@@ -55,15 +55,16 @@ CNN专门用来处理网络状拓扑结构的输入，例如图片或文本序�
 是卷积层的参数矩阵。进行计算时，卷积核与输入的各区域进行`点积`计算，将点积结果作为该位置的输出。图示如下：
 
 ![文本的卷积](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/RelationExtraction/Masters-_thesis-1/pictures/WenBenJuanJi.png)
+
 **局部连结性使得运算量减少；各位置使用同一个卷积核，减少了参数个数，不易造成过拟合。**
 + 池化操作
-最常用的是 最大池化max pooling，将图片划分成互不重叠的一个个矩形区域，取 每个区域中的最大值 作为输出，最后输出一个矩阵
+最常用的是 最大池化max pooling，将图片划分成互不重叠的一个个矩形区域，取 每个区域中的最大值 作为输出，最后输出一个矩阵.
 **是对输入的一种归纳；使得网络对局部的微小变化具有不变性**
 ### 3.2 循环神经网络
 RNN是一种用于处理序列数据的神经网络，它将网络的上一个状态作为当前计算的输入，使得整个网络具有一定记忆功能，利用之前信息。结构如下：
 
 ![RNN](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/RelationExtraction/Masters-_thesis-1/pictures/RNN.png)
-虽然理论上，RNN可以利用之前所有的历史信息，但链式法则求导后，在激活函数的作用下， 多个绝对值小于1的数相乘，梯度呈指数级的趋向于0.
+虽然理论上，RNN可以利用之前所有的历史信息，但链式法则求导后，在激活函数的作用下， 多个绝对值小于1的数相乘，梯度呈指数级的趋向于0.<br>
 **梯度消失**：在长程依赖关系中，后面的梯度很难传递到前面的位置。
 + LSTM——利用自适应的门gate 来控制信息传递
 LSTM单元结构图如下：
@@ -106,6 +107,9 @@ BLSTM在位置i的隐藏状态为：$$h_{i}=\[\overrightarrow{h_{i}},\overleftar
 
 对每个pos tagging label，NER label和position label，进行embedding。结合word embedding，得到每个词的最终表示：
 $$e_{i}^{all}=\[e_{i}^{word},e_{i}^{position1},e_{i}^{position2},e_{i}^{pos},e_{i}^{ner}]$$
++ BLSTM层——引入自适应的门，来控制LSTM单元是否保留前一时刻的状态，或者是否记住当前时刻的状态
+
+
 
 
 
