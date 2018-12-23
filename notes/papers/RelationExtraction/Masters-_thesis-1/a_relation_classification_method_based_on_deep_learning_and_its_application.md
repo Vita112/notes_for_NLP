@@ -113,7 +113,73 @@ BLSTM在位置i的隐藏状态为：$$h_{i}=\[\overrightarrow{h_{i}},\overleftar
 对每个pos tagging label，NER label和position label，进行embedding。结合word embedding，得到每个词的最终表示：
 $$e_{i}^{all}=\[e_{i}^{word},e_{i}^{position1},e_{i}^{position2},e_{i}^{pos},e_{i}^{ner}]$$
 
-+ BLSTM层——引入自适应的门，来控制LSTM单元是否保留前一时刻的状态，或者是否记住当前时刻的状态
++ BLSTM层——引入自适应的门，来控制LSTM单元是否保留前一时刻的状态，或者是否记住当前时刻的状态.结构如下：
+
+![BLSTM]()
++ attention层
+![attention]()
++ 特征融合和分类
+将$h_sent$,$h_ctx$,$h_entity$拼接起来，得到结果如下图：
+
+![feature_integration]()
+## 6 基于CNN 的关系抽取模型
+该模型通过卷积神经网络提取句子特征，再将句子特征与实体本身以及实体的上下文特征进行拼接，最后通过1个全连接的神经网络来对特征进行分类.
+框架如下图：
+
+![CNN]()
+### 6.1 word-level CNN
+
+先将文本进行分词，然后将词语作为句子的基本单元，在进行卷积时，每个词语就相当于图像中的像素点，同时我们将词语的词性标签以及命名实体识别标签也作为特征 ，与词向量拼接起来，一起进行卷积.
+>对每个词`提取上下文信息`，使用`一个滑动窗口`，对于每个单词，`将它前后大小为k的窗口中的词拼接起来，作为该词的表示`，在句子前后进行padding，加入一定数量的占位符。
+
+![convolutional_kernel]()
+
+>池化层-max pooling
+
+对于卷积层的输出矩阵C，在每个维度上求各个位置的最大值，生成一个固定长度的向量，来表示整个句子的信息。
+
+### 6.2character-level CNN
+
+句子是字符组成的序列，将每个字符替换为其对应的字向量，输入到CNN模型中，max-pooling综合每个位置的输出。
+>卷积层
+
+使用多个窗口大小的卷积模型，在不同的窗口宽度上使用不同的卷积核，每个卷积核分别在其对应的窗口宽度上进行卷积，最后，将多个
+卷积核的结果拼接起来，作为最终的输出。
+>池化层-max pooling
+
+对每个卷积核的输出单独进行池化，再将赤化的结果拼接。
+## 7 实验设计与结果分析
+### 7.1 实验设计
++ 实验环境：服务器配置；python；模型使用tensorflow实现。
++ 评价指标：precision，recall，F1-值
++ 参数设置
+
+各种embedding的维度设置
+### 7.2 不同模型对比实验
+### 7.3 循环神经网络模型分析
++ BLSTM效果比单向LSTM好很多
++ attention效果分析
+
+BLSTM为句子的每一个位置输出一个特征向量，该向量是该位置上下文的高阶表示。由于句子长度通常不一样，不同位置的词语无法对齐，因此，需要对BLSTM的输出进行处理，以输出一个固定长度的向量，综合表达整个句子的信息。**有三类做法**：
+```
+按照效果好坏从高往低分别为：
+attention：增加 那些对分类作用更强的词语的权重，削弱没有明显区分性的词语的权重，根据attention weights对BLSTM各个时间点上的
+向量做加权平均。
+first and last step首尾向量拼接
+average-pooling
+max-pooling
+```
+## 7.4 循环神经网络模型分析
++ CNN
+结合使用word-level CNN 和 char-level CNN，可以达到最好的效果，`因为结合使用时，特征更多样化`。此外，word-level效果要比char-level效果好。char-level CNN的效果要优于 只使用文本的词语作为输入
++ Pooling:max-pooling结果比average-pooling好很多
+
+## 7.5 CNN 与 BLSTM模型对比
++ 训练速度
+
++ 分类结果
+
+
 
 
 
