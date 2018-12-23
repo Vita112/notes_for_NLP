@@ -115,24 +115,24 @@ $$e_{i}^{all}=\[e_{i}^{word},e_{i}^{position1},e_{i}^{position2},e_{i}^{pos},e_{
 
 + BLSTM层——引入自适应的门，来控制LSTM单元是否保留前一时刻的状态，或者是否记住当前时刻的状态.结构如下：
 
-![BLSTM]()
+![BLSTM](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/RelationExtraction/Masters-_thesis-1/pictures/BLSTM.png)
 + attention层
-![attention]()
+![attention](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/RelationExtraction/Masters-_thesis-1/pictures/attention.png)
 + 特征融合和分类
 将$h_sent$,$h_ctx$,$h_entity$拼接起来，得到结果如下图：
 
-![feature_integration]()
+![feature_integration](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/RelationExtraction/Masters-_thesis-1/pictures/feature_integration.png)
 ## 6 基于CNN 的关系抽取模型
 该模型通过卷积神经网络提取句子特征，再将句子特征与实体本身以及实体的上下文特征进行拼接，最后通过1个全连接的神经网络来对特征进行分类.
 框架如下图：
 
-![CNN]()
+![CNNBasedMethod](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/RelationExtraction/Masters-_thesis-1/pictures/CNNBasedMethod.png)
 ### 6.1 word-level CNN
 
 先将文本进行分词，然后将词语作为句子的基本单元，在进行卷积时，每个词语就相当于图像中的像素点，同时我们将词语的词性标签以及命名实体识别标签也作为特征 ，与词向量拼接起来，一起进行卷积.
 >对每个词`提取上下文信息`，使用`一个滑动窗口`，对于每个单词，`将它前后大小为k的窗口中的词拼接起来，作为该词的表示`，在句子前后进行padding，加入一定数量的占位符。
 
-![convolutional_kernel]()
+![convolutional_kernel](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/RelationExtraction/Masters-_thesis-1/pictures/convolutional_kernel.png)
 
 >池化层-max pooling
 
