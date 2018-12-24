@@ -156,6 +156,8 @@ $$e_{i}^{all}=\[e_{i}^{word},e_{i}^{position1},e_{i}^{position2},e_{i}^{pos},e_{
 
 各种embedding的维度设置
 ### 7.2 不同模型对比实验
+![comparision_among_different_models]()
+
 ### 7.3 循环神经网络模型分析
 + BLSTM效果比单向LSTM好很多
 + attention效果分析
@@ -169,15 +171,30 @@ first and last step首尾向量拼接
 average-pooling
 max-pooling
 ```
-## 7.4 循环神经网络模型分析
+## 7.4 卷积神经网络模型分析
 + CNN
 结合使用word-level CNN 和 char-level CNN，可以达到最好的效果，`因为结合使用时，特征更多样化`。此外，word-level效果要比char-level效果好。char-level CNN的效果要优于 只使用文本的词语作为输入
 + Pooling:max-pooling结果比average-pooling好很多
 
 ## 7.5 CNN 与 BLSTM模型对比
 + 训练速度
-
+每一轮迭代，CNN都要比BLSTM快很多。原因在于：CNN更容易并行化，最大限度发挥CPU并行运算的优势<br>
+收敛速度上，BLSTM 比 CNN收敛的更快，但出现过拟合现象
 + 分类结果
+BLSTM模型 准确率更高，而CNN模型 拥有更高的召回率。CNN模型结构使得它更适合对局部特征进行抽取，因它在句子的每个位置`使用相同的卷积核`进行卷积，能对具有标识性的 词语或短语进行识别；BLSTM模型 `从句子的一端到另一端顺序`处理词语序列，由于`存在三个门`，因而能`对复杂的句子进行更准确地识别`。
+## 8 deepdive 关系抽取流程
+![deepdive_flow_chart]()
+
++ 样本打标：远程监督 和 基于规则的标注
+> distant supervison
+
+基本思想：利用已有知识库对未知的 文本进行标注。方法`假设 如果知识库中的2个实体之间存在某种关系，那么包含这2个实体的所有句子都描述了他们之间的这种关系`。在没有高质量的标注数据的情况下，distant supervision 可在短时间内生成大量的标注数据。
+
+> 基于规则的标注
++ 模型训练和推断
+
+
+
 
 
 
