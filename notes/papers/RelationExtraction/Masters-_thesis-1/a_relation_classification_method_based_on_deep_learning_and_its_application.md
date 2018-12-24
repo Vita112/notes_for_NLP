@@ -156,7 +156,7 @@ $$e_{i}^{all}=\[e_{i}^{word},e_{i}^{position1},e_{i}^{position2},e_{i}^{pos},e_{
 
 各种embedding的维度设置
 ### 7.2 不同模型对比实验
-![comparision_among_different_models]()
+![comparision_among_different_models](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/RelationExtraction/Masters-_thesis-1/pictures/comparison_among_different_models.jpg)
 
 ### 7.3 循环神经网络模型分析
 + BLSTM效果比单向LSTM好很多
@@ -183,7 +183,7 @@ max-pooling
 + 分类结果
 BLSTM模型 准确率更高，而CNN模型 拥有更高的召回率。CNN模型结构使得它更适合对局部特征进行抽取，因它在句子的每个位置`使用相同的卷积核`进行卷积，能对具有标识性的 词语或短语进行识别；BLSTM模型 `从句子的一端到另一端顺序`处理词语序列，由于`存在三个门`，因而能`对复杂的句子进行更准确地识别`。
 ## 8 deepdive 关系抽取流程
-![deepdive_flow_chart]()
+![deepdive_flow_chart](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/RelationExtraction/Masters-_thesis-1/pictures/deepdive_flow_chart.jpg)
 
 + 样本打标：远程监督 和 基于规则的标注
 > distant supervison
