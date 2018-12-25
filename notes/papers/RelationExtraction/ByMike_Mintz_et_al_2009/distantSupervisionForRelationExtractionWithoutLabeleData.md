@@ -58,3 +58,13 @@ describe specific words between and surrounding the two entities.每个词汇特
 拥有相同的命名实体标签的 连续的单词 are chunked
 + training and testing
 2种模型评估：held-out evaluation 和 human evaluation。在实验中，我们`只抽取没有出现在训练集中的关系实例,即freebase中没有的实例`.
+为构建分类器，系统需要negative训练数据，因此，在训练阶段，通过随机选择freebase关系中没有的实体对，来建立一个`unrelated relation`的特征向量，并抽取出特征。
+> 我们使用一个使用高斯正则化的L-BFGS优化的多类logistic分类器。我们的分类器以实体对和特征向量作为输入，并基于属于该关系的实体对的概率返回关系名和置信度得分。
+## 5 evaluation
++ held-out evaluation
+the combination of syntactic and lexical features offers a substantial improvement in precision over either of these feature sets on its own.
+![held-out evaluation](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/RelationExtraction/ByMike_Mintz_et_al_2009/pictures/held-out_evaluation.jpg)
++ human evaluation
+![human evaluation](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/RelationExtraction/ByMike_Mintz_et_al_2009/pictures/human-evaluation_experiments.jpg)
+## 6 discussion
+实验结果表明，该远程监控算法能够针对相当多的关系提取高精度的模式。句法特征在远程监督信息抽取任务中确实有效。
