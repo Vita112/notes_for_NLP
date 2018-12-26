@@ -1,4 +1,4 @@
-基于远程监督的无标注数据的关系抽取 Mike Mintz Steven Bills 2009 斯坦福大学<br>
+**基于远程监督的无标注数据的关系抽取** Mike Mintz Steven Bills 2009 斯坦福大学<br>
 
 提出一种适用于各种大小的、未注语料库的研究范式，distant supervision。结合了监督IE和无监督IE技术的优点。分析了特征性能，显示 对于有歧义，或词汇距离远的句子的关系抽取任务，句法剖析特征特别有用。
 ## 1 introduction
@@ -21,7 +21,7 @@ relation instances:individual ordered pairs in this relation
 
 ## 3 model architecture
 **assumption**：如果2个实体参与某个关系，那么，任何包含这2个实体的句子可能表达了这样一种关系。算法训练一个多类逻辑回归分类器，为每个噪声特征学习权重。
->使用freebase对应到大量的未标注数据中，生成大规模训练数据集，训练集中的关系和实体对来源于freebase知识库。
+>使用freebase知识库对应到大量的未标注数据中进行自动标注，生成已标注训练数据集(正项)，训练集中的关系和实体对来源于freebase知识库，再加入一些负项，训练一个分类器，最后每一个分类是一个关系。
 ```
 training step:
 如果一个句子包含一个实体对，且这个实体对是freebase知识库中的关系实例之一，那么，会从句子中抽取特征，并将特征添加到
@@ -29,7 +29,7 @@ training step:
 testing step：
 在一个句子中一起出现的每一对实体，都被认为是一个潜在的关系实例，并从句子中抽取特征，将特征添加到那个实体对的特征向量中
 ```
-+ 模型框架的主要优势——结合 同一关系的 来自不同mentions的信息
++ 模型框架的主要优势—— 结合 同一关系的 来自不同mentions的信息
 ## 4 features
 ### 4.1 lexical features
 describe specific words between and surrounding the two entities.每个词汇特征由以下成分拼接而成：
