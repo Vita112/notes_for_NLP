@@ -65,8 +65,9 @@ describe specific words between and surrounding the two entities.每个词汇特
  ## 5 evaluation
  + held-out evaluation
 the combination of syntactic and lexical features offers a substantial improvement in precision over either of these feature sets on its own.
-![held-out evaluation](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/RelationExtraction/ByMike_Mintz_et_al_2009/pictures/held-out_evaluation.jpg)
+![held-out evaluation](https://github.com/Vita112/notes_for_NLP/blob/74d821bf99a4cafc08cb80ce937c572aebc92088/notes/papers/RelationExtraction/DistantSupervision/pictures/held-out_evaluation.jpg)
 + human evaluation
-![human evaluation](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/RelationExtraction/ByMike_Mintz_et_al_2009/pictures/human-evaluation_experiments.jpg)
+
+![human evaluation](https://github.com/Vita112/notes_for_NLP/blob/74d821bf99a4cafc08cb80ce937c572aebc92088/notes/papers/RelationExtraction/DistantSupervision/pictures/human-evaluation_experiments.jpg)
 ## 6 discussion
 实验结果表明，该远程监控算法能够针对相当多的关系提取高精度的模式。句法特征在远程监督信息抽取任务中确实有效。
