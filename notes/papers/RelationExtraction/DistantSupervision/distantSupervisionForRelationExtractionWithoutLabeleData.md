@@ -2,8 +2,7 @@
 
 提出一种适用于各种大小的、未注语料库的研究范式，distant supervision。结合了监督IE和无监督IE技术的优点。分析了特征性能，显示 对于有歧义，或词汇距离远的句子的关系抽取任务，句法剖析特征特别有用。
 ## 1 introduction
-对有监督学习方法，无监督学习方法，以及半监督bootstrapping方法的概述，此处略。**intuition of distant supervison**：任何包含有 一对参与了已知的freebase关系的实体对的 句子
-都表达了那样一种关系。以下是算法优点：
+对有监督学习方法，无监督学习方法，以及半监督bootstrapping方法的概述，此处略。**intuition of distant supervison**：如果一对实体在freeebaseKB中具有某种关系，那么，语料库中，包含有这2个实体的任何句子都是含有这种关系的 一个实例。以下是算法优点：
 ```
 1. 使用更大规模的数据：more text more relations more instances
 2. do not suffer from 过拟合和域依赖的问题
@@ -21,7 +20,7 @@ relation:an ordered, binary relation between entities.<br>
 relation instances:individual ordered pairs in this relation
 
 ## 3 model architecture
-assumption：如果2个实体参与某个关系，那么，任何包含这2个实体的句子可能表达了这样一种关系。算法训练一个多类逻辑回归分类器，为每个噪声特征学习权重。
+**assumption**：如果2个实体参与某个关系，那么，任何包含这2个实体的句子可能表达了这样一种关系。算法训练一个多类逻辑回归分类器，为每个噪声特征学习权重。
 >使用freebase对应到大量的未标注数据中，生成大规模训练数据集，训练集中的关系和实体对来源于freebase知识库。
 ```
 training step:
