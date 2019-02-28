@@ -6,8 +6,9 @@ https://www.coursera.org/learn/python-text-mining
 ## Youtube
 * CrashCourse_COMPUTER SCIENCE
 ##  知乎
-NLP入门学习路线：https://www.zhihu.com/question/66411848/answer/242751803
-> 打好数学基础→机器学习（python实践）→深度学习（python实践）→神经网络→入门NLP后确定方向<br>
+learning route for NLP：https://www.zhihu.com/question/66411848/answer/242751803
+> foundations of mathematics → machine learning(code implementation using Python) → deep learning(code implementation using Python)
+→ Nueral Networks → decide which research area to probe<br>
   + 情感分析 sentiment analysis
   + 关系抽取 relation extraction
   + QA系统   question answer system
