@@ -1,9 +1,9 @@
-+ 【unread】Distant Supervision for Relation Extraction via Piecewise Convolutional Neural Networks 
++ 【read】Distant Supervision for Relation Extraction via Piecewise Convolutional Neural Networks 
 [link](http://aclweb.org/anthology/D/D15/D15-1203.pdf)
 >Zeng et al. 2015 EMNLP
 
 >模型名称：PCNN
-+ 【unread】Bidirectional Recurrent Convolutional Neural Network for Relation Classification
++ 【read】Bidirectional Recurrent Convolutional Neural Network for Relation Classification
 [link](http://www.aclweb.org/anthology/P/P16/P16-1072.pdf)
 >Rui Cai 2016 ACL
 
