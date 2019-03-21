@@ -39,13 +39,7 @@ $$\theta \_{j}=\theta \_{j}-\alpha \frac{\partial J(\theta )}{\partial \theta_{j
 $$\frac{\partial J(\theta )}{\partial \theta_{j}}=\sum_{i=1}^{N}(h_{\theta }(x^{(i)})-y^{i})\*x_{j}^{i}$$
 + 向量表示法 loss function：
 $$J(\theta )=\frac{1}{2}\sum_{i=1}^{N}(h_{\theta }(x^{(i)})-y^{(i)})^{2}=\frac{1}{2}\mathbf{(\mathbf{X}\theta -y)}^\mathrm{T}(\mathbf{X}\theta -y)$$
-输入矩阵X表示为：
-$$\mathbf{X}=\begin{bmatrix}
-({x}^{(1)})^\mathrm{T}\\ 
-\\({x}^{(2)})^\mathrm{T}\\
-\\\cdots \\
-\\({x}^{(N)})^\mathrm{T}
-\end{bmatrix}$$
+输入矩阵X表示为：![Matrix_X](https://github.com/Vita112/notes_for_NLP/blob/master/methods-models/img/Matrix_X.gif)
 求关于Θ的偏导：
 $$\bigtriangledown \_{\theta }(J(\theta ))=\bigtriangledown \_{\theta }\frac{1}{2}\mathbf{(\mathbf{X}\theta -y)}^\mathrm{T}(\mathbf{X}\theta -y)=\frac{1}{2}\bigtriangledown \_{\theta }(\theta ^\mathrm{T}\mathbf{X}^\mathrm{T}\mathbf{X}\theta-\theta ^\mathrm{T}\mathbf{X}^\mathrm{T}y-y ^\mathrm{T}\mathbf{X}\theta+ y^\mathrm{T}y)=\mathbf{X}^\mathrm{T}\mathbf{X}\theta-\mathbf{X}^\mathrm{T}y$$
 令偏导结果为0，有
@@ -72,6 +66,31 @@ $$\hat{\theta }=(\mathbf{X}^\mathrm{T}\mathbf{X})^{-1}\mathbf{X}^\mathrm{T}y$$
 在每次更新中，对 n 个样本构成的一批数据，计算损失函数 J(θ)，并对相应的参数求导。这种方法：(a) 降低了更新参数的方差（variance），使得收敛过程更为稳定；(b) 能够利用最新的深度学习程序库中高度优化的矩阵运算器，能够高效地求出每小批数据的梯度。
 ### 6 梯度下降的优化算法
 #### 6.1 动量法（momentum）
-![SGD_with_momentum]()
+![SGD_with_momentum](https://github.com/Vita112/notes_for_NLP/blob/master/methods-models/img/SGD_with_momentum.jpg)
+
+如上图所示，momentum帮助SGD在相关方向加速前进，并减少震荡。公式中在原有项前增加一个折损稀疏γ，如下：
+$$v_{t}=\gamma v_{t-1}+\eta \bigtriangledown \_{\theta }J(\theta ))$$
+$$\theta =\theta -v_{t}$$
+此处，动量项γ通常被设置为 0.9.通俗来讲，动量法就像从高坡上退下一个小球，小球在向下滚动的过程中积累了动量，
+在途中越来越快。在参数更新时，动量项在梯度指向方向相同的 方向上逐渐增大，在梯度指向改变的方向逐渐减小。
+#### 6.2 Nesterov 加速梯度法
+![Nesterov_update]()
+
+给予梯度下降方向引导的方法。在momentum方法中，我们使用动量项$\gamma v_{t-1}$来移动参数项Θ；
+**Nesterov 加速梯度法通过基于未来参数的近似值，计算相应的J(θ)，并求偏导，使算法高效地前进并收敛**，公式如下：
+$$v_{t}=\gamma v_{t-1}+\eta \bigtriangledown \_{\theta }J(\theta -\gamma v_{t-1}))$$
+$$\theta =\theta -v_{t}$$
+结合上图，蓝色向量代表momentum方法的过程，现在当前梯度值前进一小步，然后在更新后的梯度向量上前进一大步。
+
+在NAG方法中，首先在棕色向量上迈出一大步，再根据当前情况(红色向量)修正，最后得到最终的前进方向(绿色向量)。
+#### 6.3 Adagrad法
+对不同参数调整学习率，具体而言，对低频出现的参数进行大的更新，对高频出现的参数进行小的更新。
+
+适合于处理稀疏数据；大大提升了SGD的鲁棒性，在训练单词向量映射(word embedding)时，其中不频繁出现的词需要比频繁出现的词
+更大的更新值。
+
+1.对每个参数的更新过程：记在迭代次数t下，对参数$\theta \_{i}$求J(θ)梯度的结果记为gt,i:
+$$g_{t,i}=\bigtriangledown \_{\theta }J(\theta \_{t,i})$$
+
 
  
