@@ -74,7 +74,7 @@ $$\theta =\theta -v_{t}$$
 此处，动量项γ通常被设置为 0.9.通俗来讲，动量法就像从高坡上退下一个小球，小球在向下滚动的过程中积累了动量，
 在途中越来越快。在参数更新时，动量项在梯度指向方向相同的 方向上逐渐增大，在梯度指向改变的方向逐渐减小。
 #### 6.2 Nesterov 加速梯度法
-![Nesterov_update]()
+![Nesterov_update](https://github.com/Vita112/notes_for_NLP/blob/master/methods-models/img/Nesterov_update.jpg)
 
 给予梯度下降方向引导的方法。在momentum方法中，我们使用动量项$\gamma v_{t-1}$来移动参数项Θ；
 **Nesterov 加速梯度法通过基于未来参数的近似值，计算相应的J(θ)，并求偏导，使算法高效地前进并收敛**，公式如下：
@@ -91,6 +91,11 @@ $$\theta =\theta -v_{t}$$
 
 1.对每个参数的更新过程：记在迭代次数t下，对参数$\theta \_{i}$求J(θ)梯度的结果记为gt,i:
 $$g_{t,i}=\bigtriangledown \_{\theta }J(\theta \_{t,i})$$
-
+ SGD的更新规则为：
+ $$\theta \_{t+1,i}=\theta \_{t,i}-\eta \cdot g_{t,i}$$
+ ![for_Gt]()
+ ϵ是平滑项，防止除零操作.
+ #### 6.4 Adadelta
+ 
 
  
