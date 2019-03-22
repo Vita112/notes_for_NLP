@@ -114,7 +114,7 @@ $$g_{t,i}=\bigtriangledown \_{\theta }J(\theta \_{t,i})$$
  当前时间的梯度均值是基于过去梯度均值 和 当前梯度值平方的加权平均，γ是类似上述动量项的权值**（通常将可将γ设置为0.9）。
  $$E\[g^{2}]\_{t}=\gamma E\[g^{2}]\_{t-1}+(1-\gamma)g^{2}\_{t}$$
  在SGD中，有
- $$\Delta \theta _{t}=-\eta\cdot  g_{i}^{t}\\\\
+ $$\Delta \theta \_{t}=-\eta\cdot  g_{i}^{t}\\\\
 \theta \_{t+1}=\theta \_{t}+\Delta \theta \_{t}$$
  结合Adagrad法，我们 将对角矩阵Gt 用上述定义的基于过去梯度平方和的衰减均值 进行替换，得到
  $$\Delta \theta \_{t}=-\frac{\eta }{\sqrt{E\[g^{2}]\_{t}+\epsilon }}$$
@@ -127,8 +127,7 @@ $$g_{t,i}=\bigtriangledown \_{\theta }J(\theta \_{t,i})$$
  
  > but，我们还可以做什么改进呢？
  
- 由于更新值的量纲 与 参数值的假设量纲并不一致，为改进这个问题，他们定义了一种
- **指数衰减的衰减均值**，它基于参数更新的平方来定义：
+ 由于更新值的量纲 与 参数值的假设量纲并不一致，为改进这个问题，他们定义了一种**指数衰减的衰减均值**，它基于参数更新的平方来定义：
  $$E\[\Delta \theta ^{2}]\_{t}=\gamma E\[\Delta \theta ^{2}]\_{t-1}+(1-\gamma)\Delta \theta ^{2}\_{t}$$
  对该问题的方均根为：
  $$RMS\[\Delta \theta]\_{t}=\sqrt{E\[\Delta \theta ^{2}]\_{t}+\epsilon }$$
