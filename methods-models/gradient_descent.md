@@ -96,7 +96,7 @@ $$\theta =\theta -v_{t}$$
 $$g_{t,i}=\bigtriangledown \_{\theta }J(\theta \_{t,i})$$
  SGD的更新规则为：
  $$\theta \_{t+1,i}=\theta \_{t,i}-\eta \cdot g_{t,i}$$
- ![for_Gt]()
+ ![for_Gt](https://github.com/Vita112/notes_for_NLP/blob/master/methods-models/img/for_Gt.jpg)
  ϵ是平滑项，防止除零操作.
  
  2. 将表达式向量化：
@@ -143,10 +143,10 @@ $$g_{t,i}=\bigtriangledown \_{\theta }J(\theta \_{t,i})$$
  
  
  ### 7 算法可视化
- ![SGD_optimization_on_loss_surface_contours]()
+ ![SGD_optimization_on_loss_surface_contours](https://github.com/Vita112/notes_for_NLP/blob/master/methods-models/img/SGD_optimization_on_loss_surface_contours.gif)
  
  在图 5 中，我们可以看到，在罚函数的等高线图中，优化器的位置随时间的变化情况。注意到，Adagrad、 Adadelta 及 RMSprop 法几乎立刻就找到了正确前进方向并以相似的速度很快收敛。而动量法和 NAG 法，则找错了方向，如图所示，让小球沿着梯度下降的方向前进。但 NAG 法能够很快改正它的方向向最小指出前进，因为他能够往前看并对前面的情况做出响应。
  
- ![SGD_optimization_on_saddle_point_10−8]()
+ ![SGD_optimization_on_saddle_point_10−8](https://github.com/Vita112/notes_for_NLP/blob/master/methods-models/img/SGD%20_optimization_on_saddle_point_10%E2%88%928.gif)
  
  图 6 展现了各算法在鞍点附近的表现。如上面所说，这对对于 SGD 法、动量法及 NAG 法制造了一个难题。他们很难打破」对称性「带来的壁垒，尽管最后两者设法逃脱了鞍点。而 Adagrad 法、RMSprop 法及 Adadelta 法都能快速的沿着负斜率的方向前进。
