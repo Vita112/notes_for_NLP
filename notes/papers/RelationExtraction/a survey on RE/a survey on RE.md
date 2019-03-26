@@ -8,8 +8,10 @@ IE的主要目标是从给定文本库中抽取某种特定信息，输出一个
 
 一个实体（NE）通常是一个`代表真实世界里特定物体的` 词语或短语.generic NE types有：person，organization，location，date，time，
 phone，zipcode，email，url，amount etc.以及film-title，book-title等，在`fine-gained  NER`（精细NER）中，面临的问题是：识别那些分层级的泛型实体。
-NER的任务是：identifying all the mentions or occurrences of a particular NE type in the
-given document。<br>
+NER的任务是：identifying all the mentions or occurrences of a particular NE type in the given document。
+
+![NER_research_method](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/RelationExtraction/a%20survey%20on%20RE/pictures/NER_research_method.jpg)
+
 一个relation代表一个well-defined(have a specific meaning) relationship between 2 or more NEs.我们```focus on binary relations and
 assume that both the argument NE mentions that participate in a relation mention occur in the same sentence.``` 需要注意**并不是每一个实体对之间都存在一个关系**。re需要检测出提及的实体，决定实体见得关系。RE面临的挑战
 ```存在大量类目繁多的可能关系
@@ -130,7 +132,7 @@ flattended context-sensitive path tree(FCPT):cpt修改版，只有单个in 和 o
 ![evaluation_for_supervised_methods](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/RelationExtraction/a%20survey%20on%20RE/pictures/evaluation_for_supervised_methods.png)
 
 从precision，recall，F-measure of non-NONE classes 三方面评估。尽管通过不同的方式使用了相同的数据，但是，5次交叉验证中使用的实际拆分/折叠可能不同。我们得知：基于kernel的方法 比基于feature的方法 表现更优秀；其中，基于句法树kernel方法表现最好。
-
+![summry_for_supervised_method](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/RelationExtraction/a%20survey%20on%20RE/pictures/summry_for_supervised_method.jpg)
 ## 3 joint extraction of entities and relations
 上节中介绍的方法都基于这样一种假设： the knowledge about boundaries and types of entity mentions are known before hand.先定义实体mention和实体类型，然后在使用RE技术。这种‘pipeline’方法容易出现传递错误propagation errors from extracting entity mentions phase to extracting relations phase。以下方法的目的是避免这种传递错误的出现。
 ### 3.1 integer linear programminig based approach
@@ -273,13 +275,16 @@ TextRunner有以下限制：
 >1. labelling heuristic
 >2. negative instances
 
+![distance_supervised_method_for_RE](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/RelationExtraction/a%20survey%20on%20RE/pictures/distance_supervised_method_for_RE.jpg)
+![distance_supervised_method_for_RE(2)](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/RelationExtraction/a%20survey%20on%20RE/pictures/distance_supervised_method_for_RE(2).jpg)
+![distance_supervised_method_for_RE(3)](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/RelationExtraction/a%20survey%20on%20RE/pictures/distance_supervised_method_for_RE(3).jpg)
 ## 8 recent advances in RE
 + universal schemas by riedel：使用通用范式，即现有结构化数据库的关系类型的联合，以及OPEN IE中使用的表面形式的所有可能关系类型。
 
 提出一种方法，从这些通用关系类型中学习不对成话语含义asymmetric implicature。但由于含义的不对称性，导致不可反推。
 + n-ary relation extraction：多于2个以上的实体间的关系通常被认为是 `复杂，高阶或n元关系`。
 
-McDonald et al. ：used well-studied binary RE to initially find relations between all possible entity pairs.`THEN`, find 最大的圈子maximal cliques in this graph such that each clique corresponds to some valid n-ary relation.在biomedical domain 数据集上演示了这种方法的效果。*另一个视角是：将n-ary RE 问题看作是一个 语义角色标注的e问题*。
+McDonald et al. ：used well-studied binary RE to initially find relations between all possible entity pairs.`THEN`, find 最大的圈子maximal cliques in this graph such that each clique corresponds to some valid n-ary relation.在biomedical domain 数据集上演示了这种方法的效果。*另一个视角是：将n-ary RE 问题看作是一个 语义角色标注的问题*。
 + Cross-sentence Relation Extraction句际关系抽取:Swampillai and Stevenson   **感兴趣，可看相关论文**
 
 proposed an approach to extract both intra-sentential and inter-sentential relations。作者在处理句际关系问题时，使用了句内关系所用的结构化特征，比如parse tree paths，和技术。通过`co-reference resolution`可以解决大多数问题。
@@ -293,3 +298,5 @@ A cross-lingual annotation projection approach for relation detection by Kim，�
 
 当训练数据集和测试数据集来自不同的分布，监督系统被用于分类out-of-domain数据时，监督方法出现降级。 Plank and Moschitti指出，通过将词聚类和潜在语义分析（LSA）得到的语义相似信息嵌入到句法树核中，可以提高基于核系统的域外性能。
 ## 9 conclusion and future research directions
+![conclusion_and_future_research_direction](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/RelationExtraction/a%20survey%20on%20RE/pictures/conclusion_and_future_research_direction.jpg)
+![conclusion_and_future_research_direction(2)](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/RelationExtraction/a%20survey%20on%20RE/pictures/conclusion_and_future_research_direction(2).jpg)
