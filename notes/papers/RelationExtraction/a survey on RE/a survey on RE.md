@@ -300,3 +300,4 @@ A cross-lingual annotation projection approach for relation detection by Kimï¼Œä
 ## 9 conclusion and future research directions
 ![conclusion_and_future_research_direction](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/RelationExtraction/a%20survey%20on%20RE/pictures/conclusion_and_future_research_direction.jpg)
 ![conclusion_and_future_research_direction(2)](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/RelationExtraction/a%20survey%20on%20RE/pictures/conclusion_and_future_research_direction(2).jpg)
+
