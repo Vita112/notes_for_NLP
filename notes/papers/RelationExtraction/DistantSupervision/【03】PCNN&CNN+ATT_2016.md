@@ -70,24 +70,5 @@ mainly contains 2 parts:
 + **Input representation**
 
 use **word embedding** to transform words into distributed representations(low-dimensional vectors) to capture syntactic and semantic 
-meanings of the words.
-> word embeddinig：中文又称词嵌入，基于分布式假设(distributional hypothesis:由Harris于1954年提出，假设上下文相似的词，其语义也相似)。            得名于Bengio等人在2001年的一片论文《neural network language model》，该论文中，模型在学习语言模型的同时，也得到了词向量。
-
-> 1. 神经网络语言模型大致有：① Neural netword language model; ② Log-bilinear language model; ③ Recurrent neural network based language model;④ C&W model; ⑤ CBOW 和 skip-gram model
-> 2. **CBOW model**：根据某个词前面的 c个词，或前后c/2个连续的词，找到使用softmax函数的输出层中概率最大的那个词，即是所求的某个词。在BOW模型中，输入层是c个词的词向量(每个词都是平等的，即不考虑他们与中心词的距离),输出层是词汇表大小个数量的神经元（即词汇表中所有词的softmax函数概率值）；通过DNN的反向传播算法，求得DNN模型的参数，同时得到词表中所有词对应的词向量；针对具体的task（给出上下文词，求中心词），使用训练好的参数和词向量，通过前向传播算法和softmax激活函数，找到概率最大的词，即是我们输入层的c个词对应的 最可能的中心词。
-> 3. **skip-gram model**：根据某个词，找到使用softmax函数的输出层中，概率排前n的n个词。输入层是中心词的词向量，输出层是词汇表大小个数量的神经元（即词汇表中所有词的softmax函数概率值）；通过DNN的反向传播算法，求得DNN模型的参数，同时得到词表中所有词对应的词向量；针对具体的task（给出中心词，求上下文词），使用训练好的参数和词向量，通过前向传播算法和softmax激活函数，找到概率值大小排前n的词，即是 中心词对应的最可能的n个上下文词。
-下面讲一下 skip-gram的主要步骤：
-> 1. 从句子中定义一个中心词，即input word；
-> 2. 定义skip-window参数，用于表示从当前input word 的一侧选取词的数量,即找到最有可能是中心词周围的词的个数；
-> 3. 根据input word 和 skip-window ，构建窗口列表；
-> 4. 定义num-skips参数，表示从当前窗口选择多少个不同的词作为output word。
-
-> **模型中有几个参数比较重要：中心词、窗口大小、移动步长**；模型的**目标**是：学习 从input layer到hidden layer的 weights matrix.
-
-具体地，在input layer，使用one-hot representation表征input word wi；
-
-在hidden layer，学习weights matrix表征word embedding：假设词表中总共有10000个word，设定模型调优后的超参为300，则权重矩阵W∈$R^10000×300$，every line is a low-dimensional real-velue vector for the corresponding word.我们使用 wi·W 得到 单词wi的词嵌入向量；
-
-
-
-**use word2vec tool for implementation**.word2vec是谷歌在2013年提出的一种word embedding工具或算法集合，采用2种模型（CBOW 和 skip-gram）和2种方法（negative sampling 和 分层softmax）的组合。
+meanings of the words.for more information, refers to [word_embedding](https://github.com/Vita112/notes_for_NLP/blob/master/methods-models/word_embedding.md)
+**use word2vec tool for implementation**.
