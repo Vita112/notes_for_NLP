@@ -56,6 +56,7 @@ weighted by sentence-level attention.
 
 ### 1.3 attention model
 [Reference blog1](https://blog.csdn.net/malefactor/article/details/78767781)
+
 [Reference blog2](https://blog.csdn.net/mpk_no1/article/details/72862348)
   
 [attention_model](https://github.com/Vita112/notes_for_NLP/blob/master/methods-models/attention_model.md)
