@@ -11,7 +11,7 @@ make full use of all informative sentences of each entities;
 
 reduce the influence of wrong labelled instances effectively.
 + souce code: https://github.com/thunlp/NRE.
-## 1 introduction
+## 1 introduction and related work
 KBs: mostly compose of relational facts with triple format, like(Microsoft, founder, Bill Gates); incomplete to contain infinite real-world 
 facts.
 > to enrich KBs, many efforts have been invested in automatically finding unknown relational facts.**RE**: the process of generating
@@ -54,6 +54,11 @@ as described in Fig.1, mainly contain 3 steps:
 > 3. build sentence-level attention over multiple instances,and extract relation with the relation vector
 weighted by sentence-level attention.
 
-
-
+### 1.3 attention model
+[Reference blog1](https://blog.csdn.net/malefactor/article/details/78767781)
+[Reference blog2](https://blog.csdn.net/mpk_no1/article/details/72862348)
   
+[attention_model](https://github.com/Vita112/notes_for_NLP/blob/master/methods-models/attention_model.md)
+
+## 2 Methodology
+
