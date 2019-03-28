@@ -60,4 +60,21 @@ weighted by sentence-level attention.
 [attention_model](https://github.com/Vita112/notes_for_NLP/blob/master/methods-models/attention_model.md)
 
 ## 2 Methodology
+mainly contains 2 parts:
+> 1. **sentence encoder**:给定一个句子x和2个目标实体，使用CNN构建句子的分布式表征X；
+> 2. **selective attention over instances**:当学习了所有句子的分布式向量表征后，使用sentence-level attention 来选择真正表达对应关系的句子。
+### 2.1 Sentence Encoder
+![sentence_encoder_in_selective_attention_with_CNN]()
+
+**Transform the sentence x into its distributed representation X By CNN/PCNN**.
++ **Input representation**
+
+use **word embedding** to transform words into distributed representations(low-dimensional vectors) to capture syntactic and semantic 
+meanings of the words.
+> word embeddinig：中文又称词嵌入，基于分布式假设(distributional hypothesis:由Harris于1954年提出，假设上下文相似的词，其语义也相似)。            得名于Bengio等人在2001年的一片论文《neural network language model》，该论文中，模型在学习语言模型的同时，也得到了词向量。
+
+神经网络语言模型大致有：① Neural netword language model; ② Log-bilinear language model; ③ Recurrent neural network based language model; 
+④ C&W model; ⑤ CBOW 和 skip-gram model
+
+**use word2vec tool for implementation**.
 
