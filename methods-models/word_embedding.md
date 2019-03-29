@@ -6,7 +6,7 @@ word embeddinig, 中文又称词嵌入，基于分布式假设(distributional hy
 ## 2 神经网络语言模型
 神经网络语言模型大致有：① Neural netword language model; ② Log-bilinear language model; ③ Recurrent neural network based language model;
 ④ C&W model; ⑤ CBOW 和 skip-gram model.
-![CBOW&Skip-Gram]()
+![CBOW&Skip-Gram](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/RelationExtraction/DistantSupervision/pictures/CBOW%26Skip-Gram.png)
 > 2. **CBOW model**：根据某个词前面的 c个词，或前后c/2个连续的词，找到使用softmax函数的输出层中概率最大的那个词，即是所求的某个词。
 在BOW模型中，输入层是c个词的词向量(每个词都是平等的，即不考虑他们与中心词的距离),输出层是词汇表大小个数量的神经元（即词汇表中所有词的softmax函数概率值）；
 通过DNN的反向传播算法，求得DNN模型的参数，同时得到词表中所有词对应的词向量；
@@ -44,7 +44,7 @@ word2vec建模过程与自编码器(auto-encoder)的思想相似，**其思想�
 
 另一个例子帮助理解神经网络的训练过程：
 
-![word2vec_with_skip-gram]()
+![word2vec_with_skip-gram](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/RelationExtraction/DistantSupervision/pictures/word2vec_with_skip-gram.png)
 
 给定句子“the quick brown fox jumps over the lazy dog”, window_size=2, 蓝色代表input word，
 方框内代表位于窗口内的单词。**模型将从 每对单词出现的次数中 习得统计结果**。
