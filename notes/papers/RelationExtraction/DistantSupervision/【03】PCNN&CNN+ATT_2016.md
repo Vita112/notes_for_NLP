@@ -95,7 +95,7 @@ $$\[x]\_{ij}=max(p_{ij})$$
 ### 2.2 selective attention over instances
 a set $\mathbf{S}$ contains n sentences for entity pair(head, tail), $\mathbf{S}={x_{1},x_{2},\cdots ,x_{n}}$.
 **our model represents the set $\mathbf{S}$ with a real-valued vector s when predicting relation r.The representation of set $\mathbf{S}$ depends on all sentences' representation x1,x2,……,xn, each sentence representation xi contains information about whether entity pair(head, tail) contains relation r for input sentence xi**. SO THE SET VECTOR s is computed as follows:
-$s=\sum_{i}\alpha \_{i}x_{i}$, here αi is the weight of each sentence vector xi.**$\alpha \_{i}$ is defined in 2 ways**:
+$$s=\sum_{i}\alpha \_{i}x_{i}$$, here αi is the weight of each sentence vector xi.**$\alpha \_{i}$ is defined in 2 ways**:
 > 1. *AVERAGE*: 假设在集合X中的所有句子 对集合的表征具有相同的贡献，这意味着 集合S的嵌入表示 是所有句子向量的平均值：
 $$s=\sum\_{i}\frac{1}{n}x_{i}$$
 > 2. *selective attention*: 如果我们将所有句子平等看待，在训练和测试阶段，错误标注问题将带来大量的噪音。因此，**使用一个选择注意力机制，
@@ -132,7 +132,7 @@ entity mentions are found using the Stanford named entity tagger.
 
 compare the relation facts discovered from the test articles with facts in Freebase.
 
-report 聚合曲线 精度/召回率曲线，以及不同
+report 聚合曲线 精度/召回率曲线，以及不同数量句子时的精确度(P@N).
 ### 3.2 experimental settings
 + word embeddings
 
@@ -144,9 +144,25 @@ tune our model **using 3-fold validation on the training set**; use a **grid sea
 and select learning rate λ for SGD. all parameters used in the experiments are as follows:
 
 ![parameter_settings_in_PCNN+ATT](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/RelationExtraction/DistantSupervision/pictures/parameter_settings_in_PCNN%2BATT.jpg)
+### 3.3 effect of sentence-level selective attention
+compare different methods through held-out evaluation.
 
+use CNN medel(Zeng et al.2014) and PCNN(Zeng et al. 2015) as sentence encoders. **then compare the performance of 
+the 2 different kinds of CNN with sentence-level attention(ATT)**:
+> AVE(represents each sentence set as the average vector of sentences inside the set<br>
+> ONE(the at-least-one multi-instance learning 
+![figure3_aggregate_precision/recall_curves]()
 
+we find that **CNN/PCNN+ATT can effectively filter out menningless sentences and alleviate the wrong lebeling problem in DSRE**.
+### 3.4 effect of sentence number
+compare the performance of CNN/PCNN_ONE,CNN/PCNN+AVE,CNN/PCNN+ATT on the entity pairs which have more than one sentence.
+3 test setttings:
+> 1. ONE: 对每个测试实体对，随机选择1个句子，使用这个句子预测关系；
+> 2. TWO: 对每个测试实体对，随机选择2个句子，使用他们进行关系抽取；
+> 3. ALL: 使用每个实体对的所有句子，进行关系抽取
 
+**use all the sentences in training; report the P@100, P@200, P@300 and the mean of them for each medel in held-out evaluation**.the P@N for compared models in 3 test settings are shown in the following tabel:
+![P@N_for_relation_extraction_in_the_entity_pairs_with_different_nember_of_sentences]()
 
 
 
