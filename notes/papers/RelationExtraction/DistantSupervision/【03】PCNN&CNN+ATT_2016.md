@@ -64,7 +64,7 @@ mainly contains 2 parts:
 > 1. **sentence encoder**:给定一个句子x和2个目标实体，使用CNN构建句子的分布式表征X；
 > 2. **selective attention over instances**:当学习了所有句子的分布式向量表征后，使用sentence-level attention 来选择真正表达对应关系的句子。
 ### 2.1 Sentence Encoder
-![sentence_encoder_in_selective_attention_with_CNN]()
+![sentence_encoder_in_selective_attention_with_CNN](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/RelationExtraction/DistantSupervision/pictures/architecture_of_sentence-level_attention-based_CNN.jpg)
 
 **Transform the sentence x into its distributed representation X By CNN/PCNN**.
 + **Input representation**
@@ -97,7 +97,7 @@ a set $\mathbf{S}$ contains n sentences for entity pair(head, tail), $\mathbf{S}
 **our model represents the set $\mathbf{S}$ with a real-valued vector s when predicting relation r.The representation of set $\mathbf{S}$ depends on all sentences' representation x1,x2,……,xn, each sentence representation xi contains information about whether entity pair(head, tail) contains relation r for input sentence xi**. SO THE SET VECTOR s is computed as follows:
 $s=\sum_{i}\alpha \_{i}x_{i}$, here αi is the weight of each sentence vector xi.**$\alpha \_{i}$ is defined in 2 ways**:
 > 1. *AVERAGE*: 假设在集合X中的所有句子 对集合的表征具有相同的贡献，这意味着 集合S的嵌入表示 是所有句子向量的平均值：
-$$s=\sum_{i}\frac{1}{n}x_{i}$$
+$$s=\sum\_{i}\frac{1}{n}x_{i}$$
 > 2. *selective attention*: 如果我们将所有句子平等看待，在训练和测试阶段，错误标注问题将带来大量的噪音。因此，**使用一个选择注意力机制，
 来弱化噪音句子**，此时αi被定义为：
 $$\alpha \_{i}=\frac{exp(e_{i})}{\sum \_{k}exp(e_{k})}$$,
