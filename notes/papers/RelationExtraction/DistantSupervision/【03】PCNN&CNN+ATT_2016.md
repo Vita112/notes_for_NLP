@@ -44,7 +44,7 @@ employ multi-instance learning to address wrong label problem
 
 ### 1.2 what's new in this paper?
 
-![architecture_of_sentence-level_attention-based_CNN]()
+![architecture_of_sentence-level_attention-based_CNN](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/RelationExtraction/DistantSupervision/pictures/architecture_of_sentence-level_attention-based_CNN.jpg)
 
 as described in Fig.1, mainly contain 3 steps:
 > 1. use CNN to embed the senmatics of sentences
@@ -151,7 +151,7 @@ use CNN medel(Zeng et al.2014) and PCNN(Zeng et al. 2015) as sentence encoders. 
 the 2 different kinds of CNN with sentence-level attention(ATT)**:
 > AVE(represents each sentence set as the average vector of sentences inside the set<br>
 > ONE(the at-least-one multi-instance learning 
-![figure3_aggregate_precision/recall_curves]()
+![figure3_aggregate_precision/recall_curves](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/RelationExtraction/DistantSupervision/pictures/figure3_aggregate_precisionrecall_curves.png)
 
 we find that **CNN/PCNN+ATT can effectively filter out menningless sentences and alleviate the wrong lebeling problem in DSRE**.
 ### 3.4 effect of sentence number
@@ -162,7 +162,7 @@ compare the performance of CNN/PCNN_ONE,CNN/PCNN+AVE,CNN/PCNN+ATT on the entity 
 > 3. ALL: 使用每个实体对的所有句子，进行关系抽取
 
 **use all the sentences in training; report the P@100, P@200, P@300 and the mean of them for each medel in held-out evaluation**.the P@N for compared models in 3 test settings are shown in the following tabel:
-![P@N_for_relation_extraction_in_the_entity_pairs_with_different_nember_of_sentences]()
+![P@N_for_relation_extraction_in_the_entity_pairs_with_different_nember_of_sentences](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/RelationExtraction/DistantSupervision/pictures/P%40N_for_relation_extraction_in_the_entity_pairs_with_different_nember_of_sentences.png)
 
 
 
