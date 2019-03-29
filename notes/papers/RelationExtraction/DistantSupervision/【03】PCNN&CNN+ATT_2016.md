@@ -143,7 +143,7 @@ report 聚合曲线 精度/召回率曲线，以及不同
 tune our model **using 3-fold validation on the training set**; use a **grid search to determine the optimal parameters** 
 and select learning rate λ for SGD. all parameters used in the experiments are as follows:
 
-![parameter_settings_in_PCNN+ATT]()
+![parameter_settings_in_PCNN+ATT](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/RelationExtraction/DistantSupervision/pictures/parameter_settings_in_PCNN%2BATT.jpg)
 
 
 
