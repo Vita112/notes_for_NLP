@@ -23,11 +23,11 @@
 >清华 Lin et al. 2016
 
 >模型名称：CNN+ATT / PCNN+ATT
-+ 【unread】UERAL RELATION EXTRACTION WITH MULTI-LINGUAL ATTENTION
++ 【unread】NUERAL RELATION EXTRACTION WITH MULTI-LINGUAL ATTENTION
 [link](http://nlp.csai.tsinghua.edu.cn/~lyk/publications/acl2017_mnre.pdf)
 >清华 Lin et al. 2017
 
->MNRE
+>MNRE; **上文句子级别选择性注意力机制下神经关系抽取的 扩展**
 + 【unread】Deep Residual Learning forWeakly-Supervised Relation Extraction
 [link]()
 >Yi Yao Huang 台湾国立大学 EMNLP 2017 
