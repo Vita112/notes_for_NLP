@@ -64,7 +64,7 @@ mainly contains 2 parts:
 > 1. **sentence encoder**:给定一个句子x和2个目标实体，使用CNN构建句子的分布式表征X；
 > 2. **selective attention over instances**:当学习了所有句子的分布式向量表征后，使用sentence-level attention 来选择真正表达对应关系的句子。
 ### 2.1 Sentence Encoder
-![sentence_encoder_in_selective_attention_with_CNN]()
+![sentence_encoder_in_selective_attention_with_CNN](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/RelationExtraction/DistantSupervision/pictures/sentence_encoder_in_selective_attention_with_CNN.png)
 
 **Transform the sentence x into its distributed representation X By CNN/PCNN**.
 + **Input representation**
@@ -173,7 +173,7 @@ compare the performance of CNN/PCNN_ONE,CNN/PCNN+AVE,CNN/PCNN+ATT on the entity 
 the tabel shows that by taking more useful information into account, the relational facts which CNN+ATT ranks higher 
 are more reliable and beneficial to relation extraction.
 ### 3.5 comparison with feature-based approaches
-![performance_comparison_of_proposed_model_and_traditional_methods]()
+![performance_comparison_of_proposed_model_and_traditional_methods](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/RelationExtraction/DistantSupervision/pictures/performance_comparison_of_proposed_model_and_traditional_methods.png)
 
 above figure shows that **CNN/PCNN+ATT can learns the representation of each sentences automatically and can express
 sentences well**.
