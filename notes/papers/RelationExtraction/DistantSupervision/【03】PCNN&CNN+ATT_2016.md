@@ -64,7 +64,7 @@ mainly contains 2 parts:
 > 1. **sentence encoder**:给定一个句子x和2个目标实体，使用CNN构建句子的分布式表征X；
 > 2. **selective attention over instances**:当学习了所有句子的分布式向量表征后，使用sentence-level attention 来选择真正表达对应关系的句子。
 ### 2.1 Sentence Encoder
-![sentence_encoder_in_selective_attention_with_CNN](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/RelationExtraction/DistantSupervision/pictures/architecture_of_sentence-level_attention-based_CNN.jpg)
+![sentence_encoder_in_selective_attention_with_CNN]()
 
 **Transform the sentence x into its distributed representation X By CNN/PCNN**.
 + **Input representation**
@@ -78,8 +78,7 @@ for more information, refers to [word_embedding](https://github.com/Vita112/note
 
 **position embedding**:the words close to the target entities are usually informative to determine the relaiton between entities.**word embedding specified by entity pairs can help CNN to keep track of how close each word is to head or tail entities**.
 
-as is shown in Fig.2, the sentence is transformed to **vector representation**, which concatenate word embedding and position embedding 
-of all words.
+as is shown in Fig.2, **every word is transformed to vector representation**, which concatenates word embedding and position embedding.
 + **convolution, max-pooling and non-linear layers**
 
 *because the length of the sentences is variable and the important information can appear in any area of the sentences*, 
@@ -88,13 +87,18 @@ we **use CNN to merge all the local featrues**.concretely，
 the i-th filter of convolutional layer is described as $p_{i}=\[\mathbf{W} q+b]\_{i}$ mathematically, here $\mathbf{W}\in \mathbf{R^{d^{c}\times (l\times d)}}$, $q_{i}\in \mathbf{R}^{l\times d}$, $q_{i}$ is the concatenation of a sequence of w word embeddings.
 > 2. combine all the local features via a max-pooling operation to obtain a fixed-sized vector for the input sentence;
 the i-th element of the vector x : $\[x]\_{i}=max(p_{i})$ ;
-**apply PCNN to divede each convolutional filter $p_{i}$ into 3 segments($p_{i1},p_{i2},p_{i3}$) by head and tail entities**.
+**apply PCNN to divide each convolutional filter $p_{i}$ into 3 segments($p_{i1},p_{i2},p_{i3}$) by head and tail entities**.
 so the max pooling procedure is performed in 3 segments separately,defined as:
 $$\[x]\_{ij}=max(p_{ij})$$
-> 3. apply a non-liear function at output.
+> 3. apply a non-liear function at output, such as the hyperbolic tangent(双曲正切函数)。
+
+after done these, we **got the representation for sentences**, 每个句子表征xi包含 句子中的实体对是否存在一种关系的 信息。
 ### 2.2 selective attention over instances
-a set $\mathbf{S}$ contains n sentences for entity pair(head, tail), $\mathbf{S}={x_{1},x_{2},\cdots ,x_{n}}$.
-**our model represents the set $\mathbf{S}$ with a real-valued vector s when predicting relation r.The representation of set $\mathbf{S}$ depends on all sentences' representation x1,x2,……,xn, each sentence representation xi contains information about whether entity pair(head, tail) contains relation r for input sentence xi**. SO THE SET VECTOR s is computed as follows:
+对每个句子xi赋予不同的权重αi，得到句子集合S的加权表示向量s；通过softmax函数，输出某个关系r在某个加权句子集合向量s出现 与 
+所有关系在某个加权句子集合向量s中出现 的概率大小。
+
+a set $\mathbf{S}$ contains n sentences for entity pair(head, tail), $\mathbf{S}=\{x_{1},x_{2},\cdots ,x_{n}}$.
+**our model represents the set $\mathbf{S}$ with a real-valued vector s when predicting relation r.The representation of set $\mathbf{S}$ depends on all sentences' representation x1,x2,……,xn, each sentence representation xi contains information about whether entity pair(head, tail) contains relation r**. SO the setvector s is computed as follows:
 $$s=\sum_{i}\alpha \_{i}x_{i}$$, here αi is the weight of each sentence vector xi.**$\alpha \_{i}$ is defined in 2 ways**:
 > 1. *AVERAGE*: 假设在集合X中的所有句子 对集合的表征具有相同的贡献，这意味着 集合S的嵌入表示 是所有句子向量的平均值：
 $$s=\sum\_{i}\frac{1}{n}x_{i}$$
@@ -103,16 +107,18 @@ $$s=\sum\_{i}\frac{1}{n}x_{i}$$
 $$\alpha \_{i}=\frac{exp(e_{i})}{\sum \_{k}exp(e_{k})}$$,
 其中，ei指的是 评分输入句子xi和预测关系r的匹配度的 基于查询的函数。我们使用双线性形式，在不同的方案中实现最佳性能：
 $$e_{i}=x_{i}Ar$$,
-其中，A是一个加权对角矩阵，r是一个 与关系r相关联的 查询向量，它代表了关系r的表征。最后，通过一个softmax layer
+其中，A是一个加权对角矩阵，r是一个 与关系r相关联的 查询向量，它代表了关系r的表征。
+
+最后，通过一个softmax layer
 定义条件概率$p(r|\mathbf{S},\theta )$:
 $$p(r|\mathbf{S},\theta )=\frac{exp(o\_{r})}{\sum_{k=1}^{n_{r}}}exp(o\_{k})$$
 其中，nr指关系类总数，o是神经网络的最终输出，它对应于所有关系类型的得分：
 $$o=\mathbf{M}s+d$$
-M代表 关系的表征矩阵。Zeng et al.,2015的论文中的模型，其实是本文的选择性注意力的一个特例：Zeng 将拥有最大概率的 句子的权重设为1，把其他的设为0.
+M代表 关系的表征矩阵。Zeng et al.,2015的论文中的模型，其实是本文选择性注意力的一个特例：Zeng 将拥有最大概率的 句子的权重设为1，把其他的设为0.
 ### 2.3 optimization and implementation details
 + **Optimization** 
 > 1. define **loss function** using cross-entropy at the set level:
-$$J(\theta )=\sum_{I=1}^{s}logp(r_{i}|\mathbf{S_{i}},\theta )$$
+$$J(\theta )=\sum_{i=1}^{s}logp(r_{i}|\mathbf{S_{i}},\theta )$$
 s是句子集的数量，Θ代表模型的所有参数。
 > 2. adopt SGD to minimize the loss function, 通过从训练数据集中随机选取一个mini-batch进行迭代，直到收敛。
 
@@ -134,7 +140,7 @@ compare the relation facts discovered from the test articles with facts in Freeb
 
 report 聚合曲线 精度/召回率曲线，以及不同数量句子时的精确度(P@N).
 ### 3.2 experimental settings
-+ word embeddings
++ word embeddings 
 
 **use word2vec to trainig word embedding** on NYT corpus.选取在语料库中出现超过100次的单词作为词表vocabulary。
 
