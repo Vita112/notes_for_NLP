@@ -1,4 +1,4 @@
-title：neural relation extraction with selective attention over instances(基于选择性注意力模型的多实例神经关系抽取)
+title：neural relation extraction with selective attention over instances(基于句子级别选择性注意力模型的多实例神经关系抽取)
 
 清华 Lin et al. 2016
 ## abstract
@@ -25,7 +25,7 @@ do not need to manually design features, **but suffer from wrong labelling probl
 
 《knowledge-based weak supervision for information extraction of overlapping relations》:multi-instance multi-label learning
 
-《multi-instance multi-label learning for relation extraction》:multi-instance multi-label learning
+《multi-instance multi-label learning for relation extraction》:multi-instance multi-label learning + 贝叶斯网络
  
 > using NLP tools, like POS tagging, lead to **error propagation**. Because the accururacy of syntactic parsing decrease significantly 
 with increasing sentence length.
