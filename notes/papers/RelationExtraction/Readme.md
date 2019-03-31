@@ -34,6 +34,11 @@
 
 >模型名称：ResCNN-9
 
++ 【unread】CoType: Joint Extraction of Typed Entities and Relations with Knowledge Bases
+[link](https://arxiv.org/pdf/1610.08763.pdf)
+> Xiang Ren, Zeqiu Wu et al. WWW 2017 
+
+>模型名称：CoType：一种基于distant supervision 和 weakly supervision的 对文本中**实体和关系联合抽取**的 框架。
 ## reference link
 + [csdn](https://blog.csdn.net/yuxuan_hulu/article/details/82783810)
 + [zhihu](https://zhuanlan.zhihu.com/p/29970617)
