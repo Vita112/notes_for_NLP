@@ -170,7 +170,19 @@ compare the performance of CNN/PCNN_ONE,CNN/PCNN+AVE,CNN/PCNN+ATT on the entity 
 **use all the sentences in training; report the P@100, P@200, P@300 and the mean of them for each medel in held-out evaluation**.the P@N for compared models in 3 test settings are shown in the following tabel:
 ![P@N_for_relation_extraction_in_the_entity_pairs_with_different_nember_of_sentences](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/RelationExtraction/DistantSupervision/pictures/P%40N_for_relation_extraction_in_the_entity_pairs_with_different_nember_of_sentences.png)
 
+the tabel shows that by taking more useful information into account, the relational facts which CNN+ATT ranks higher 
+are more reliable and beneficial to relation extraction.
+### 3.5 comparison with feature-based approaches
+![performance_comparison_of_proposed_model_and_traditional_methods]()
 
+above figure shows that **CNN/PCNN+ATT can learns the representation of each sentences automatically and can express
+sentences well**.
+## 4 conclusion and future works
+CNN/PCNN with sentence-level selective attention proposed in this paper can make full use of informative sentences
+and  reduce the influence of wrong labelled instances.
+
+apply this model in other multi-instance learning tasks; incorporate instance-level selective attention model with
+other neural networks models for RE.
 
 
 
