@@ -18,13 +18,13 @@
 >中科大自动化所 Zhou ACL 2016
 
 >模型名称：BLSTM + ATT
-+ 【unread】Neural Relation Extraction with Selective Attention over Instances
++ 【read】Neural Relation Extraction with Selective Attention over Instances
 [link](http://www.aclweb.org/anthology/P16-1200)
 >清华 Lin et al. 2016
 
 >模型名称：CNN+ATT / PCNN+ATT
 + 【unread】UERAL RELATION EXTRACTION WITH MULTI-LINGUAL ATTENTION
-[link]()
+[link](http://nlp.csai.tsinghua.edu.cn/~lyk/publications/acl2017_mnre.pdf)
 >清华 Lin et al. 2017
 
 >MNRE
