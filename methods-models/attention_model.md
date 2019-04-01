@@ -76,7 +76,7 @@ $$att(query,source)=\sum_{i=1}^{L_{x}}sim(que,k_{i}\ast value)$$
 然后，对value值进行加权求和，得到最终的value值，即attention值**。
 + attention机制的具体计算过程
 
-![三阶段attention机制计算过程]()
+![三阶段attention机制计算过程](https://github.com/Vita112/notes_for_NLP/blob/master/methods-models/img/%E4%B8%89%E9%98%B6%E6%AE%B5attention%E6%9C%BA%E5%88%B6%E8%AE%A1%E7%AE%97%E8%BF%87%E7%A8%8B.png)
 > 1. 计算query和key的相似性；
 + 相似性计算方法：向量点积、向量cosine相似性、引入额外的神经网络来求值.
 > 2. 使用softmax函数对相似性结果进行归一化处理，得到权重系数α；
@@ -88,7 +88,7 @@ $$att(query,source)=\sum_{i=1}^{L_{x}}sim(que,k_{i}\ast value)$$
 **而self attention指的不是source和target之间的attention机制，而是source内部元素之间或target内部元素之间
 的attention机制**。
 + self attention机制可以学到哪些规律？以下以机器翻译中的self attention为例说明：
-![self_attention可视化实例]()
+![self_attention可视化实例](https://github.com/Vita112/notes_for_NLP/blob/master/methods-models/img/self_attention%E5%8F%AF%E8%A7%86%E5%8C%96%E5%AE%9E%E4%BE%8B.png)
 
 上图可以看出：self attention可以捕获同一个句子中单词之间的句法 或 语义特征。**引入self attention后，模型更容易
 捕获句子中长距离的相互依赖特征，它直接将句子中任意两个单词的联系，通过一个计算步骤直接联系起来，极大地缩短了
@@ -99,7 +99,7 @@ $$att(query,source)=\sum_{i=1}^{L_{x}}sim(que,k_{i}\ast value)$$
 使用encoder-decoder框架来完成目标任务：encoder阶段，使用CNN对图片进行特征抽取；decoder阶段，使用RNN/LSTM输出 对所给图片的等价语义描述。
 **加入attention机制后，在输出某个实体单词时，注意力焦点将聚焦在图片中相应的区域上，这个过程
 于人类视觉选择性注意机制十分相似**。下图给出了一些例子：
-![attention_machanism_in_image_caption_task]()
+![attention_machanism_in_image_caption_task](https://github.com/Vita112/notes_for_NLP/blob/master/methods-models/img/attention_mechanism_in_image_caption_task.png)
 
 [Reference blog1](https://zhuanlan.zhihu.com/p/37601161)
 
