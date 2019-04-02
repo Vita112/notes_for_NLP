@@ -1,13 +1,14 @@
 ## 1 word embedding
-**one-hot representation**(独热表征)将单词表示为一个高维稀疏向量；各个单词的表示相互独立，没有考虑单词间的语义信息；向量维度为词表大小，当词表中单词量巨大时，这种表征方式的计算量将非常大，十分耗时；one-hot表示distributed representation可以解决one-hot representation的问题：通过训练，将高维稀疏的向量 映射到 低维空间中。
++ 词编码
+
+**one-hot representation**(独热表征)将单词表示为一个高维稀疏向量；各个单词的表示相互独立，没有考虑单词间的语义信息；向量维度为词表大小，当词表中单词量巨大时，这种表征方式的计算量将非常大，十分耗时；distributed representation可以解决one-hot representation的问题：通过训练，将高维稀疏的向量 映射到 低维空间中。
 
 **word embeddinig**, 中文又称词嵌入，基于分布式假设(distributional hypothesis:由Harris于1954年提出，假设上下文相似的词，其语义也相似)。         
-得名于Bengio等人在2001年的一片论文《neural network language model》，该论文中，模型在学习语言模型的同时，也得到了词向量。**是一个映射，
-将单词从原先所属的空间映射到新的空间中**。下图更为直观：
+得名于Bengio等人在2001年的一片论文《neural network language model》，该论文中，模型在学习语言模型的同时，也得到了词向量。woed embedding**是一个映射，将单词从原先所属的空间映射到新的空间中，同时，词向量在向量空间中所表示的点具有实际意义，即相似含义的词在空间中的距离更近**。下图更为直观：
 
 ![word_embedding]()
 
-## 2 神经网络语言模型
+## 2 神经网络语言模型(NNLM)
 神经网络语言模型大致有：① Neural netword language model; ② Log-bilinear language model; ③ Recurrent neural network based language model;
 ④ C&W model; ⑤ CBOW 和 skip-gram model.
 ![CBOW&Skip-Gram](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/RelationExtraction/DistantSupervision/pictures/CBOW%26Skip-Gram.png)
