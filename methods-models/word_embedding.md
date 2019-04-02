@@ -6,7 +6,7 @@
 **word embeddinig**, 中文又称词嵌入，基于分布式假设(distributional hypothesis:由Harris于1954年提出，假设上下文相似的词，其语义也相似)。         
 得名于Bengio等人在2001年的一片论文《neural network language model》，该论文中，模型在学习语言模型的同时，也得到了词向量。woed embedding**是一个映射，将单词从原先所属的空间映射到新的空间中，同时，词向量在向量空间中所表示的点具有实际意义，即相似含义的词在空间中的距离更近**。下图更为直观：
 
-![word_embedding]()
+![word_embedding](https://github.com/Vita112/notes_for_NLP/blob/master/methods-models/img/word_embedding.jpg)
 
 ## 2 神经网络语言模型(NNLM)
 神经网络语言模型大致有：① Neural netword language model; ② Log-bilinear language model; ③ Recurrent neural network based language model;
