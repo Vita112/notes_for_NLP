@@ -1,13 +1,14 @@
 ## 1 word embedding
 + 词编码
 
-**one-hot representation**(独热表征)将单词表示为一个高维稀疏向量；各个单词的表示相互独立，没有考虑单词间的语义信息；向量维度为词表大小，当词表中单词量巨大时，这种表征方式的计算量将非常大，十分耗时；distributed representation可以解决one-hot representation的问题：通过训练，将高维稀疏的向量 映射到 低维空间中。
+**one-hot representation**(独热表征)将单词表示为一个高维稀疏向量；各个单词的表示相互独立，没有考虑单词间的语义信息；向量维度为词表大小，当词表中单词量巨大时，容易造成维度灾难，并且计算量将非常大，十分耗时；distributed representation可以解决one-hot representation的问题：通过训练，将高维稀疏的向量 映射到 低维空间中，将每个词映射到一个低维度的语义空间，每个词 将由一个固定维度的稠密向量表示。
 
 **word embeddinig**, 中文又称词嵌入，基于分布式假设(distributional hypothesis:由Harris于1954年提出，假设上下文相似的词，其语义也相似)。         
-得名于Bengio等人在2001年的一片论文《neural network language model》，该论文中，模型在学习语言模型的同时，也得到了词向量。woed embedding**是一个映射，将单词从原先所属的空间映射到新的空间中，同时，词向量在向量空间中所表示的点具有实际意义，即相似含义的词在空间中的距离更近**。下图更为直观：
+得名于Bengio等人在2001年的一片论文《neural network language model》，该论文中，模型在学习语言模型的同时，也得到了词向量。woed embedding**是一个映射，将单词从原先所属的空间映射到新的空间中**。下图更为直观：
 
 ![word_embedding](https://github.com/Vita112/notes_for_NLP/blob/master/methods-models/img/word_embedding.jpg)
 
+同时，通过将word向量化成词向量，可以得到单词间的语义相似性信息。这是因为：向量之间的距离在一定程度上可以衡量词的语义相似性，含义相似的词在空间中的距离更接近。这个是传统词袋模型挖掘不到的信息。
 ## 2 神经网络语言模型(NNLM)
 神经网络语言模型大致有：① Neural netword language model; ② Log-bilinear language model; ③ Recurrent neural network based language model;
 ④ C&W model; ⑤ CBOW 和 skip-gram model.
@@ -26,10 +27,10 @@
 计算量很大，处理过程十分耗时**。
 
 ## 3 word2vec
-word2vec是谷歌在2013年提出的一种word embedding工具或算法集合，它是一种**从大量文本语料中，以无监督的方式学习语义知识的模型，通过学习文本，使用词向量表征语义信息**。其实是一个简化的神经网络：input layer为one-hot vector，hidden layer为线性单元，没有使用激活函数，output layer使用softmax函数，维度与input layer一样；采用2种模型（CBOW 和 skip-gram）和2种方法（negative sampling 和 分层softmax）的组合。
+word2vec是谷歌在2013年提出的一种word embedding工具或算法集合，它是一种**从大量文本语料中，以无监督的方式学习语义知识的模型，通过学习文本，使用词向量表征语义信息,可以较好地表达不同词之间的相似和类比关系**。其实是一个简化的神经网络：input layer为one-hot vector，hidden layer为线性单元，没有使用激活函数，output layer使用softmax函数，维度与input layer一样；采用2种模型（CBOW 和 skip-gram）和2种方法（negative sampling 和 分层softmax）的组合。
 + 以下所讲均**以Skip-Gram模型为例**
 
-word2vec建模过程与自编码器(auto-encoder)的思想相似，**其思想为：先基于训练数据构建一个神经网络，这是一个fake task；然后获取训练好的模型的参数(例如隐层的权重矩阵)。**基于这种思想的建模被称为“fake task”，因为我们没有使用训练好的模型处理新的任务，而只是需要模型学得的参数。
+word2vec建模过程与自编码器(auto-encoder)的思想相似，**其思想为：先基于训练数据构建一个神经网络，这是一个fake task；然后获取训练好的模型的参数(例如隐层的权重矩阵)。**基于这种思想的建模被称为“fake task”，因为我们没有使用训练好的模型处理新的任务，而只是需·要模型学得的参数。
 
 建模过程分为2各部分：**1.建立模型；2.通过模型获取嵌入词向量**。
 > 无监督特征学习中最常见的自编码器：通过在隐层将输入进行编码压缩；然后在输出层将数据解码恢复初始状态；训练完成后，将输出层“去掉”，仅保留隐层。
