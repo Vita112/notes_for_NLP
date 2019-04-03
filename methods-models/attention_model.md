@@ -112,3 +112,5 @@ $$att(query,source)=\sum_{i=1}^{L_{x}}sim(que,k_{i}\ast value)$$
 [Reference blog1](https://zhuanlan.zhihu.com/p/37601161)
 
 [Reference blog2](https://blog.csdn.net/mpk_no1/article/details/72862348)
+
+![【paper】show_attend_and_tell-neural_image_caption_generation_with_visual_attention](https://github.com/Vita112/notes_for_NLP/blob/master/methods-models/%E3%80%90attention_model%E3%80%91show_attend_and_tell-neural_image_caption_generation_with_visual_attention.pdf)
