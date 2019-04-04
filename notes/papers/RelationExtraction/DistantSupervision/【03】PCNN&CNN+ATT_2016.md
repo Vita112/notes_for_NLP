@@ -111,7 +111,7 @@ $$e_{i}=x_{i}Ar$$,
 
 最后，通过一个softmax layer
 定义条件概率$p(r|\mathbf{S},\theta )$:
-$$p(r|\mathbf{S},\theta )=\frac{exp(o\_{r})}{\sum_{k=1}^{n_{r}}}exp(o\_{k})$$
+$$p(r|\mathbf{S},\theta )=\frac{exp(o\_{r})}{\sum_{k=1}^{n_{r}}exp(o\_{k})}$$
 其中，nr指关系类总数，o是神经网络的最终输出，它对应于所有关系类型的得分：
 $$o=\mathbf{M}s+d$$
 M代表 关系的表征矩阵。Zeng et al.,2015的论文中的模型，其实是本文选择性注意力的一个特例：Zeng 将拥有最大概率的 句子的权重设为1，把其他的设为0.
