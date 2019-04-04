@@ -103,6 +103,7 @@ adopt mini-batch stochastic gradient descent to minimize the objective function.
 测试集中准确找到KBs中更多的关系事实，那么，它将在RE TASK中取得更好的性能表现。
 ### 4.2 experimental settings
 在validation set上决定最佳的模型参数，使用**早停法early stopping**来选择最佳的模型。训练迭代次数为15次；使用validation set通过grid searching 进行调参。the best setting of all parameters are as follows:
+
 ![parameters_used_in_MNRE](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/RelationExtraction/DistantSupervision/pictures/parameters_used_in_MNRE.jpg)
 ### 4.3 effectiveness of consistency
 使用 held-out evaluation 比较不同的方法：
@@ -126,6 +127,7 @@ adopt mini-batch stochastic gradient descent to minimize the objective function.
 M：考虑了关系的全局一致性；
 
 R：考虑了每种语言中关系的特性
+
 ![comparison_of_relation_matrix_for_MNRE](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/RelationExtraction/DistantSupervision/pictures/comparison_of_relation_matrix_for_MNRE.jpg)
 
 观察上图，发现：
