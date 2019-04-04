@@ -83,7 +83,7 @@ $$p(r|\mathbf{S}\_{jk},\theta )=softmax((\mathbf{R}\_{k}+\mathbf{M})\mathbf{S}\_
 ### 3.4 optimization
 loss function：
 $$J(\theta )=-\sum_{i=1}^{s}f(T_{i},r_{i})$$
-此处，s代表 不同语言中的 对应于每一个句子集合的 所有实体对的数量，
+此处，s代表 不同语言中的 对应于每一个句子集合的 所有实体对的数量，$\theta $代表模型参数。
 ## 4 experiments
 ### 4.1 datasets and evaluation metrics
 ### 4.2 experimental settings
