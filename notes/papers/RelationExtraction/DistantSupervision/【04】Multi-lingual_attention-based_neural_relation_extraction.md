@@ -34,6 +34,8 @@ Verga et al.(2015): employ Universal Schema to combine OpenIE and link-predictio
 ## 3 methodology
 **key motivation of MNRE**: for each relational fact, the relation patterns in sentences of different languages should be substantially consistent,and MNRE can utilize the pattern consistency and complementarity among languages to achieve better results for RE.
 
+![architecture_of_MNRE_for_chinese_and_english]()
+
 给定一对实体，他们在m种不同语言中对应的句子被定义为
 $$T={S_{1},S_{2},\cdots ,S_{m}}$$
 其中，$S_{j}$代表j语言中的包含$n_{j}$个句子的句子集合，
@@ -81,13 +83,57 @@ $$p(r|\mathbf{S}\_{jk},\theta )=softmax((\mathbf{R}\_{k}+\mathbf{M})\mathbf{S}\_
 
 **需要注意的是**：在训练阶段，我们使用标注好的关系来构建 句子集合向量Sjk；在测试阶段，我们为每一个可能的关系r构建不同的句子集合向量Sjk，来计算f(T,r),用于关系预测。
 ### 3.4 optimization
-loss function：
++ loss function(objective function)：
 $$J(\theta )=-\sum_{i=1}^{s}f(T_{i},r_{i})$$
-此处，s代表 不同语言中的 对应于每一个句子集合的 所有实体对的数量，$\theta $代表模型参数。
+此处，s代表 不同语言中的 对应于每一个句子集合的 所有实体对的数量，$\theta $代表框架的所有参数。
++ optimizaton
+
+adopt mini-batch stochastic gradient descent to minimize the objective function.
 ## 4 experiments
 ### 4.1 datasets and evaluation metrics
++ datasets
+> 通过 对齐百度百科和wikidata，生成中文实例；<br>
+> 通过 对齐英文wikipedia和wikidata，生成英文实例.<br>
+> 本文数据集中的wikidata的关系事实被分别用于：training，validation，testing；**而且，我们使 英文和中文的验证集和测试集 包含相同的关系事实**。
+
+![statistics_of_datasets_based_on_MNRE]()
++ evaluation metrics: use held-out evaluation
+
+通过 比较测试集中通过RE系统发现的关系事实 和 KB中的事实，使用held-out evaluation来调查MNRE模型的性能。评估方法基于这样一个假设：如果一个RE系统从
+测试集中准确找到KBs中更多的关系事实，那么，它将在RE TASK中取得更好的性能表现。
 ### 4.2 experimental settings
+在validation set上决定最佳的模型参数，使用**早停法early stopping**来选择最佳的模型。训练迭代次数为15次；使用validation set通过grid searching 进行调参。the best setting of all parameters are as follows:
+![parameters_used_in_MNRE]()
 ### 4.3 effectiveness of consistency
+使用 held-out evaluation 比较不同的方法：
+
+![model_comparison_for_consistency_in_MNRE]()
+
+观察上图，发现：
+> 1. ( PCNN/CNN+joint PCNN/CNN+share )**performs better** compared to (PCNN/CNN+En PCNN/CNN+Zh),表明：**联合利用中文和英文句子，有利于抽取新的关系事实**；
+> 2. share 的表现要比joint差，表明：**通过共享relation embedding matrices，多语言的简单组合 不能捕获 更多各种语言间的隐式相关关系**。
+> 3. MNRE achieves the highest performance.观察发现：**通过简单扩大模型大小，并不能捕获更多有用的信息；而，通过考虑语言间的 pattern consistency可以成功提高多语言关系抽取的性能**。
 ### 4.4 effectiveness of complementarity
+通过held-out evaluation比较以下方法：MNRE-En, MNRE-Zh, \[P]CNN-En, \[P]CNN-Zh.
+
+![model_comparison_for_complementarity_in_MNRE]()
+
+观察上图，发现：
+> **通过使用本文提出的 multi-lingual attention scheme，中文和英文的关系抽取器都能充分利用 另一种语言的信息，从而提高关系抽取性能**。
 ### 4.5 comparison of Relation Matrix
++ 2种关系矩阵
+
+M：考虑了关系的全局一致性；
+
+R：考虑了每种语言中关系的特性
+![comparison_of_relation_matrix_for_MNRE]()
+
+观察上图，发现：
+> 1. MNRE-M **performs better** than MNRE-R/MNRE,表明：**预测关系时，我们不能只使用global relation matrix，因为每一种语言在表达relation patterns时，有该语言自身的特性**。
+> 2. 当recall较低时，MNRE-R与MNRE性能相当；**当recall变大时，precision出现了显著的下降**，表明：**仍然存在必须受到重视的 各语言间的relation patterns 的全局一致性**。
+> 3. should combine both R and M together for multi-lingual RE task.
 ## 5 conclusion
+**future work**：
+> 1. **word alignment information可能对捕获relation patterns有帮助**，因此，可能发现多语言中单词之间的隐式对齐的word-level multi-lingual attention将会提高多语言关系抽取的性能；
+
+> 2. extend MNRE to more languages
