@@ -57,7 +57,7 @@ adopt different mono-lingual attentions to de-emphasize noisy sentences within e
 $$\mathbf{S}\_{j}=\sum_{i}\alpha \_{j}^{i}X_{j}^{i}$$
 $\alpha \_{j}^{i}$是每个句子向量的attention score，计算方法如下：
 $$\alpha \_{j}^{i}=\frac{exp(e_{j}^{i})}{\sum \_{k}exp(e_{j}^{k})}$$
-$e_{j}^{i}$是一个基于查询的函数，其得分可以表示 输入句子向量表示$x_{j}^{i}$ 反应其标注关系r 的程度。$e_{j}^{i}$计算方法如下：
+$e_{j}^{i}$是一个基于查询的函数，该函数对 输入句子向量表示$x_{j}^{i}$如何反映其标注关系r 进行打分。$e_{j}^{i}$计算方法如下：
 $$e_{j}^{i}=X_{j}^{i}\cdot r_{j}$$
 上述过程其实就是【03】的 selective attention over instances。
 + cross-lingual attention to measure the pattern consistency among languages
@@ -68,7 +68,7 @@ $$e_{j}^{i}=X_{j}^{i}\cdot r_{j}$$
 $$\mathbf{S}\_{jk}=\sum_{i}\alpha \_{jk}^{i}X_{j}^{i}$$
 $\alpha \_{jk}^{i}$是j语言中每个句子向量$X_{j}^{i}$ 对应于k语言的cross-lingua attention score，计算方法如下：
 $$\alpha \_{jk}^{i}=\frac{exp(e_{jk}^{i})}{\sum \_{k}exp(e_{jk}^{k})}$$
-$e_{j}^{i}$是一个基于查询的函数，其得分可以表示 输入句子向量表示$x_{j}^{i}$ 反应其标注关系r 的程度。$e_{j}^{i}$计算方法如下：
+$e_{jk}^{i}$是一个基于查询的函数，该函数对 j语言中的输入句子向量表示$x_{j}^{i}$和k语言中的关系模式之间的一致性 进行打分，以表达标注关系r的语义意义。。$e_{jk}^{i}$计算方法如下：
 $$e_{jk}^{i}=X_{j}^{i}\cdot r_{k}$$
 ### 3.3 prediction
 假设有m种语言，使用 cross-lingual attention，我们得到m×m个实值向量Sjk；将所有的向量Sjk放在一起，定义整体打分函数f(T,r)如下：
