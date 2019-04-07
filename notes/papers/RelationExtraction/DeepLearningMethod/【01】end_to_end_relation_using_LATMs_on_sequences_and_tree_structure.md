@@ -75,7 +75,14 @@ h_{t}=o_{t}\odot tanh(c_{t})$$
 在sequence layer的顶部堆栈relation candidates对应的dependency layers，以便把word sequence 和 dependency tree structure information合并进输出中。
 
 第t个word的dependency layer LSTM unit接收输入
+$$x_{t}=\[s_{t};v_{t}^{(d)};v_{t}^{(e)}]$$
+$s_{t}$指的是 在sequence layer中其对应隐藏状态向量的拼接；$v_{t}^{(d)}$指的是dependency type embedding依存类型嵌入,表示对父级依赖的类型；$v_{t}^{(e)}$指的是label embedding标签嵌入，对应于预测的实体标签。
 ### 3.6 relation classification
+使用检测到的实体的最后单词的所有可能的组合来增量式地构建relation candidates。在fig. 1 中，通过使用 带有L-PER标签的Yates和带有U-LOC标签的Chicago，构建了一个关系候选，
+
+对每一个关系候选，我们发现依存层dp，它对应于关系候选中单词对p之间的路径；NN接收 由依存树层的输出构建的一个关系候选的向量，并预测它的关系标签。
+
+使用类型和方向表示关系标签。
 ### 3.7 training
 ## 4 results and discussion
 ### 4.1 data and task setttings
