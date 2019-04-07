@@ -31,7 +31,10 @@ model in this paper is as follows:
 n_w, n_p, n_d, n_e-dimensional vectors $v^{(w)},v^{(p)},v^{(d)},v^{(e)}$ are embedded to words, POS tags, dependency types, entity labels, respectively.
 ### 3.2 sequence layer-represent words in a linear sequence using the representations from the embedding layer
 **fig. 1 中的左下角的方框区**。这一层表示句子上下文信息，并维护实体。模型使用双向LSTM-RNNs表示一个句子中的词序列。
-> 句子中第t个单词的LSTM unit 由$n_{ls}$维向量的集合组成，包含：一个输入门$i_{t}$, 一个遗忘门$f_{t}$, 一个输出门$o_{t}$, 一个记忆细胞$c_{t}$, 一个隐藏状态$h_{t}$.**该LSTM unit接受一个n维输入向量xt，上一个隐藏状态$h_{t-1}$，以及上一个记忆细胞$c_{t-1}$，使用如下公式计算新的向量**：
+> 句子中第t个单词的LSTM unit 由$n_{ls}$维向量的集合组成，包含：一个输入门$i_{t}$, 一个遗忘门$f_{t}$, 一个输出门$o_{t}$, 一个记忆细胞$c_{t}$, 一个隐藏状态$h_{t}$.
+
+> **该LSTM unit接受一个n维输入向量xt，上一个隐藏状态$h_{t-1}$，以及上一个记忆细胞$c_{t-1}$，使用如下公式计算新的向量**：
+
 $$i_{t}=\sigma (W^{(i)}x_{t}+U^{(i)}h_{t-1}+b^{(i)}),\\\\
 f_{t}=\sigma (W^{(f)}x_{t}+U^{(f)}h_{t-1}+b^{(f)}),\\\\
 o_{t}=\sigma (W^{(o)}x_{t}+U^{(o)}h_{t-1}+b^{(o)}),\\\\
@@ -47,9 +50,31 @@ $$s_{t}=\[\overrightarrow{h_{t}};\overleftarrow{h_{t}}]$$
 ### 3.3 entity dectection-将实体检测看作一个序列标注任务
 使用encoding scheme BILOU(begin, inside, last, outside, unit)为每个word分配一个entity tag，每个entity tag代表一个实体类型和这个实体中word的位置。
 
-在序列层的顶部进行实体检测，使用一个 带有
-### 3.4 dependency layer
+在序列层的顶部进行实体检测，使用一个 带有$n_{h_{e}}$维的隐藏层$h^{(e)}$和softmax输出层的 双层(2-layered)神经网络，用于实体检测：
+$$h^{(e)}\_{t}=tanh(W^{e_{h}}\[s_{t};v_{t-1}^{(e)}]+b^{(e_{h})})\\\\
+y_{t}=softmax(W^{e_{y}}h_{t}^{(e)}+b^{(e_{y})})$$
+
+我们使用从左向右的 贪心的方法 为words分配实体标签，在这个解码过程中，我们使用当前word的预测标签来预测下一个word的标签，以便考虑到标签依存。上述双层NN 的输入是 其在sequence layer对应的输出和前一个word的label embedding的拼接。
+### 3.4 dependency layer-表示依存树中一对target words之间的一个关系，负责特定关系表示
+依存层**主要聚焦在 依存树中一对target words间的最短路径(在最小公共节点和2个target words之间的路径)**。
+
+我们使用双向树结构LSTM-RNNs，通过捕获围绕在目标单词对周围的依存结构来表示一个关系候选。这个双向结构向每个node不仅传递叶子节点信息，还传递根节点信息，充分利用了结构树底部附近的自变量节点。**本文的top-down LSTM-RNN 把信息从结构树的top发送至这些近叶 子节点，模型在相同类型的children node间共享权重矩阵Us，并且允许不同数量的children**。在有C(t)children的第t个node上，我们计算LSTM unit中的$n_{l_{t}}$维向量：
+$$i_{t}=\sigma (W^{(i)}x_{t}+\sum_{l\in C(t)}U^{(i)}\_{m(l)}h_{tl}+b^{(i)}),\\\\
+f_{tk}=\sigma (W^{(f)}x_{t}+\sum_{l\in C(t)}U^{(f)}\_{m(k)m(l)}h_{tl}+b^{(f)}),\\\\
+o_{t}=\sigma (W^{(o)}x_{t}+\sum_{l\in C(t)}U^{(o)}\_{m(l)}h_{tl}+b^{(o)}),\\\\
+u_{t}=tanh(W^{(u)}x_{t}+\sum_{l\in C(t)}U^{(u)}\_{m(l)}h_{tl}+b^{(u)}),\\\\
+c_{t}=i_{t}\odot u_{t}+\sum_{l\in C(t)}f_{tl}\odot c_{tl},\\\\
+h_{t}=o_{t}\odot tanh(c_{t})$$
+其中，m(·)是一个类型映射函数。
+
+我们对3个结构选项进行了实验：
+> 1. SP-Tree(shortest path structure): 捕获一个目标单词对之间的核心依存路径；
+> 2. SubTree: 在目标词对的最低共同祖先下的子树，为SPTree中的路径和单词对提供额外的修正信息；
+> 3. FullTree：完全树，捕获整个句子的上下文信息
 ### 3.4 stacking sequence and dependency layers
+在sequence layer的顶部堆栈relation candidates对应的dependency layers，以便把word sequence 和 dependency tree structure information合并进输出中。
+
+第t个word的dependency layer LSTM unit接收输入
 ### 3.6 relation classification
 ### 3.7 training
 ## 4 results and discussion
