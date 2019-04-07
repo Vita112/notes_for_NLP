@@ -20,7 +20,7 @@ some existing feature-based models:
 > 3. global probabilistic graphical models 全局概率图模型
 ## 3 model
 model in this paper is as follows:
-![end-to-end_neural_relation_extraction_based_on_bidirectional_sequential_and_tree-structured_LSTM-RNNs]()
+![end-to-end_neural_relation_extraction_based_on_bidirectional_sequential_and_tree-structured_LSTM-RNNs](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/RelationExtraction/DeepLearningMethod/imgs/end-to-end_neural_relation_extraction_based_on_bidirectional_sequential_and_tree-structured_LSTM-RNNs.png)
 模型主要有3个表征层组成：
 > 1. 词嵌入层
 > 2. 基于LSTM-RNN 的词序列层
