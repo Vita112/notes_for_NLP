@@ -35,15 +35,21 @@ n_w, n_p, n_d, n_e-dimensional vectors $v^{(w)},v^{(p)},v^{(d)},v^{(e)}$ are emb
 
 > **该LSTM unit接受一个n维输入向量xt，上一个隐藏状态$h_{t-1}$，以及上一个记忆细胞$c_{t-1}$，使用如下公式计算新的向量**：
 
-$$i_{t}=\sigma (W^{(i)}x_{t}+U^{(i)}h_{t-1}+b^{(i)}),\\\\
-f_{t}=\sigma (W^{(f)}x_{t}+U^{(f)}h_{t-1}+b^{(f)}),\\\\
-o_{t}=\sigma (W^{(o)}x_{t}+U^{(o)}h_{t-1}+b^{(o)}),\\\\
+$$f_{t}=\sigma (W^{(f)}x_{t}+U^{(f)}h_{t-1}+b^{(f)}),\\\\
+i_{t}=\sigma (W^{(i)}x_{t}+U^{(i)}h_{t-1}+b^{(i)}),\\\\
 u_{t}=tanh(W^{(u)}x_{t}+U^{(u)}h_{t-1}+b^{(u)}),\\\\
 c_{t}=i_{t}\odot u_{t}+f_{t}\odot c_{t-1},\\\\
+o_{t}=\sigma (W^{(o)}x_{t}+U^{(o)}h_{t-1}+b^{(o)}),\\\\
 h_{t}=o_{t}\odot tanh(c_{t})$$
 
 其中，σ代表sigmoid function，W 和 U 是权重矩阵，b是偏置向量；LSTM unit接收word 和 POS embeddings 的拼接 作为其输入向量：
 $$x_{t}=\[v_{t}^{(w)};v_{t}^{(p)}]$$
+LSTM 的核心是 Cell state, 每个unit中包含4个交互的层：
+> 1. forget gate:决定不把何种信息放入cell state中，sigmoid function输出一个在 0 到 1 之间的数值给每个在细胞状态$C_{t-1}$中的数字。1 表示“完全保留”，0 表示“完全舍弃”；
+> 2. input gate:确定何种信息会被存放进cell state中，包含2部分：一个sigmoid层，决定需要更新的值；一个tanh层，创建一个新的候选值向量，对应上述公式中的$u_{t}$;
+> 3. update Ct：将旧状态与ft相乘，丢弃确定不需要的信息；输入中决定需要更新的值乘以新的候选；将两者相加得到更新后的cell state；
+> 4. output gate:使用sigmoid层确定细胞状态中哪些部分需要输出；使用tanh层对更新后的cell state进行处理；将两者的值相乘，输入最终确定的输出结果。
+
 拼接每个word对应的2个方向的LSTM units的隐藏状态向量，作为它的输出向量：
 $$s_{t}=\[\overrightarrow{h_{t}};\overleftarrow{h_{t}}]$$
 并且，将它喂给后续层subsequent layers。
