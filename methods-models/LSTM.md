@@ -10,6 +10,7 @@ LSTM 是RNN的一种特殊的RNN类型，它通过在循环单元内的多层操
 
 RNN循环单元内部(隐层)的操作比较简单，通常是一个tanh 函数；LSTM同样可以看作是同一神经网络的多次复制，与RNN相比不同的是：
 LSTM的隐层操作更加复杂，正如上图所示，通过3个门对输入进行控制，以便得到我们期望的结果。门可以选择性的控制信息的流动，通常由一个sigmoid神经网络和一个point wise(element wise)的乘法操作组成。下图显示了RNN与LSTM隐层操作的不同：
+
 ![difference_between_RNN_and_LSTM](https://github.com/Vita112/notes_for_NLP/blob/master/methods-models/img/difference_between_RNN_and_LSTM.jpg)
 
 通俗来讲，LSTM中，循环的神经网络通过使用3个门，来控制处理序列的信息，模型可以有选择性的保留序列的特征，留下重要的部分，遗忘掉不重要的部分。
