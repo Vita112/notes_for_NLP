@@ -23,7 +23,7 @@ model in this paper is as follows:
 ![end-to-end_neural_relation_extraction_based_on_bidirectional_sequential_and_tree-structured_LSTM-RNNs](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/RelationExtraction/DeepLearningMethod/imgs/end-to-end_neural_relation_extraction_based_on_bidirectional_sequential_and_tree-structured_LSTM-RNNs.png)
 模型主要有3个表征层组成：
 > 1. 词嵌入层
-> 2. 基于LSTM-RNN 的词序列层
+> 2. 基于[LSTM-RNN](https://github.com/Vita112/notes_for_NLP/blob/master/methods-models/LSTM.md) 的词序列层
 > 3. 基于LSTM-RNN 的依存子树层
 
 在解码阶段，在序列层上建立贪心的 自左向右的实体检测，并且在依存层发现了关系分类，依存层中的每一个基于LSTM-RNN的子树 对应于 检测出的2个实体间的一个关系候补。在解码整个模型结构后，通过时序反向传播(backpropagation through time)同步更新参数，**依存层在序列层上进行堆栈，因此，实体检测和关系分类可以共享embedding and sequence layers，并且共享的参数受到实体和关系标签的影响**。
