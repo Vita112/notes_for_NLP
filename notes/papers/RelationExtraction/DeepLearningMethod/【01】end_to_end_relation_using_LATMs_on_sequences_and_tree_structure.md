@@ -112,11 +112,38 @@ k是一个超参，调整模型以何种频率使用gold labels作为预测结�
 
 在entity pretraining 阶段，模型在训练整个模型参数之前，使用训练数据预训练实体检测模型。
 ## 4 results and discussion
-### 4.1 data and task setttings
+### 4.1 data and task setttingss
+using ACE05 and ACE04 for end-to-end relation extraction;  using SemEval2010 Task 8 for relation classification
 
+ACE05： 定义了7个粗粒度的实体类型, 6个粗粒度的实体间的关系类型。一个实体是正确的，当它的类型和它头部的区域是正确的；一个关系是正确的，当
+他的类型和参数实体是正确的。*因此，我们将所有在错误实体上的non-negative relations视为false positives*。
+
+ACE04： 定义了7个粗粒度的实体类型, 7个粗粒度的实体间的关系类型。
+
+SemEval2010 Task 8:定义了9个名词性之间的关系类型，以及一个other类型（当两个名词之间没有关系）。treat OTHER type as a negative relation
+type,and no direction is considered.
 ### 4.2 experimental setttings
+使用cnn library 实现模型；使用带original stanford dependencies 的 stanford nueral dependencu parser解析文本；设置embedding dimensions n_w 为200，n_p,n_d,n_e为25， 中间层维度dimensions of intermediate layers为100，使用在Wikipedia上训练好的wrod2vec
+来初始化word vectors，并随机初始化所有其他的parameters
+
+使用开发集微调超参tune the hyper-parameters
 ### 4.3 end-to-end relation extraction results
+为了分析我们的端到端关系抽取模型的各个部件的贡献，我们在ACE05上进行了消融测试ablation tests：
+> 发现1：当我们去掉entity pretraining ，或者同时去掉scheduled sampling 和 entity pretraining时，性能显著下降(p< 0.05)
+
+原因：只有当两个实体都被发现时，模型才能产生关系实例，并且没有这些强化，一切将变得很迟以至于不能找到一些关系。
+
+> 发现2：在检测实体和关系时，不考虑sharing parameters，比如embedding and sequence layers，具体的，先训练一个实体检测model；
+然后使用检测到的实体创建一个独立的RE model。此时，在实体检测和关系分类中，性能都出现了轻微的下降。
+
+> 发现3：当去掉所有的enhancements(scheduled sampling, lable embedding, shared parameters, entity pretraning),性能甚至比SP-Tree还差。
+
+
+> 发现4：对于端到端关系提取任务，选择适当的输入树结构表示（这里指最短路径）比在该输入上选择何种LSTM-RNN结构更重要（即选择sequential，还是tree-based)。
+>> 1. 比较不同结构的LSTM-RNN的性能。*首先，比较了LSTM-RNNs的三种不同的输入依存结构（SPTree，SubTree，FullTree）* → 当我们将最短路径上的nodes同其他的nodes区分开时，LSTM-RNNs的表现几乎是一样的。**可能是由于模型的不同仅出现在拥有多个孩子的节点上**。
+>> 2. 用最短路径给出了两个对应的基于序列的LSTM RNN的结果。*SPSeq是最短路径上的双向LSTM-RNN*:LSTM 单元接收序列层作为input，序列层与周围依赖关系类型和方向的嵌入 拼接；拼接关系候选的2个RNNs输出。*SPXu是对Xu等人提出的shortest path LSTM-RNNs的适应，以匹配我们的sequence-layer based model*：对于最短路径的左右两个子路径，有2个LSTM-RNNs。**这些sequence-based LSTM-RNN的比较显示：在表示最短路径时，一个树结构的LSTM-RNN与 基于序列的 LSTM-RNN 是差不多的**。
 ### 4.4 relation classification analysis results
+使用SemEval-2010 Task 8 来分析不同LSTM结构，architecture components，以及classification task settings
 ## 5 conclusion
 ## reference
 1. Qi Li and Heng Ji@2104 **incemental joint extraction of entity mentions and relations**ACL
