@@ -131,7 +131,7 @@ type,and no direction is considered.
 为了分析我们的端到端关系抽取模型的各个部件的贡献，我们在ACE05上进行了消融测试ablation tests：
 > 发现1：当我们去掉entity pretraining ，或者同时去掉scheduled sampling 和 entity pretraining时，性能显著下降(p< 0.05)
 
-原因：只有当两个实体都被发现时，模型才能产生关系实例，并且没有这些强化，一切将变得很迟以至于不能找到一些关系。
+原因1：只有当两个实体都被发现时，模型才能产生关系实例，并且没有这些强化，一切将变得很迟以至于不能找到一些关系。
 
 > 发现2：在检测实体和关系时，不考虑sharing parameters，比如embedding and sequence layers，具体的，先训练一个实体检测model；
 然后使用检测到的实体创建一个独立的RE model。此时，在实体检测和关系分类中，性能都出现了轻微的下降。
@@ -141,10 +141,18 @@ type,and no direction is considered.
 
 > 发现4：对于端到端关系提取任务，选择适当的输入树结构表示（这里指最短路径）比在该输入上选择何种LSTM-RNN结构更重要（即选择sequential，还是tree-based)。
 >> 1. 比较不同结构的LSTM-RNN的性能。*首先，比较了LSTM-RNNs的三种不同的输入依存结构（SPTree，SubTree，FullTree）* → 当我们将最短路径上的nodes同其他的nodes区分开时，LSTM-RNNs的表现几乎是一样的。**可能是由于模型的不同仅出现在拥有多个孩子的节点上**。
->> 2. 用最短路径给出了两个对应的基于序列的LSTM RNN的结果。*SPSeq是最短路径上的双向LSTM-RNN*:LSTM 单元接收序列层作为input，序列层与周围依赖关系类型和方向的嵌入 拼接；拼接关系候选的2个RNNs输出。*SPXu是对Xu等人提出的shortest path LSTM-RNNs的适应，以匹配我们的sequence-layer based model*：对于最短路径的左右两个子路径，有2个LSTM-RNNs。**这些sequence-based LSTM-RNN的比较显示：在表示最短路径时，一个树结构的LSTM-RNN与 基于序列的 LSTM-RNN 是差不多的**。
+>> 2. 用最短路径给出了两个对应的基于序列的LSTM RNN的结果。*SPSeq是最短路径上的双向LSTM-RNN* :  LSTM 单元接收序列层作为input，序列层与周围依赖关系类型和方向的嵌入 拼接；拼接关系候选的2个RNNs输出。*SPXu是对Xu等人提出的shortest path LSTM-RNNs的适应，以匹配我们的sequence-layer based model* ：  对于最短路径的左右两个子路径，有2个LSTM-RNNs。**这些sequence-based LSTM-RNN的比较显示：在表示最短路径时，一个树结构的LSTM-RNN与 基于序列的 LSTM-RNN 是差不多的**。
 ### 4.4 relation classification analysis results
-使用SemEval-2010 Task 8 来分析不同LSTM结构，architecture components，以及classification task settings
+使用SemEval-2010 Task 8 来分析不同LSTM结构，architecture components，以及classification task settings。
+
+对于关系分类来说，上述 **发现4的内容 同样适用**。
 ## 5 conclusion
+本文提出的模型 **允许只使用同一个模型来表示实体和关系**。得出以下3个关键发现：
+1. 同时使用word sequence 和 dependency tree strucure十分有效；
+
+2. 使用共享参数训练 可提高关系抽取准确性，特别是应用在entity pretraining，scheduled sampling，label embeddings
+
+3. 最短依存路径同样适用于神经LSTM-RNN模型，来表示树结构。
 ## reference
 1. Qi Li and Heng Ji@2104 **incemental joint extraction of entity mentions and relations**ACL
 
