@@ -1,24 +1,32 @@
 **基于远程监督的无标注数据的关系抽取** Mike Mintz Steven Bills 2009 斯坦福大学<br>
 
-提出一种适用于各种大小的、未注语料库的研究范式，distant supervision。结合了监督IE和无监督IE技术的优点。分析了特征性能，显示 对于有歧义，或词汇距离远的句子的关系抽取任务，句法剖析特征特别有用。
+提出一种适用于各种大小的、未标注的语料库的研究范式-distant supervision，同时避免domain dependence。实验使用一个拥有上千个关系的大型语义数据库Freebase，来实现远程监督。
+**算法对于出现在某些freebase relation中的每一对实体，在一个大型的未标注语料库中，找到包含这些实体的所有句子，并抽取文本特征，训练一个关系分类器**，结合了监督IE和无监督IE技术的优点。本文分析了特征性能，显示 对于有歧义，或词汇距离远的句子的关系抽取任务，句法剖析特征特别有用。
 ## 1 introduction
-对有监督学习方法，无监督学习方法，以及半监督bootstrapping方法的概述，此处略。**intuition of distant supervison**：如果一对实体在freeebaseKB中具有某种关系，那么，语料库中，包含有这2个实体的任何句子都是含有这种关系的 一个实例。以下是算法优点：
+对有监督学习方法，无监督学习方法，以及半监督bootstrapping方法的概述，此处略。
+
+远程监督是Snow等人所用范式的延伸，该范式利用WordNet提取实体之间的超同名（IS-A）关系，类似于生物信息学中弱标记数据的使用。
+
+**intuition of distant supervison**：如果一对实体参与到freeebaseKB 的某种已知关系，那么，对于未标注的语料库，包含有这2个实体的任何句子都是表达这种关系的 一个实例。以下是**算法优点**：
 ```
-1. 使用更大规模的数据：more text more relations more instances
-2. do not suffer from 过拟合和域依赖的问题
+1. 使用更大规模的数据：more text more relations more instances，使用120万wikipedia articles和连接了94万实体的102种关系的180万个实例。
+2. do not suffer from 过拟合和域依赖的问题，因为算法使用database进行监督学习
 3. 分类器的输出使用 规范的关系名称
 4. 整合多个句子的数据，来决定2实体间是否存在一个关系：聚集来自 包含某个实体对的不同句子 的特征，为分类器提供更多的信息，产生更准确的标签
 ```
+**缺点**：某些句子可能并没有表达这样的关系，但句子特征却被加入到
 ## 2 previous work
 + use little or no syntactic info
 >+ DIPRE: string-based regex
 >+ SnowBall:learned similar regular expression patterns over words and named entity tags
 
 + use deeper syntactic info which got from parse of the input sentence
-+ freebase:一个免费可用的 在线的 结构化语义 数据库
-relation:an ordered, binary relation between entities.<br>
-relation instances:individual ordered pairs in this relation
 
++ freebase:一个免费可用的 在线的 结构化语义数据库，Freebase中的数据主要来自text boxes 和其他来自wikipedia的表格数据。
+
+关系relation:an ordered, binary relation between entities.<br>
+关系实例relation instances:individual ordered pairs in this relation<br>
+实验中，我们有900万实体间的包含7300中关系的1.16亿个实例，过滤掉那些nameless和uninteresting实体，结果我们得到94万实体间的102种关系的180万个实例。
 ## 3 model architecture
 **assumption**：如果2个实体参与某个关系，那么，任何包含这2个实体的句子可能表达了这样一种关系。算法训练一个多类逻辑回归分类器，为每个噪声特征学习权重。
 >使用freebase知识库对应到大量的未标注数据中进行自动标注，生成已标注训练数据集(正项)，训练集中的关系和实体对来源于freebase知识库，再加入一些负项，训练一个分类器，最后每一个分类是一个关系。
