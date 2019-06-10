@@ -17,11 +17,13 @@ self-attention，又称为intra-attention，是一种 联系single sequence的�
 ![transformer_model_architecture](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/Attention/img/transformer_model_architecture.jpg)
 ### 3.1 堆栈encoder和decoder
 ![encoder-decoder结构](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/Attention/img/encoder-decoder%E7%BB%93%E6%9E%84.png)
-> Encoder
+> **Encoder**
+
 ![encoder](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/Attention/img/encoder.png)
 
 由6个相同层的堆栈构成，每层中包含2个子层sub-layers，分别是multi-head self-attention mechanism 和 simple，position-wise fully connected feed-forward network；对每一层进行正则化后，在2个子层的每一层周围残差连接residual connection（**为什么使用残差连接？达到了怎样的效果？**）。为方便residual connection，模型中的所有子层，包括embedding layers，其输出的维数都为d_model=512.
-> Decoder
+> **Decoder**
+
 ![decoder](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/Attention/img/decoder.png)
 
 同样，由6个相同层的堆栈构成，除encoder中的2个子层外，还插入了另一个对ENCODER的attention子层**（为什么增加一层，作用何在？）**，这个子层在encoder stack的输出上执行multi-head attention。同样，在每一层进行正则化后，在每一个子层周围使用residual connection。同样修正了self-attention sub-layer来防止decoder关注后续位置的信息，保证位置i的预测仅依赖于前i-1个位置的已知输出(具体地，添加一个mask将位置i及其之后的token遮盖住)。
@@ -31,9 +33,8 @@ self-attention，又称为intra-attention，是一种 联系single sequence的�
 ![scaled_dot-product_attention_and_multi-head_attention]()
 > **scaled dot-product attention**
 
-+ atention表示成k, v, q的方式：
++ 序列问题中传统的attention:
 
-序列问题中传统的attention
 ![traditional_attention_in_sequence_modeling](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/Attention/img/traditional_attention_in_sequence_modeling.png)
 
 + k, v, q表示方式下的scaled dot-product attention
@@ -55,7 +56,7 @@ $$Attention(q_{t},K,V)=\sum_{s=1}^{m}\frac{1}{Z}exp(\frac{<q_{t},k_{s}>}{\sqrt{d
 
 为了解决d_k很大时，dot-product的结果将变得很大，导致softmaxd在求导时遇到梯度消失的问题，使用$\sqrt{d_{k}}$进行归一化处理。
 
-+ 此处提到的additive attention和dot-product attention，具体指的是什么？
++ **此处提到的additive attention和dot-product attention，具体指的是什么**？
 > additive attention加性注意力：使用一个 有隐藏层的全连接前馈网络 来计算注意力分配
 
 ![additive_attention](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/Attention/img/additive_attention.png)
