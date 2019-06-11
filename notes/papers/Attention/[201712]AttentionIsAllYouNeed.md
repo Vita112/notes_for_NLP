@@ -27,6 +27,8 @@ self-attention，又称为intra-attention，是一种 联系single sequence的�
 ![decoder](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/Attention/img/decoder.png)
 
 同样，由6个相同层的堆栈构成，除encoder中的2个子层外，还插入了另一个对ENCODER的attention子层**（为什么增加一层，作用何在？）**，这个子层在encoder stack的输出上执行multi-head attention。同样，在每一层进行正则化后，在每一个子层周围使用residual connection。同样修正了self-attention sub-layer来防止decoder关注后续位置的信息，保证位置i的预测仅依赖于前i-1个位置的已知输出(具体地，添加一个mask将位置i及其之后的token遮盖住)。
+
+![masked_self-attention_with_softmax]()
 ### 3.2 attention
 **注意力机制可被看做 将一个查找query和一个键值对key-value pairs集合映射为一个输出的过程**，其中，query，keys，values以及output都是vectors。输出是一个values的加权和，此处分配给每个value的weight通过对应key的query的兼容函数得到。本文的注意力机制细节如下图：
 
@@ -73,10 +75,20 @@ $$Attention(q_{t},K,V)=\sum_{s=1}^{m}\frac{1}{Z}exp(\frac{<q_{t},k_{s}>}{\sqrt{d
 ![computation_flow_of_decoder2](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/Attention/img/computation_flow_of_decoder2.jpg)
 细节动态图[click](https://www.zhihu.com/question/61077555/answer/183884003)
 
-## 3.4 一个例子——input：2个单词——thinking 和 machines；计算得到q,k,v,得到self-attention的输出z
+## 3.4 一个例子
+
+input：2个单词——thinking 和 machines；
+
+首先embedding得到单词表示，矩阵点乘计算得到每个单词的q,k,v；
 
 ![computations_of_self-attention1](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/Attention/img/computations_of_self-attention1.jpg)
+
+向量q，k点乘得到相似性得分score，score规范化后进行softmax，得到score的概率分布，可以理解为注意力概率分配；
+
+分别与encoder的v值相乘，并相加后，得到针对各单词的加权求和值z，即是self-attention的输出。
+
 ![computations_of_self-attention2](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/Attention/img/computations_of_self-attention2.jpg)
+
 ![multi-head_self-attention1](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/Attention/img/multi-head_self-attention.jpg)
 ![multi-head_self-attention2](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/Attention/img/multi-head_self-attention2.jpg)
 ![multi-head_self-attention3](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/Attention/img/multi-head_self-attention3.jpg)
@@ -95,3 +107,5 @@ $$Attention(q_{t},K,V)=\sum_{s=1}^{m}\frac{1}{Z}exp(\frac{<q_{t},k_{s}>}{\sqrt{d
 3. [attention_is_all_you_need解读](https://zhuanlan.zhihu.com/p/34781297)
 
 4. [如何理解谷歌团队的机器翻译新作《Attention is all you need》？](https://www.zhihu.com/question/61077555/answer/183884003)
+
+5. [Transformer模型笔记(包含pytorch代码)](https://zhuanlan.zhihu.com/p/39034683)
