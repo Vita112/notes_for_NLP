@@ -26,13 +26,13 @@ self-attention，又称为intra-attention，是一种 联系single sequence的�
 
 ![decoder](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/Attention/img/decoder.png)
 
-同样，由6个相同层的堆栈构成，除encoder中的2个子层外，还插入了另一个对ENCODER的attention子层**（为什么增加一层，作用何在？）**，这个子层在encoder stack的输出上执行multi-head attention。同样，在每一层进行正则化后，在每一个子层周围使用residual connection。同样修正了self-attention sub-layer来防止decoder关注后续位置的信息，保证位置i的预测仅依赖于前i-1个位置的已知输出(具体地，添加一个mask将位置i及其之后的token遮盖住)。
+同样，由6个相同层的堆栈构成，除encoder中的2个子层外，还插入了另一个对ENCODER的attention子层**（为什么增加一层，作用何在？）**，这个子层在encoder stack的输出上执行multi-head attention。同样，在每一层进行正则化后，在每一个子层周围使用residual connection。**修正了self-attention sub-layer来防止decoder关注后续位置的信息，保证位置i的预测仅依赖于前i-1个位置的已知输出(具体地，添加一个mask将位置i及其之后的token遮盖住)**。
 
-![masked_self-attention_with_softmax]()
+![masked_self-attention_with_softmax](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/Attention/img/masked_self-attention_with_softmax.jpg)
 ### 3.2 attention
 **注意力机制可被看做 将一个查找query和一个键值对key-value pairs集合映射为一个输出的过程**，其中，query，keys，values以及output都是vectors。输出是一个values的加权和，此处分配给每个value的weight通过对应key的query的兼容函数得到。本文的注意力机制细节如下图：
 
-![scaled_dot-product_attention_and_multi-head_attention]()
+![scaled_dot-product_attention_and_multi-head_attention](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/Attention/img/multi-head_attention.jpg)
 > **scaled dot-product attention**
 
 + 序列问题中传统的attention:
@@ -68,32 +68,44 @@ $$Attention(q_{t},K,V)=\sum_{s=1}^{m}\frac{1}{Z}exp(\frac{<q_{t},k_{s}>}{\sqrt{d
 
 > **multi-head attention**
 
-将d_model 维的queries，keys和values分别线性映射h次成 不同的、学习到的$d_k$维,$d_k$维和$d_v$维。在h次的每一次映射后得到的结果(queries,keys,values)上并行执行注意力（即进行scaled dot-product attention operation），返回一个$d_v$维输出。将所有输出拼接，再进行一次线性映射，得到最终的结果值。multi-head attention是由若干个并行运行的attention layers组成，**允许模型联合关注来自不同位置的不同表示子空间的信息**。具体地，在encoder-decoder框架中，query来自上一层decoder，而key和value则是上一层encoder的输出。正是这种机制，使得句子中每一个part都可以参与到encoder-decoder的过程。
+将d_model 维的queries，keys和values分别线性映射h次成 不同的、学习到的$d_k$维,$d_k$维和$d_v$维。在h次的每一次映射后得到的结果(queries,keys,values)上并行执行注意力（即进行scaled dot-product attention operation），返回一个$d_v$维输出。将所有输出拼接，再进行一次线性映射，得到最终的结果值。multi-head attention是由若干个并行运行的attention layers组成，**允许模型联合关注来自不同位置的不同表示子空间的信息，这里主要重点在不同子空间，因为存在多个head**。在encoder-decoder框架中，query来自上一个decoder层，而key和value则是上一层encoder的输出。正是这种机制，这使得decoder中的每个位置都可以处理输入序列中的所有位置，句子中每一个part都可以参与到encoder-decoder的过程。
 
-### 3.3 decoder
-![computation_flow_of_decoder1](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/Attention/img/computation_flow_of_decoder.jpg)
-![computation_flow_of_decoder2](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/Attention/img/computation_flow_of_decoder2.jpg)
-细节动态图[click](https://www.zhihu.com/question/61077555/answer/183884003)
+**此处有两个问题：1，多头的head个数 如何确定？2.位置信息直观上看，具体指什么呢？**
 
-## 3.4 一个例子
+### 3.3 self-attention
+![the_whole_computation_flow_of_self-attenion](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/Attention/img/the_whole_computation_flow_of_self-attenion.jpg)
 
-input：2个单词——thinking 和 machines；
+### 3.4 position-wise feed-forward networks
+在encoder和decoder中，均使用了定位全链接前馈网络，**它应用于每个位置，并且完全相同**。公式如下：
 
-首先embedding得到单词表示，矩阵点乘计算得到每个单词的q,k,v；
+
+## 4 一个例子-multi-head self-attention model
+
++ input：2个单词——thinking 和 machines；
+
++ 首先embedding得到单词表示，矩阵点乘计算得到每个单词的q,k,v；
 
 ![computations_of_self-attention1](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/Attention/img/computations_of_self-attention1.jpg)
 
-向量q，k点乘得到相似性得分score，score规范化后进行softmax，得到score的概率分布，可以理解为注意力概率分配；
++ 向量q，k点乘得到相似性得分score，score规范化后进行softmax，得到score的概率分布，可以理解为注意力概率分配；
 
-分别与encoder的v值相乘，并相加后，得到针对各单词的加权求和值z，即是self-attention的输出。
++ 分别与encoder的v值相乘，并相加后，得到针对各单词的加权求和值z，即是self-attention的输出。
+
+**所谓的self-attention，是指 所有的keys，values和queries都来自encoder中上一层的输出，encoder中的每一个position都可以处理encoder上一层的所有位置**。
 
 ![computations_of_self-attention2](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/Attention/img/computations_of_self-attention2.jpg)
 
 ![multi-head_self-attention1](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/Attention/img/multi-head_self-attention.jpg)
 ![multi-head_self-attention2](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/Attention/img/multi-head_self-attention2.jpg)
 ![multi-head_self-attention3](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/Attention/img/multi-head_self-attention3.jpg)
-## 4 self-attention
-![the_whole_computation_flow_of_self-attenion](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/Attention/img/the_whole_computation_flow_of_self-attenion.jpg)
+
++ decoder
+
+![computation_flow_of_decoder1](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/Attention/img/computation_flow_of_decoder.jpg)
+![computation_flow_of_decoder2](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/Attention/img/computation_flow_of_decoder2.jpg)
+
+细节动态图[click](https://www.zhihu.com/question/61077555/answer/183884003)
+
 ## 5 training
 ## 6 results
 ## 7 conclusion
