@@ -77,8 +77,17 @@ $$Attention(q_{t},K,V)=\sum_{s=1}^{m}\frac{1}{Z}exp(\frac{<q_{t},k_{s}>}{\sqrt{d
 
 ### 3.4 position-wise feed-forward networks
 在encoder和decoder中，均使用了定位全链接前馈网络，**它应用于每个位置，并且完全相同**。公式如下：
+$$FFN(x)=max(0,xW_{1}+b_{1})W_{2}+b_{2}$$
+#### 3.5 others
++ embeddings and softmax
 
+使用学习到的embeddings将input tokens和output tokens 转化为d_model维的向量；使用softmax函数将decoder output转化为预测为下一个token的概率。**in this model，我们在两个embedding layers 和 pre-softmax linear transformation之间，使用相同的权重矩阵**。
++ positional encoding
 
+在encoder和decoder stacks的底层，将positional encodings添加到input embeddings 中。**in this work，使用不同频率的sine和cosine函数，公式如下**：
+$$PE_{(pos,2i)}=sin(pos/10000^{2i/d_{model}})\\\\
+PE_{(pos,2i+1)}=cos(pos/10000^{2i/d_{model}})$$
+此处，pos代表position，i代表dimension，也就是说:**positional encoding的每一个dimension都对应一个正弦曲线sinusoid。波长形成了一个从2π到10000·2π的geometric progression几何数列
 ## 4 一个例子-multi-head self-attention model
 
 + input：2个单词——thinking 和 machines；
