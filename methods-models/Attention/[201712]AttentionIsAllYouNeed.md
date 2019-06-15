@@ -73,12 +73,33 @@ $$Attention(q_{t},K,V)=\sum_{s=1}^{m}\frac{1}{Z}exp(\frac{<q_{t},k_{s}>}{\sqrt{d
 **此处有两个问题：1，多头的head个数 如何确定？2.位置信息直观上看，具体指什么呢？**
 
 ### 3.3 self-attention
+在解释为什么使用self-attention时，从以下3各方面考虑：
+> 1. the computational complexity per layer;
+> 2. the amount of computation that can be parallelized;
+> 3. the path length between long-range dependencies in the network.影响学习长期依赖能力的一个关键因素是：网络中需要遍历的前向和后向信号的路径长度。
+
+下图显示了不同层类型的complexity per layer，sequential operarions以及maximun path length：
+
+![comparison_of_different_layer_types]()
+
+由上图可知，一个自注意力层只需要 一个常数级的序列操作 将所有位置连接起来，而一个递归层则需要O(n)个序列操作。**计算复杂度**上，当n小于d时，自注意力比递归层快，而在机器翻译的先进模型中，序列长度n都比表示维度d小，例如字段表示和字节表示(word-piece and byte-pair representations)，
+
+一个单独的核窗口宽度为 k<n 的卷积层并不会连接所有的输入和输出位置对。而要连接所有的位置对，使用相邻核(contiguous kernels)时，需要堆栈O(n/k)的卷积层；使用膨胀卷积(dilated convolution)时，需堆栈O(logk(n))的卷积层。
+
+**关于不同类型的卷积操作，可参考知乎的两篇文章**：
+> 1. [一文了解各种卷积结构原理](https://zhuanlan.zhihu.com/p/28186857)
+> 2. [CNN中千奇百怪的卷积方式](https://zhuanlan.zhihu.com/p/29367273)
+
+下图是一个自注意力的完整计算流程：
+
 ![the_whole_computation_flow_of_self-attenion](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/Attention/img/the_whole_computation_flow_of_self-attenion.jpg)
+
+**使用self-attention的另一个好处是：可以返回更易解释的模型**。不仅单个的注意力头可以明确地学习执行不同的任务，有许多展现出了与句子的语法和语义结构相关的行为。
 
 ### 3.4 position-wise feed-forward networks
 在encoder和decoder中，均使用了定位全链接前馈网络，**它应用于每个位置，并且完全相同**。公式如下：
 $$FFN(x)=max(0,xW_{1}+b_{1})W_{2}+b_{2}$$
-#### 3.5 others
+### 3.5 others
 + embeddings and softmax
 
 使用学习到的embeddings将input tokens和output tokens 转化为d_model维的向量；使用softmax函数将decoder output转化为预测为下一个token的概率。**in this model，我们在两个embedding layers 和 pre-softmax linear transformation之间，使用相同的权重矩阵**。
@@ -116,7 +137,16 @@ PE_{(pos,2i+1)}=cos(pos/10000^{2i/d_{model}})$$
 细节动态图[click](https://www.zhihu.com/question/61077555/answer/183884003)
 
 ## 5 training
+模型训练主要包括：**training data and batching，hardware and schedule，optimizer以及正则化**。下面说一下正则化过程，本模型中使用了3种正则化。
+
++ residual dropout
+
++ label smoothing
+
 ## 6 results
+分别在英德机器翻译核英法机器翻译任务中表现优秀。
+
+为评估模型泛化能力，在english constituency parsing任务上进行实验。
 ## 7 conclusion
 
 > references
