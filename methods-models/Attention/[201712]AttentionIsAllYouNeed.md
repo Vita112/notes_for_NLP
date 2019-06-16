@@ -1,5 +1,7 @@
 ## Abstract
 propose a new simple network architecture：Transformer，完全依赖于attention mechanism。第一个完全依赖于self-attention来计算(输入和输出)表示的传导模型transduction model,用于处理序列模型相关问题。
+
+code available：https://github.com/tensorflow/tensor2tensor
 > **创新点**
 
 提出自注意力self-attention，每个词和所有词计算attention，使每个词都有全局的语义信息(长依赖性)。*不管两个词之间的距离有多长，最大的路径长度也都只是1*。
@@ -148,6 +150,10 @@ PE_{(pos,2i+1)}=cos(pos/10000^{2i/d_{model}})$$
 
 为评估模型泛化能力，在english constituency parsing任务上进行实验。
 ## 7 conclusion
+第一个提出完全依赖于attention的传到序列模型-transformer；
+
+训练速度显著快于其他基于CNN,RNN的模型。
+
 
 > references
 
