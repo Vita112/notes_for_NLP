@@ -25,7 +25,7 @@ fine-tuning：例如 OpenAI GPT(Generative Pre-training Transformer)
 
 + **本文贡献**
 
-1. 提出BERT，使用MLM(masked language model)来预训练深度双向表示。
+1. 提出BERT，使用MLM(masked language model)来预训练深度双向表示；提出了NSP：next sentence prediction。
 
 2. 表明 预训练表示减少了 对许多精心设计的特定于某个任务的构架的需求。
 
@@ -60,13 +60,19 @@ bert如此火的原因：在NLP各项任务中的出色表现 和 模型的广�
 
 + **1.2 NLP领域的预训练**
 > word embedding-NLP早期预训练技术
->> 语言模型(非学术解释)<br>
-    语言模型使用一个函数P，该函数根据句子中某个词之前的一系列单词，来预测该词位置上出现某个特定单词的概率，**句子中，每个单词都有一个根据上文信息预测自己的过程，把所有预测这些单词的概率乘起来，数值越大，代表这句话越接近自然语言，即越像一句人话**。<br>
-    语言模型能够帮助从大量自然语言事实中提取出语言学知识，提高NLP中各下游任务的表现。本世纪初最流行的统计语言模型是N-gram模型，是典型的基于稀疏表示(sparse representation)的语言模型;这类语言模型遭遇 数据严重稀疏的问题。因为句子长度不固定，若是每次预测概率都考虑该词以前的所有词，模型将用到更多的参数，且为获得更准确的概率分布，需要庞大的语料支持，这将**导致参数空间过大**；加之，zipf定律：语言中大多数词在语料中的出现是稀疏的。训练样本的不足，也会大大削弱模型的可靠性。<br>
-    随着deep learning的崛起，以词向量(word embedding)为代表的分布式表示(distributed representation)的语言模型取得更好的效果，深刻影响着NLP领域的模型及其应用。<br>
-    NNLM（neural network language model）是基于神经网络的语言模型，其利用神经网络的非线性拟合能力，推导出词汇或者文本的分布式表示。在NNLM中，某个单词的分布式表示被看做激活神经元的向量空间，训练时，每次激活一个神经元。标准的NNLM构架图如下：
-    ![architecture_of_NNLM]()
+>> 统计语言模型(非学术解释)
 
+语言模型假设一种语言中所有可能的句子服从一个概率分布，每个句子出现的概率加起来为1，它使用一个函数P，该函数根据句子中某个词之前的一系列单词，来预测该词位置上出现某个特定单词的概率，**句子中，每个单词都有一个根据上文信息预测自己的过程，把所有预测这些单词的概率乘起来，数值越大，代表这句话越接近自然语言，即越像一句人话**。好的语言模型应该得到较高的概率，perplexity更低，越合乎自然语言表达。**语言模型仅对句子出现的概率进行建模，并不尝试去理解句子的内容含义**。根据链式法则，该函数表示为：
+    $$p(S)=p(w_{1},w_{2},\cdots ,w_{m})=p(w_{1})p(w_{2}|w_{1})p(w_{3}|w_{1}w_{2})\cdots ,p(w_{m}|p(w_{1},\cdots ,w_{m-1}))=\prod_{i=1}^{m}p(w_{i}|w_{1},\cdots ,w_{i-1})$$
+    语言模型能够帮助从大量自然语言事实中提取出语言学知识，提高NLP中各下游任务的表现。本世纪初最流行的统计语言模型是N-gram模型，是典型的基于稀疏表示(sparse representation)的语言模型;这类**sparse representation based语言模型遭遇 数据严重稀疏的问题**。因为句子长度不固定，若是每次预测概率都考虑该词以前的所有词，模型将用到更多的参数，且为获得更准确的概率分布，需要庞大的语料支持，这将**导致参数空间过大**；加之，zipf定律：语言中大多数词在语料中的出现是稀疏的。训练样本的不足，也会大大削弱模型的可靠性。
+>>> 基于马尔科夫假设的n-gram模型：一个词的出现仅依赖于它前面的n个词
+
+    随着deep learning的崛起，以词向量(word embedding)为代表的分布式表示(distributed representation)的语言模型取得更好的效果，深刻影响着NLP领域的模型及其应用。<br>
+>> 神经概率语言模型
+    NNLM（neural network language model）是基于神经网络的语言模型，其利用神经网络的非线性拟合能力，推导出词汇或者文本的分布式表示。在NNLM中，某个单词的分布式表示被看做激活神经元的向量空间，训练时，每次激活一个神经元。标准的NNLM构架图如下：
+    ![architecture_of_NNLM](https://github.com/Vita112/notes_for_NLP/blob/master/methods-models/Pre-trainingLM/img/architecture_of_NNML.jpg)
+    
+Bengio于2003年提出Probabilistic feedforward neural network language model，包含input，projection，hidden和output这四层，
 
 
 
