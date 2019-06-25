@@ -75,7 +75,8 @@ $$p(w_{i}|w_{i-n+1},\cdots ,w_{i-1})=\frac{Count(w_{i-n+1},\cdots ,w_{i-1},w_{i}
 
 随着deep learning的崛起，以词向量(word embedding)为代表的分布式表示(distributed representation)的语言模型取得更好的效果，深刻影响着NLP领域的模型及其应用。
 >> 神经概率语言模型
-    NNLM（neural network language model）是基于神经网络的语言模型，其利用神经网络的非线性拟合能力，同时学习每个单词的分布式表示以及单词序列的概率函数。Bengio于2003年**提出Probabilistic feedforward neural network language model**，改进了n-gram模型，使用依赖于共享参数的多层神经网络，可以利用更长的上下文。在NNLM中，某个单词的分布式表示被看做激活神经元的向量空间，训练时，每次激活一个神经元。**提出分布式表示：存在一个分布式假设，即 如果2个词的上下文相同，那么，这两个词的representation也是相似的。分布式表示可理解为 一种用来得到word representation的方法**。
+
+NNLM（neural network language model）是基于神经网络的语言模型，其利用神经网络的非线性拟合能力，同时学习每个单词的分布式表示以及单词序列的概率函数。Bengio于2003年**提出Probabilistic feedforward neural network language model**，改进了n-gram模型，使用依赖于共享参数的多层神经网络，可以利用更长的上下文。在NNLM中，某个单词的分布式表示被看做激活神经元的向量空间，训练时，每次激活一个神经元。**提出分布式表示：存在一个分布式假设，即 如果2个词的上下文相同，那么，这两个词的representation也是相似的。分布式表示可理解为 一种用来得到word representation的方法**。
     
 标准的NNLM构架图如下：
     ![architecture_of_NNLM](https://github.com/Vita112/notes_for_NLP/blob/master/methods-models/Pre-trainingLM/img/architecture_of_NNML.jpg)
