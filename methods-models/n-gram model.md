@@ -104,5 +104,5 @@ $$PP(S)=2^{-\frac{1}{N}\sum \_{x}p(w_{i})log_{2}p(w_{i})}$$
  
  4.**本质上，N-gram模型描述的是 有限状态的正则文法语言**，而自然语言是不确定的，因此N-gram模型表达能力有限，**无法较好的处理长距离依赖语言现象**。
 
-
+参考文献：[CSDN_blog_自然语言处理NLP中的N-gram模型](https://blog.csdn.net/songbinxu/article/details/80209197)
 下一步：NNLM，由Bengio于2003年提出，N-gram的进化版。
