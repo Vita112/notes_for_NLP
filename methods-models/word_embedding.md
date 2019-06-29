@@ -32,13 +32,14 @@ woed embedding**是一个映射，将单词从原先所属的空间映射到新�
 
 ## 3 word2vec
 在正式介绍word2vec之前，有必要了解一下NNLM。
-+ NNLM
++ 3.1 NNLM
 
 **NNLM存在的问题**：
 >1. 只能处理定长的序列，缺少灵活性；对此，Mikolov等人在2010年提出RNNLM，使用递归神经网络 代替原始模型中的前向反馈神经网络，，并将embedding layer 同RNN中的 hidden layer合并，解决了变成序列的问题
 >2. 训练速度太慢。在百万量级的数据集上，使用40个CPU进行训练，需耗时数周才能得到稍微靠谱的结果。此时，
 Mikolov发现：
-+ word2vec
++ 3.2 word2vec
+
 word2vec是谷歌在2013年提出的一种word embedding工具或算法集合，它是一种**从大量文本语料中，以无监督的方式学习语义知识的模型，通过学习文本，使用词向量表征语义信息,可以较好地表达不同词之间的相似和类比关系**。其实是一个简化的神经网络：input layer为one-hot vector；hidden layer为线性单元，没有使用激活函数；output layer使用softmax函数，维度与input layer一样；采用2种模型（CBOW 和 skip-gram）和2种方法（negative sampling 和 分层softmax）的组合。
 + 以下所讲均**以Skip-Gram模型为例**
 
@@ -75,6 +76,6 @@ word2vec建模过程与自编码器(auto-encoder)的思想相似，**其思想�
 every line is a low-dimensional real-velue vector for the corresponding word.我们使用 wi·W 得到 单词wi的词嵌入向量；
 
 
-参考文献:[word2vec的前世今生](https://www.cnblogs.com/iloveai/p/word2vec.html)
+参考文献:[word2vec的前世今生](https://www.cnblogs.com/iloveai/p/word2vec.html)中又十分详细的讲解！！
 
 
