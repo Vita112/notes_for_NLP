@@ -55,7 +55,7 @@ s为一个有意义的句子，由一串特定顺序排列的词（w1w2……wi�
 
 基本思想是：当某一事件在样本中出现的概率大于K（通常为0或1），运用极大似然估计减值来估计其概率，否则，使用低阶的（n-1）-gram概率来代替n-gram概率。
 只是这种替代必须受归一化因子α的作用。其一般形式为：
-$$p(w_{i+1}|w_{i-k},\cdots ,w_{i})=\lambda _{w_{i-k},\cdots ,w_{i+1}}\frac{count(w_{i-k},\cdots ,w_{i+1})}{w_{i-k},\cdots ,w_{i-1}}+(1-\lambda _{w_{i-k},\cdots ,w_{i}})p(w_{i+1}|w_{i-k+1},\cdots ,w_{i})$$
+$$p(w_{i+1}|w_{i-k},\cdots ,w_{i})=\lambda _{w_{i-k},\cdots ,w_{i+1}}\frac{count(w_{i-k},\cdots ,w_{i+1})}{w_{i-k},\cdots ,w_{i-1}}+(1-\lambda \_{w_{i-k},\cdots ,w_{i}})p(w_{i+1}|w_{i-k+1},\cdots ,w_{i})$$
 非神经网络的最佳语言模型如下：
 $$p(w_{i+1}|w_{i-k},\cdots ,w_{i})=\frac{count(w_{i-k},\cdots ,w_{i+1})-D(count(w{i-k},\cdots ,w_{i+1}))}{w_{i-k},\cdots ,w_{i-1}}+\gamma (w_{i-k},\cdots ,w_{i})p(w_{i+1}|w_{i-k+1},\cdots ,w_{i})$$
 
@@ -64,11 +64,12 @@ $$p(w_{i+1}|w_{i-k},\cdots ,w_{i})=\frac{count(w_{i-k},\cdots ,w_{i+1})-D(count(
 + 基于一定的语料库，预估或评估一个句子是否合理（分词和词性标注）
 
 ## 使用困惑度perplexity评价ml的好坏
-困惑度公式如下：
-$$2^{-\sum \_{x}p(x)log_{2}p(x)}$$
-其中，p(x)=p(wi+1|wi-k,……,wi)，困惑度取值范围为(1,+∞)，困惑度越小，说明词序列越合理，语言模型越好。
-
- 
+困惑度根据每个词来估计一句话出现的概率，并用句子长度作normalize，其公式如下：
+$$PP(S)=P(w_{1}\cdots w_{N})^{-\frac{1}{N}}\\=\sqrt\[N]{\frac{1}{p(w_{1}\cdots w_{N})}}\\=\sqrt\[N]{\prod_{i=1}^{N}\frac{1}{p(w_{i}|w_{1}w_{2}\cdots w_{i-1})}}$$
+其中，p(wi)是第i个词的概率，第一个词就是p(w1|w0),w0是start，一个占位符。困惑度取值范围为(1,+∞)。这个公式表明**困惑度越小，则$p(w_{1}\cdots w_{N})}$就越大，说明词序列越合理，语言模型越好**。
+> PPL的另一种表示：
+$$PP(S)=2^{-\frac{1}{N}\sum \_{x}p(w_{i})log_{2}p(w_{i})}$$
+在unigram时，经常使用这种形式，此时wi不再是个单词，而是第i个bigram 或其他单位量。 
  
  ## 传统语言模型的缺点
  1. 平滑技术 或 back-off，这类方法属人工设计规则，规则复杂，且泛化性能低；
