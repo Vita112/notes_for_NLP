@@ -79,7 +79,7 @@ $$p(w_{i}|w_{i-n+1},\cdots ,w_{i-1})=\frac{Count(w_{i-n+1},\cdots ,w_{i-1},w_{i}
 NNLM（neural network language model）是基于神经网络的语言模型，其利用神经网络的非线性拟合能力，同时学习每个单词的分布式表示word embedding，以及单词序列的概率函数。Bengio于2003年**提出Probabilistic feedforward neural network language model**，改进了n-gram模型，使用依赖于共享参数的多层神经网络，可以利用更长的上下文。论文**提出分布式表示：存在一个分布式假设，即 如果2个词的上下文相同，那么，这两个词的representation也是相似的。这使得模型得以泛化。分布式表示可理解为 一种用来得到word representation的方法**。例如，知道猫和狗扮演类似的角色(语义和语法)，那么，可以将“the cat is walking in the bedroom”泛化到“a dog was running in a room”。
     
 标准的NNLM构架图如下：
-    ![architecture_of_NNLM](https://github.com/Vita112/notes_for_NLP/blob/master/methods-models/Pre-trainingLM/img/architecture_of_NNML.jpg)
+    ![architecture_of_NNLM](https://github.com/Vita112/notes_for_NLP/blob/master/methods-models/Pre-trainingLM/img/architecture_Of_NNLM.jpg)
     
 模型包含input，projection，hidden和output四层，可概括为2部分：
 
@@ -100,6 +100,7 @@ NNLM（neural network language model）是基于神经网络的语言模型，�
 
 $$L(\theta )=\frac{1}{T}\sum \_{i}logf(w_{i},w_{i-1},\cdots ,w_{i-n+1};\theta )+R(\theta )$$
 
+**_思考：网络中，隐层的作用是什么？_**
 >> **word embedding**
 
 从上一节NNLM的训练过程，我们发现 网络不仅能够根据上文预测后接的单词是什么，同时，收获了一个副产品，即word embedding。2013年，最火的用语言模型做word embedding的工具是word2vec，
