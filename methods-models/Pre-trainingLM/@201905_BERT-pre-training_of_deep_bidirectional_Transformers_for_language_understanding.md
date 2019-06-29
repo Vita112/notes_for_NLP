@@ -65,13 +65,14 @@ bert如此火的原因：在NLP各项任务中的出色表现 和 模型的广�
 语言模型假设一种语言中所有可能的句子服从一个概率分布，每个句子出现的概率加起来为1，它使用一个函数P，该函数根据句子中某个词之前的一系列单词，来预测该词位置上出现某个特定单词的概率，**句子中，每个单词都有一个根据上文信息预测自己的过程，把所有预测这些单词的概率乘起来，数值越大，代表这句话越接近自然语言，即越像一句人话**。好的语言模型应该得到较高的概率，perplexity更低，越合乎自然语言表达。**语言模型仅对句子出现的概率进行建模，并不尝试去理解句子的内容含义**。根据链式法则，该函数表示为：
 $$p(S)=p(w_{1},w_{2},\cdots ,w_{m})=p(w_{1})p(w_{2}|w_{1})p(w_{3}|w_{1}w_{2})\cdots ,p(w_{m}|p(w_{1},\cdots ,w_{m-1}))=\prod_{i=1}^{m}p(w_{i}|w_{1},\cdots ,w_{i-1})$$
 语言模型能够帮助从大量自然语言事实中提取出语言学知识，提高NLP中各下游任务的表现。本世纪初最流行的统计语言模型是N-gram模型，是典型的基于稀疏表示(sparse representation)的语言模型;这类**sparse representation based语言模型遭遇 数据严重稀疏的问题**。因为句子长度不固定，若是每次预测概率都考虑该词以前的所有词，模型将用到更多的参数，且为获得更准确的概率分布，需要庞大的语料支持，这将**导致参数空间过大**；加之，zipf定律：语言中大多数词在语料中的出现是稀疏的。训练样本的不足，也会大大削弱模型的可靠性。
->>> 基于马尔科夫假设的n-gram模型：一个词的出现仅依赖于它前面的n个词。
+>>> 基于马尔科夫假设的N-gram模型：一个词的出现仅依赖于它前面的n个词。
 
 模型公式简化为：
 $$p(S)=p(w_{1},w_{2},\cdots ,w_{m})=\prod_{i=1}^{m}p(w_{i}|w_{i-n+1},\cdots ,w_{i-1})$$
-其中，n代表当前单词依赖它前面单词的个数。当n取1,2,3时，分别为 `unigram`,`bigram`,`trigram`。研究人员使用n=3时，获得了较好的效果，但也存在2个缺陷：`1.没有考虑超过22个单词以上的上下文信息；2. 没有考虑单词之间的similarity`. n-gram模型参数一般采用极大似然估计方法计算：
+其中，n代表当前单词依赖它前面单词的个数。当n取1,2,3时，分别为 `unigram`,`bigram`,`trigram`。研究人员使用n=3时，获得了较好的效果，但也存在2个缺陷：`1.没有考虑超过2个单词以上的上下文信息,无法处理更长程的context(N>3);；2. 没有考虑单词之间的similarity`. n-gram模型参数一般采用极大似然估计方法计算：
 $$p(w_{i}|w_{i-n+1},\cdots ,w_{i-1})=\frac{Count(w_{i-n+1},\cdots ,w_{i-1},w_{i})}{Count(w_{i-n+1},\cdots ,w_{i-1}}$$
 其中，count(x)表示短语x在语料中出现的次数。
+关于N-gram模型，请参考笔记[N-gram_model](https://github.com/Vita112/notes_for_NLP/blob/master/methods-models/n-gram%20model.md)
 
 随着deep learning的崛起，以词向量(word embedding)为代表的分布式表示(distributed representation)的语言模型取得更好的效果，深刻影响着NLP领域的模型及其应用。
 >> **神经网络语言模型**
@@ -100,13 +101,12 @@ NNLM（neural network language model）是基于神经网络的语言模型，�
 
 $$L(\theta )=\frac{1}{T}\sum \_{i}logf(w_{i},w_{i-1},\cdots ,w_{i-n+1};\theta )+R(\theta )$$
 
-**_思考：网络中，隐层的作用是什么？_**
+### 思考：网络中，隐层的作用是什么？
 >> **word embedding**
 
-从上一节NNLM的训练过程，我们发现 网络不仅能够根据上文预测后接的单词是什么，同时，收获了一个副产品，即word embedding。2013年，最火的用语言模型做word embedding的工具是word2vec，
+从上一节NNLM的训练过程，我们发现 网络不仅能够根据上文预测后接的单词是什么，同时，收获了一个副产品，即word embedding。2013年，最火的用语言模型做word embedding的工具是word2vec，它有2种训练方法：①CBOW，核心思想是：从一个句子中扣掉一个词，使用该词的上文(context before)和下文(context after)来预测被抠掉的词；②Skip-gram：输入某个单词，要求网络预测该单词的上下文。**word2vec与NNLM不同，NNLM的任务是 学习一个解决LM任务的网络结构，要求根据上文，预测下文；而word2vec不一样，它的目的就是生成word embedding。一个单词表达为word embedding后，很容易找出语义相近的其他词汇**。
 
-
-
+关于word2vec工具，请参见笔记[word_embedding](https://github.com/Vita112/notes_for_NLP/blob/master/methods-models/word_embedding.md),在此不做详述。
 
 
 
