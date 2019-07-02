@@ -26,23 +26,29 @@ NNLM基本思想如下：
 ```
 该模型主要有2部分：
 > 1. 线性embedding layer：它将input word 的one-hot vector映射为一个 低维稠密的real-value vector；
+
 > 2. 简单的前向反馈神经网络g，由tanh隐层和softmax输出层组成。将经过embedding layer输出的word representation(此时应该是输入词段的向量拼接，假设词段长度为k)映射为长度为词典大小的概率分布向量，对词典中的word在输入context下的条件概率做预估：
 $$p(w_{i}|w_{1}\cdots w_{i-1})\approx f(w_{i},w_{t-1},\cdots, w_{t-n+1})\approx g(w_{i},C(w_{t-n+1}),\cdots ,C(w_{t-1}))$$
 使用regularized cross-entropy loss function来优化模型参数θ：
 $$L(\theta )=\frac{1}{T}\sum_{t}logf(w_{t},w_{t-1},\cdots, w_{t-n+1})+R(\theta )$$
-模型参数θ包括了 embedding layer矩阵C的各元素 和 前向反馈神经网络g中的权重。**模型很简单，却同时解决了两个问题**：
+模型参数θ包括了 embedding layer矩阵C的各元素 和 前向反馈神经网络g中的权重。
+
+**模型很简单，却同时解决了两个问题**：
 >1. 计算了LM的条件概率p(wt|context);
 >2. 学习了input word 的word representation
 
 **NNLM存在的问题**：
 >1. 只能处理定长的序列，缺少灵活性；对此，*Mikolov等人在2010年提出RNNLM，使用递归神经网络 代替原始模型中的前向反馈神经网络*，并将embedding layer 同RNN中的 hidden layer合并，解决了变成序列的问题
 
->2. 参数空间巨大，训练速度太慢。在百万量级的数据集上，使用40个CPU进行训练，需耗时数周才能得到稍微靠谱的结果。此时，*Mikolov发现：可以简化NNLM中的第二步，得到word的连续特征向量*。他于2013年推出2篇paper，并开源了word2vec开元词向量计算工具。
+>2. 参数空间巨大，训练速度太慢。在百万量级的数据集上，使用40个CPU进行训练，需耗时数周才能得到稍微靠谱的结果。此时，**Mikolov发现：可以简化NNLM中的第二步，得到word的连续特征向量**。他于2013年推出2篇paper，并开源了word2vec开元词向量计算工具。
 + **3.2 word2vec**
 
 word2vec是谷歌在2013年提出的一种word embedding工具或算法集合，它是一种**从大量文本语料中，以无监督的方式学习语义知识的模型，通过学习文本，使用词向量表征语义信息,可以较好地表达不同词之间的相似和类比关系**。
 
-word2vec是一个简化的神经网络：input layer为one-hot vector；hidden layer为线性单元，没有使用激活函数；output layer使用softmax函数，维度与input layer一样；也就是说**word2vec删掉了NNLM中前向反馈神经网络中的nonlinear hidden layer，直接将embedding layer 与 softmax layer连接**。
+word2vec是一个简化的神经网络：input layer为one-hot vector；hidden layer为线性单元，没有使用激活函数；output layer使用softmax函数对输出进行归一化，得到概率分布，维度与input layer一样；对原始NNLM的改造有以下几点：
+>1. word2vec删掉了NNLM中前向反馈神经网络中的nonlinear hidden layer，直接将embedding layer 与 softmax layer连接;
+>2. 忽略上下文环境的序列信息（此处对应着词袋模型）：输入的所有词向量均汇总到同一个embedding layer；
+>3. put feature word into context
 
 采用2种模型（CBOW 和 skip-gram）和2种方法（negative sampling 和 分层softmax）的组合。
 
@@ -51,10 +57,25 @@ word2vec是一个简化的神经网络：input layer为one-hot vector；hidden l
 ![CBOW&Skip-Gram](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/RelationExtraction/DistantSupervision/pictures/CBOW%26Skip-Gram.png)
 >> **CBOW model**
 
-根据某个词前面的 c个词，或前后c/2个连续的词，找到使用softmax函数的输出层中概率最大的那个词，即是所求的某个词。是从 根据context对target word的预测中，学习到词向量的表达。
+根据某个词前面的 c个词，或前后c/2个连续的词，找到使用softmax函数的输出层中概率最大的那个词，即是所求的某个词。是从 根据context对target word的预测中，学习到词向量的表达。**针对具体的task（给出上下文词，求中心词），使用训练好的参数和词向量**，通过前向传播算法和softmax激活函数，找到概率最大的词，即是我们输入层的c个词对应的 可能性最大的中心词。**适合小型数据库**。下面考虑多词上下文的CBOW。
 
-在BOW模型中，输入层是上下文的c个词的one-hot vector(每个词都是平等的，即不考虑他们与中心词的距离),输出层是词汇表大小个数量的神经元（即词汇表中所有词的softmax函数概率值）；通过DNN的反向传播算法，求得DNN模型的参数，同时得到词表中所有词对应的词向量；<br>
-**针对具体的task（给出上下文词，求中心词），使用训练好的参数和词向量**，通过前向传播算法和softmax激活函数，找到概率最大的词，即是我们输入层的c个词对应的 可能性最大的中心词。**适合小型数据库**。
++ 1. 前向传播
+
+主要有3个步骤：从input layer到hidden layer，**线性操作**得到隐层结果；从hidden layer到output layer**线性操作**得到输出；使用softmax函数对输出归一化，得到概率分布（设词表大小为V）。模型中，输入层是上下文的c个词的one-hot vector(每个词都是平等的，即不考虑他们与中心词的距离),输出层是词汇表大小个数量的神经元（即词汇表中所有词的softmax函数概率值）；
+
+设x1,x2,……,xC是上下文单词的one-hot编码，**以下通过公式展示上面的三个步骤**：
+$$h=\frac{1}{C}W^{T}(x_{1},x_{2},\cdots ,x_{C})=\frac{1}{C}(v_{w_{1}}+v_{w_{1}}+\cdots +v_{w_{C}})^{T}\\\\
+u=W'^{T}h,u_{j}=v'\_{w_{j}}^{T}h$$
+由于`h是输入单词的词向量`，而$v'\_{w_{j}}^{T}$是第j个单词的词向量，**因此，$u_{j}=v'\_{w_{j}}^{T}h$可以看做是 输入单词的词向量与第j个单词词向量的相似度**。
+$$y_{j}=\frac{exp(u_{j})}{\sum_{j'=1}^{V}exp(u_{j'})}=p(w_{j}|w_{I}),j=1,\cdots ,V$$
++ 2. 反向传播
+
+主要有3点：①最大似然估计和损失函数；②hidden layer到output layer的权重矩阵W'的更新；③input layer到hidden layer的权重矩阵W的更新
+
+>  MLE 和 loss function
+
+MLE:
+$$MaxP(w_{O}|w_{I,1},w_{I,2},\cdots ,w_{I,C})=MaxlogP(w_{O}|w_{I,1},w_{I,2},\cdots ,w_{I,C})$$
 
 >> **skip-gram model**
 
@@ -65,16 +86,19 @@ Vi是embedding layer矩阵的列向量，是wi的word representation；Uj是soft
 **其本质是 计算word 的input representation 和 目标representation之间的余弦相似度，并进行softmax归一化**。通过DNN的反向传播算法，求得DNN模型的参数，同时得到词表中所有词对应的词向量；<br>
 **针对具体的task（给出中心词，求上下文词），使用训练好的参数和词向量**，通过前向传播算法和softmax激活函数，找到概率值大小排前n的词，即是 中心词对应的最可能的n个上下文词。**在大型语料上表现较好**。
 
-**由于词表一般在百万级别以上，这意味着 DNN 的输出层softmax函数需要计算词表大小个数量的词的输入概率，计算量很大，处理过程十分耗时**。因此，Mikolov引入了两种优化算法：**分层softmax(hierarchical softmax)和负采样(negative sampling).
+**由于词表一般在百万级别以上，这意味着 DNN 的输出层softmax函数需要计算词表大小个数量的词的输入概率，计算量很大，处理过程十分耗时**。因此，Mikolov引入了两种优化算法：**分层softmax(hierarchical softmax)和负采样(negative sampling)**.
 
 >> Hierarchical softmax
 
 其**基本思想是：将复杂的归一化概率分解为一系列条件概率的乘积**：
 $$p(v|context)=\prod_{i=1}^{m}p(b_{i}(v)|b_{1}(v),\cdots ,b_{i-1}(v),context)$$
-其中，每一层条件概率对应一个二分类问题，通过一个logistic regression function拟合。于是，将对V个word的概率归一化问题 转化成了 对V个词的log似然概率进行拟合。
+其中，每一层条件概率对应一个二分类问题，通过一个logistic regression function拟合。于是，将对V个word的概率归一化问题 转化成了 对V个word的log似然概率进行拟合。
 
-层次softmax 通过构造一颗二叉树，将目标概率的计算复杂度 从最初的V降低到了logV。其付出的代价是：人为增强了
-词与词之间的耦合性。比如，一个word出现的条件概率的变化，会影响到其二叉树路径上所有非叶节点的概率变化，间接对 其他word出现的条件概率产生不同程度的影响。*实际应用中，基于Huffman编码的二叉树可以满足大部分应用场景的需求*。
+层次softmax 通过构造一颗二叉树，将目标概率的计算复杂度 从最初的V降低到了logV，即计算一次概率，最坏要跑O(logV)个节点。其付出的代价是：人为增强了
+词与词之间的耦合性。比如，一个word出现的条件概率的变化，会影响到其二叉树路径上所有非叶节点的概率变化，间接对 其他word出现的条件概率产生不同程度的影响。
+
+*实际应用中，基于Huffman编码的二叉树可以满足大部分应用场景的需求*。<br>
+因为①Huffman树 是满二叉树，从BST 角度上讲，平衡性最好；②Huffman树 可以构成优先队列，对非随机访问十分有效。因此，**按照词频降序建立Huffman树，保证了高频词接近Root，也就是说，高频词计算少，低频词计算多，是一种贪心优化算法**。
 >> negative sampling
 
 
@@ -112,6 +136,11 @@ word2vec建模过程与自编码器(auto-encoder)的思想相似，**其思想�
 every line is a low-dimensional real-velue vector for the corresponding word.我们使用 wi·W 得到 单词wi的词嵌入向量；
 
 
-参考文献:[word2vec的前世今生](https://www.cnblogs.com/iloveai/p/word2vec.html)中又十分详细的讲解！！
+参考文献:
+
+[word2vec的前世今生](https://www.cnblogs.com/iloveai/p/word2vec.html)中又十分详细的讲解！！
+
+[CBOW和Skip-gram模型原理推导](https://blog.csdn.net/bqw18744018044/article/details/90295730)
+
 
 
