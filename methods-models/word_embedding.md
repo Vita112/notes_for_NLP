@@ -77,11 +77,78 @@ $$y_{j}=\frac{exp(u_{j})}{\sum_{j'=1}^{V}exp(u_{j'})}=p(w_{j}|w_{I}),j=1,\cdots 
 MLE:
 $$MaxP(w_{O}|w_{I,1},w_{I,2},\cdots ,w_{I,C})=MaxlogP(w_{O}|w_{I,1},w_{I,2},\cdots ,w_{I,C})$$
 
+loss function：
+$$E=-logP(w_{O}|w_{I,1},w_{I,2},\cdots ,w_{I,C})\\\\=-u_{j^{\*}}+log\sum_{j'=1}^{V}exp(u_{j'})$$
+> 使用SGD，更新hidden layer到output layer的权重矩阵W'，求导过程如下：
+
+$$\frac{\partial E}{\partial u_{j}}=-\frac{\partial u_{j^{\*}}}{\partial u_{j}}+\frac{\partial log\sum_{j'=1}^{V}exp(u_{j'})}{\partial u_{j}}=y_{j}-t_{j}:=e_{j}$$
+其中，$t_{j}$为指示函数，
+$$t_{j}=\left\{\begin{matrix}
+1, &j=j^{\*}\\ 
+0, &j\neq j^{\*}
+\end{matrix}\right.$$
+此处，yj-tj可看做 预测概率与真实概率的差值，即误差ej。接下来，计算权重矩阵W'的第i行第j列的元素$w'\_{ij}$的梯度为：
+$$\frac{\partial E}{\partial w'\_{ij}}=\frac{\partial E}{\partial u_{j}}\times \frac{\partial u_{j}}{\partial w'\_{ij}}=e_{j}h_{j}$$
+
+此处，hj是向量h的第j个分量。于是梯度更新公式为：
+$$w'\_{ij}^{(new)}=w'\_{ij}^{(old)}- \eta e_{j}h_{j}$$
+或者为
+$$v'\_{wj}^{(new)}=v'\_{wj}^{(old)}- \eta e_{j}h_{j}$$
+$$v'\_{wj}$是矩阵W'的第j列。计算ej时，当j≠j\*时，tj=0，即ej=yj-tj≥0，则会 减去ηej倍的h；当j=j\*时，tj=1，则ej=yj-tj≤0，W'中对应的列向量会 增加ηej倍的h。
+
+> 使用SGD计算 input layer到hidden layer的权重矩阵的W的更新
+
+计算损失函数E对隐层向量h的偏导：
+$$\frac{\partial E}{\partial h}=\sum_{j=1}^{V}\frac{\partial E}{\partial u_{j}}\times \frac{\partial u_{j}}{\partial h}\\\\=\sum_{j=1}^{V}e_{j}\frac{\partial (v{\'}\_{wj}^{T}h)}{\partial h}=\sum_{j=1}^{V}e_{j}v{\'}\_{wj}^{T}:=EH $$
+上式可看作是 以ej为权重，对所有W'的列向量进行加权求和。接上式，求关于W的偏导：
+$$\frac{\partial E}{\partial W}=\frac{\partial E}{\partial h}\frac{\partial h}{\partial W}\\\\
+=x\cdot EH^{T}$$
+$EH^{T}$是 1×N 的行向量，输入向量x为 V×1 .因此上式得到一个 V×N 的矩阵。又 由于x是one-hot vector，故得到的其实是向量x中 分量不为0的位置对应的$EH^{T}$的值。此时梯度更新公式为：
+$$v_{wI,c}^{(new)}=v_{wI,c}^{(old)}-\frac{1}{C}\eta EH^{T}$$
+其中，$v_{wI,c}$ 表示 输入单词在矩阵 W 中对应的行向量，此处 需要分别对上下文中的多个词向量进行更新。
+
 >> **skip-gram model**
 
-根据某个词，找到使用softmax函数的输出层中，概率排前n的n个词。从 根据given word对context的预测中，学些到word representation。其过程的数学表示为：
-$$p(w_{0}|w_{i})=\frac{e^{U_{o}\cdot V_{i}}}{\sum \_{j}e^{U_{j}\cdot V_{i}}}$$
-Vi是embedding layer矩阵的列向量，是wi的word representation；Uj是softmax layer 矩阵的行向量，是wj的word representation。输出层是词汇表大小(V)个数量的神经元（即词汇表中所有词的softmax函数概率值）；
+根据某个词，找到使用softmax函数的输出层中，概率排前n的n个词。**从 根据given word对context的预测中，学些到word representation**。
++ 1. 前向传播
+
+对应CBOW中， hidden layer到output layer计算后，同样使用softmax计算概率分布，**skip-gram会输出多个概率分布，假设有C个分布，则第c个分布的第j个输出，即第c个上下文单词为j的概率为**：
+$$p(w_{c,j}|w_{I})=\frac{e^{u_{c,j}}}{\sum_{j'=1}^{V}e^{u_{j'}}}=y_{c,j}$$
+其中，$w_{c,j}$表示第c个概率分布的第j个单词，$y_{c,j}$表示 第c个概率分布中第j个单词的输出概率。
+
+由于skip-gram中，不同的概率分布使用了相同的输出矩阵W'，因此，对于不同的c在相同位置上的u是相等的，即
+$$u_{c,j}=u_{j}=v'\_{wj}^{T}\cdot h$$
+其中，$v'\_{wj}$是 词典中第j个单词wj的输出向量，也是矩阵W'的第j列。
++ 2. 反向传播
+
+> 损失函数
+
+$$E = -logP(w_{O,1},\cdots ,w_{O,C}|w_{I})\\\\
+=-log\prod_{c=1}^{C}P(w_{O,C}|w_{I})\\\\
+=-log\prod_{c=1}^{C}\frac{exp(u_{c,j_{c}^{\*}})}{\sum_{j'=1}^{V}exp(u_{j'})}\\\\
+=-\sum_{c=1}^{C}u_{c,j_{c}^{\*}}+C\cdot log\sum_{j'=1}^{V}exp(u_{j'})$$
+其中，$j_{c}^{\*}$是第c个上下文真实单词在字典中的索引。
+> hidden layer 到output layer的权重矩阵W'的更新
+
+$$\frac{\partial E}{\partial u_{c,j}}=y_{c,j}-t_{c,j}:=e_{c,j}$$
+由于输出层权重共享，即$y_{c1,j}=y_{c2,j}$。因此，只是$t_{c,j}$的不同，会导致$e_{c,j}$的不同。于是，定义
+$$EI_{j}=\sum_{c=1}^{C}e_{c,j}$$
+定义V维向量
+$$EI=\[EI_{1},EI_{2},\cdots ,EI_\{V}]$$
+计算损失函数E关于W'的导数：
+$$\frac{\partial E}{\partial w'\_{ij}}=\sum_{c=1}^{C}\frac{\partial E}{\partial u_{c,j}}\cdot =\frac{\partial u_{c,j}}{\partial w'\_{ij}}= EI_{j}\cdot h_{j}$$
+因此，权重更新公式为：
+$${w}'\_{ij}^{(new)}={w}'\_{ij}^{(old)}-\eta EI_{j}\cdot h_{j}$$
+or
+$${v}'\_{wj}^{(new)}={v}'\_{wj}^{(old)}-\eta EI_{j}\cdot h$$
+> input layer到hidden layer的权重矩阵W的更新
+
+$$\frac{\partial E}{\partial h}=\sum_{j=1}^{V}\sum_{c=1}^{C}\frac{\partial E}{\partial u_{c,j}}\cdot \frac{\partial u_{c,j}}{\partial h}\\\\
+=\sum_{j=1}^{V}\sum_{c=1}^{C} e_{c,j}\ {v'}\_{wj}^{T}\\\\
+=\sum_{j=1}^{V}{v'}\_{wj}^{T}\sum_{c=1}^{C} e_{c,j}\\\\
+=\sum_{j=1}^{V}EI_{j}{v'}\_{wj}^{T}:=EH$$
+
+观察上式发现：EH是输出词向量${v'}\_{wj}^{T}$的加权求和，权重由$EI_{j}=\sum_{c=1}^{C}e_{c,j}$给出。由于skip-gram需要预测多个上下文，于是，预测误差是 将多个上下文在同一个位置的预测误差相加得到。
 
 **其本质是 计算word 的input representation 和 目标representation之间的余弦相似度，并进行softmax归一化**。通过DNN的反向传播算法，求得DNN模型的参数，同时得到词表中所有词对应的词向量；<br>
 **针对具体的task（给出中心词，求上下文词），使用训练好的参数和词向量**，通过前向传播算法和softmax激活函数，找到概率值大小排前n的词，即是 中心词对应的最可能的n个上下文词。**在大型语料上表现较好**。
