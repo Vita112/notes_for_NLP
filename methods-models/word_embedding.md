@@ -215,5 +215,10 @@ every line is a low-dimensional real-velue vector for the corresponding word.我
 
 [CBOW和Skip-gram模型原理推导](https://blog.csdn.net/bqw18744018044/article/details/90295730)
 
+[噪音对比估计NCE](https://blog.csdn.net/littlely_ll/article/details/79252064)
+
+[噪声对比估计杂谈：曲径通幽之妙](https://blog.csdn.net/c9Yv2cf9I06K2A9E/article/details/80731084)
+
+[word2vec原理（三）基于negative sampling的模型](https://www.cnblogs.com/pinard/p/7249903.html）
 
 
