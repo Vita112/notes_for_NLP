@@ -6,15 +6,15 @@
 **distributed representation**可以解决one-hot representation的问题：通过训练，将高维稀疏的向量 映射到 低维空间中，将每个词映射到一个低维度的语义空间，每个词 将由一个固定维度的稠密向量表示。事实上，distributed representation这个概念在IR领域早就广泛使用，只是被称为*向量空间模型vector space model(VSM)*.VSM基于一种statistical semantics hypothesis：语言的统计特征隐藏着语义的信息。比如，2篇具有相似词分布的文档可以被认为是有着相近的主题。**该假设有2个广为人知的衍生版本**：一个是bag of words hypothesis：一篇文档的词频代表了文档的主题；一个是distributional hypothesis：上下文环境相似的两个词有着相近的语义。**word2vec是基于distributional hypothesis的**。
 
 **word embedding**, 中文又称词嵌入，基于分布式假设(distributional hypothesis:由Harris于1954年提出，假设上下文相似的词，其语义也相似)。         
-得名于Bengio等人在2001年的一片论文《neural network language model》，该论文中，模型在学习语言模型的同时，也得到了词向量。下图是谷歌于2013年开源的一款用于计算词向量的工具——word2vec的两种训练方法：CBOW  和 Skip-gram。
+得名于Bengio等人在2001年的一片论文《neural network language model》，该论文中，模型在学习语言模型的同时，也得到了词向量。
 
 ![word_embedding](https://github.com/Vita112/notes_for_NLP/blob/master/methods-models/img/word_embedding.jpg)
 
-woed embedding**是一个映射，将单词从原先所属的空间映射到新的空间中**。同时，通过将word向量化成word vector，可以得到单词间的语义相似性信息。这是因为：向量之间的距离在一定程度上可以衡量词的语义相似性，含义相似的词在空间中的距离更接近。这个是传统词袋模型挖掘不到的信息。
+woed embedding**是一个映射(见上图)，将单词从原先所属的空间映射到新的空间中**。同时，通过将word向量化成word vector，可以得到单词间的语义相似性信息。这是因为：向量之间的距离在一定程度上可以衡量词的语义相似性，含义相似的词在空间中的距离更接近。这个是传统词袋模型挖掘不到的信息。
 
 ## 3 word2vec
 在正式介绍word2vec之前，有必要了解一下NNLM。
-+ **3.1 NNLM**
++ **3.1 NNLM神经网络语言模型**
 
 2003年，由Bengio等人在《a neural probabilisitic language model》中提出，在模型构建过程中产生的映射矩阵，为后续包括word2vec等研究word representation learning奠定了基础。
 
