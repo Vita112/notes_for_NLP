@@ -172,9 +172,35 @@ $$p(v|context)=\prod_{i=1}^{m}p(b_{i}(v)|b_{1}(v),\cdots ,b_{i-1}(v),context)$$
 > NCE本质是 利用已知的概率密度函数来估计未知的概率密度函数，使得在 没法直接完成归一化因子(配分函数)的计算时，能够估算出概率分布的参数。其思想如下：
 
 在softmax回归中，计算 某个样本属于某个分类的概率，需要把所有分类的概率都计算出来。**NCE将多分类变为二分类，并使用相同的参数**：从真实的数据中抽取样本X=（x1,x2,……,xTd），但我们并不清楚 该样本服从何种分布。假设每个样本xi服从一个未知的概率密度函数pd，现在需要一个可参考的分布，也可称为噪音分布来反过来估计概率密度函数pd,从该噪音分布中抽取的样本数据为Y=（y1,y2,……,yTn）。我们的目的是  通过学习一个分类器把这两类样本区别开来，从模型中学到数据的属性，通过比较来学习。
+> 设$U=X\bigcup Y={u_{1},u_{1},\cdots ,u_{Td+Tn}}$，其中，Td是数据样本个数，Tn为噪音分布的样本个数，ut服从(0-1)伯努利分布，给每个ut一个标签Ct，有
+$$C_{t}=\left\{\begin{matrix}
+1 & if \ u_{t}\in X\\ 
+0 & if \ u_{t}\in Y& 
+\end{matrix}\right.$$
+令$p(\cdot |C=1)=p_{m}(.;\theta )$,假设存在$\theta ^{\ast }$使得$p_{d}(\cdot)=p_{m}(.;\theta ^{\ast } )$,则有：
+$$p(u|C=1)=p_{m}(u;\theta )\\\\
+p(u|C=0)=p_{n}(u)$$
+先验分布为：
+$$P(C=1)=\frac{Td}{Td+Tn}\\\\
+P(C=0)=\frac{Tn}{Td+Tn}$$
+根据全概率公式，有：
+$$P(u)=P(u|C=1;\theta )P(C=1)+P(u|C=0)P(C=0)$$
+**我们的目标是得到后验概率$P(C=1|u;\theta )$，根据贝叶斯公式，有**:
+$$P(C=1|u;\theta )=\frac{P(u|C=1;\theta )P(C=1)}{P(u)}\\\\
+=\frac{P_{m}(u;\theta )}{P_{m}(u;\theta) +\frac{Tn}{Td}P_{n(u)}}$$
+引进对数比率
+$$G(u;\theta )=ln\frac{P_{m}(u;\theta )}{Pn(u)}$$
+记我们的后验概率$P(C=1|u;\theta )=h(u;\theta )$,且
+$$h(u;\theta )=\frac{1}{1+v\cdot exp(-u)},u=G(u;\theta ),v=\frac{Tn}{Td}$$
+
+**根据二元逻辑回归的条件对数似然函数，有**：
+$$L(\theta )=\sum_{t=1}^{Td}ln(h(x_{t};\theta ))+\sum_{t=1}^{Tn}ln(1-h(y_{t};\theta ))$$
+
+在NCE中，通过最大化以下目标函数得到$\theta$的估计：
+$$J_{T}(\theta )=\frac{1}{Td}{\sum_{t=1}^{Td}ln(h(x_{t};\theta ))+\sum_{t=1}^{Tn}ln(1-h(y_{t};\theta ))}$$
 
 关于**negative sampling的直观理解**：假设有一个训练样本，中心词为w，其上下文为context(w),这是一个正实例；在nagative sampling中，我们得到neg个和w不同的中心词wi=1,2，……，neg,context(w)和wi就组成了neg个负实例。使用正实例(w,context(w))和neg个负实例(wi,context(w))进行二元逻辑回归，得到负采样对应每个词wi对应的模型参数Θi 和 每个词的词向量。需弄明白2个问题:**1、如何计算二元逻辑回归？2、如何进行负采样**。以下试分析：
-> 基于negative sampling的模型梯度计算
+> 1、基于negative sampling的模型梯度计算
 
 正负例样本表示为：
 $$P(context(w_{0}),w_{i})=\left\{\begin{matrix}
@@ -187,6 +213,10 @@ $$\prod_{i=0}^{neg} P(context(w_{0}),w_{i})=
 (1-\sigma (x_{w_{0}}^{T}\theta ^{w_{i}}))$$
 我们得到对应的对数似然函数为：
 $$L=\sum_{i=0}^{neg}y_{i}log(\sigma (x_{w_{0}}^{T}\theta ^{w_{i}}))+(1- y_{i})log(1-\sigma(x_{w_{0}}^{T}\theta ^{w_{i}})）$$
+与hierarchical softmax类似，我们采用随机梯度上升的方法，每次仅用一个样本更新梯度，此处，我们**通过下式得到$x_{w_{0}}$和$\theta ^{w_{i}}$的梯度**（[逻辑回归的详细求导过程](https://www.cnblogs.com/zhongmiaozhimen/p/6155093.html)）
+$$\frac{\partial L}{\partial \theta ^{w_{i}}}=(y^{i}-\sigma (x_{w_{0}}^{T}\theta ^{w_{i}}))x_{w_{0}}$$
+$$\frac{\partial L}{\partial x ^{w_{0}}}=\sum_{i=0}^{neg}(y^{i}-\sigma (x_{w_{0}}^{T}\theta ^{w_{i}}))\theta ^{w_{i}}$$
+> 2 、negative sampling如何进行
 
 
 + 以下所讲**以Skip-Gram模型为例**
@@ -233,6 +263,6 @@ every line is a low-dimensional real-velue vector for the corresponding word.我
 
 [噪声对比估计杂谈：曲径通幽之妙](https://blog.csdn.net/c9Yv2cf9I06K2A9E/article/details/80731084)
 
-[word2vec原理（三）基于negative sampling的模型](https://www.cnblogs.com/pinard/p/7249903.html）
+[word2vec原理（三）基于negative sampling的模型](https://www.cnblogs.com/pinard/p/7249903.html)
 
 
