@@ -169,11 +169,25 @@ $$p(v|context)=\prod_{i=1}^{m}p(b_{i}(v)|b_{1}(v),\cdots ,b_{i-1}(v),context)$$
 
 是Tomas Mikolov 等人在论文《distributed representations of words and phrases and their compositionality》提出的，**是NCE(Noise Contrastive Estimation)噪声对比评估的简化版，目的是 提高训练速度，改善所得词向量的质量**。
 
-关于**negative sampling的直观理解**：假设有一个训练样本，中心词为w，其上下文为context(w),这是一个正实例；在nagative sampling中，我们得到neg个和w不同的中心词wi=1,2，……，neg,context(w)和wi就组成了neg个负实例。使用正实例(w,context(w))和neg个负实例(wi,context(w))进行二元逻辑回归，得到负采样对应每个词wi对应的模型参数Θi 和 每个词的词向量。
-
 > NCE本质是 利用已知的概率密度函数来估计未知的概率密度函数，使得在 没法直接完成归一化因子(配分函数)的计算时，能够估算出概率分布的参数。其思想如下：
 
 在softmax回归中，计算 某个样本属于某个分类的概率，需要把所有分类的概率都计算出来。**NCE将多分类变为二分类，并使用相同的参数**：从真实的数据中抽取样本X=（x1,x2,……,xTd），但我们并不清楚 该样本服从何种分布。假设每个样本xi服从一个未知的概率密度函数pd，现在需要一个可参考的分布，也可称为噪音分布来反过来估计概率密度函数pd,从该噪音分布中抽取的样本数据为Y=（y1,y2,……,yTn）。我们的目的是  通过学习一个分类器把这两类样本区别开来，从模型中学到数据的属性，通过比较来学习。
+
+关于**negative sampling的直观理解**：假设有一个训练样本，中心词为w，其上下文为context(w),这是一个正实例；在nagative sampling中，我们得到neg个和w不同的中心词wi=1,2，……，neg,context(w)和wi就组成了neg个负实例。使用正实例(w,context(w))和neg个负实例(wi,context(w))进行二元逻辑回归，得到负采样对应每个词wi对应的模型参数Θi 和 每个词的词向量。需弄明白2个问题:**1、如何计算二元逻辑回归？2、如何进行负采样**。以下试分析：
+> 基于negative sampling的模型梯度计算
+
+正负例样本表示为：
+$$P(context(w_{0}),w_{i})=\left\{\begin{matrix}
+\sigma (x_{w_{0}}^{T}\theta ^{w_{i}}) & y_{i}=1,i=0\\ 
+1-\sigma (x_{w_{0}}^{T}\theta ^{w_{i}}) & y_{i}=0,i=1,2,\cdots ,neg
+\end{matrix}\right.$$
+我们希望最大化下式：
+$$\prod_{i=0}^{neg} P(context(w_{0}),w_{i})=
+\sigma (x_{w_{0}}^{T}\theta ^{w_{0}})\prod_{i=1}^{neg}
+(1-\sigma (x_{w_{0}}^{T}\theta ^{w_{i}}))$$
+我们得到对应的对数似然函数为：
+$$L=\sum_{i=0}^{neg}y_{i}log(\sigma (x_{w_{0}}^{T}\theta ^{w_{i}}))+(1- y_{i})log(1-\sigma(x_{w_{0}}^{T}\theta ^{w_{i}})）$$
+
 
 + 以下所讲**以Skip-Gram模型为例**
 
