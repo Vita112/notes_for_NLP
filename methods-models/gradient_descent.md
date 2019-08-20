@@ -66,6 +66,8 @@ $$\hat{\theta }=(\mathbf{X}^\mathrm{T}\mathbf{X})^{-1}\mathbf{X}^\mathrm{T}y$$
 在每次更新中，对 n 个样本构成的一批数据，计算损失函数 J(θ)，并对相应的参数求导。
 
 这种方法：(a) 降低了更新参数的方差（variance），使得收敛过程更为稳定；(b) 能够利用最新的深度学习程序库中高度优化的矩阵运算器，能够高效地求出每小批数据的梯度。
+
+**[补充知识：指数加权移动平均和偏差修正](https://github.com/Vita112/notes_for_NLP/blob/master/methods-models/exponential_weighted_moving_average.md)**
 ### 6 梯度下降的优化算法
 #### 6.1 动量法（momentum）
 ![SGD_with_momentum](https://github.com/Vita112/notes_for_NLP/blob/master/methods-models/img/SGD_with_momentum.jpg)
