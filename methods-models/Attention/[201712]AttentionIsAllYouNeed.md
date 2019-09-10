@@ -2,6 +2,8 @@
 propose a new simple network architecture：Transformer，完全依赖于attention mechanism。第一个完全依赖于self-attention来计算(输入和输出)表示的传导模型transduction model,用于处理序列模型相关问题。
 
 code available：https://github.com/tensorflow/tensor2tensor
+
+paper link [here](https://arxiv.org/pdf/1706.03762.pdf)
 > **创新点**
 
 提出自注意力self-attention，每个词和所有词计算attention，使每个词都有全局的语义信息(长依赖性)。*不管两个词之间的距离有多长，最大的路径长度也都只是1*。
@@ -84,7 +86,7 @@ $$Attention(q_{t},K,V)=\sum_{s=1}^{m}\frac{1}{Z}exp(\frac{<q_{t},k_{s}>}{\sqrt{d
 
 ![comparison_of_different_layer_types]()
 
-由上图可知，一个自注意力层只需要 一个常数级的序列操作 将所有位置连接起来，而一个递归层则需要O(n)个序列操作。**计算复杂度**上，当n小于d时，自注意力比递归层快，而在机器翻译的先进模型中，序列长度n都比表示维度d小，例如字段表示和字节表示(word-piece and byte-pair representations)，
+由上图可知，一个自注意力层只需要 一个常数级的序列操作 将所有位置连接起来，而一个递归层则需要O(n)个序列操作。**计算复杂度**上，当n小于d时，自注意力比递归层快，而在机器翻译的先进模型中，序列长度n都比表示维度d小，例如字段表示和字节表示(word-piece and byte-pair representations).
 
 一个单独的核窗口宽度为 k<n 的卷积层并不会连接所有的输入和输出位置对。而要连接所有的位置对，使用相邻核(contiguous kernels)时，需要堆栈O(n/k)的卷积层；使用膨胀卷积(dilated convolution)时，需堆栈O(logk(n))的卷积层。
 
