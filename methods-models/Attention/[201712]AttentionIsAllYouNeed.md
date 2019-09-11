@@ -72,7 +72,15 @@ $$Attention(q_{t},K,V)=\sum_{s=1}^{m}\frac{1}{Z}exp(\frac{<q_{t},k_{s}>}{\sqrt{d
 
 > **multi-head attention**
 
-将d_model 维的queries，keys和values分别线性映射h次成 不同的、学习到的$d_k$维,$d_k$维和$d_v$维。在h次的每一次映射后得到的结果(queries,keys,values)上并行执行注意力（即进行scaled dot-product attention operation），返回一个$d_v$维输出。将所有输出拼接，再进行一次线性映射，得到最终的结果值。multi-head attention是由若干个并行运行的attention layers组成，**允许模型联合关注来自不同位置的不同表示子空间的信息，这里主要重点在不同子空间，因为存在多个head**。在encoder-decoder框架中，query来自上一个decoder层，而key和value则是上一层encoder的输出。正是这种机制，这使得decoder中的每个位置都可以处理输入序列中的所有位置，句子中每一个part都可以参与到encoder-decoder的过程。
+将d_model 维的queries，keys和values分别线性映射h次成 不同的、学习到的$d_k$维,$d_k$维和$d_v$维。在h次的每一次映射后得到的结果(queries,keys,values)上并行执行注意力（即进行scaled dot-product attention operation），返回一个$d_v$维输出。将所有输出拼接，再进行一次线性映射，得到最终的结果值。multi-head attention是由若干个并行运行的attention layers组成，**允许模型联合关注来自不同位置的不同表示子空间的信息，这里主要重点在不同子空间，因为存在多个head**。
+
+> Transformer use multi-head in 3 ways:
+
+① 在encoder-decoder attention layers中，query来自previous decoder layer，key和value来自encoder output，这使得decoder中的每个位置都可以处理输入序列中的所有位置。
+
+② encoder中包含多个self-attention layers，每一个self-attention layer 的所有keys，values和queries 均来自 the output of ther previous layer in the encoder.**encoder中的每一个位置 可以关注该encoder的previous layer 的所有位置**。
+
+③ decoder中也包含多个self-attention layers，这些layers 允许decoder中的每个位置关注 该位置之前的所有位置的信息(包括该位置)。
 
 **此处有两个问题：1，多头的head个数 如何确定？2.位置信息直观上看，具体指什么呢？**
 
@@ -103,13 +111,14 @@ $$Attention(q_{t},K,V)=\sum_{s=1}^{m}\frac{1}{Z}exp(\frac{<q_{t},k_{s}>}{\sqrt{d
 ### 3.4 position-wise feed-forward networks
 在encoder和decoder中，均使用了定位全链接前馈网络，**它应用于每个位置，并且完全相同**。公式如下：
 $$FFN(x)=max(0,xW_{1}+b_{1})W_{2}+b_{2}$$
+同一层上跨不同位置的线性变化是一样的，但是使用不同的参数from layer to layer。
 ### 3.5 others
 + embeddings and softmax
 
-使用学习到的embeddings将input tokens和output tokens 转化为d_model维的向量；使用softmax函数将decoder output转化为预测为下一个token的概率。**in this model，我们在两个embedding layers 和 pre-softmax linear transformation之间，使用相同的权重矩阵**。
+使用学习到的embeddings将input tokens和output tokens 转化为d_model维的向量；使用学习到的线性变换和softmax函数转换decoder output，用于预测下一个token的概率。**in this model，我们在两个embedding layers 和 pre-softmax linear transformation之间，使用相同的权重矩阵**。
 + positional encoding
 
-在encoder和decoder stacks的底层，将positional encodings添加到input embeddings 中。**in this work，使用不同频率的sine和cosine函数，公式如下**：
+在encoder和decoder stacks的底层，将positional encodings添加到input embeddings 中，以利用序列的顺序信息。**in this work，使用不同频率的sine和cosine函数，公式如下**：
 $$PE_{(pos,2i)}=sin(pos/10000^{2i/d_{model}})\\\\
 PE_{(pos,2i+1)}=cos(pos/10000^{2i/d_{model}})$$
 此处，pos代表position，i代表dimension，也就是说:**positional encoding的每一个dimension都对应一个正弦曲线sinusoid。波长形成了一个从2π到10000·2π的geometric progression几何数列
@@ -117,11 +126,11 @@ PE_{(pos,2i+1)}=cos(pos/10000^{2i/d_{model}})$$
 
 + input：2个单词——thinking 和 machines；
 
-+ 首先embedding得到单词表示，矩阵点乘计算得到每个单词的q,k,v；
++ 首先embedding得到单词表示wj，矩阵点乘计算得到input每个单词表示wj 的三个向量 qi,kj,vj；*此处，i，j分别表示input sequence和output sequence的索引，且位置对应*。
 
 ![computations_of_self-attention1](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/Attention/img/computations_of_self-attention1.jpg)
 
-+ 向量q，k点乘得到相似性得分score，score规范化后进行softmax，得到score的概率分布，可以理解为注意力概率分配；
++ 对于output sequence中的yi，计算向量qi，kj点乘，得到相似性score，score规范化后进行softmax，得到score的概率分布，即是预测yi时，给与input sequence中每个单词的注意力概率分配；
 
 + 分别与encoder的v值相乘，并相加后，得到针对各单词的加权求和值z，即是self-attention的输出。
 
@@ -141,11 +150,11 @@ PE_{(pos,2i+1)}=cos(pos/10000^{2i/d_{model}})$$
 细节动态图[click](https://www.zhihu.com/question/61077555/answer/183884003)
 
 ## 5 training
-模型训练主要包括：**training data and batching，hardware and schedule，optimizer以及正则化**。下面说一下正则化过程，本模型中使用了3种正则化。
+模型训练主要包括：**training data and batching，hardware and schedule，optimizer以及正则化**。
 
-+ residual dropout
+training data：来自标准WMT 2014 english-german dataset，使用byte-pair encoding 编码句子，
 
-+ label smoothing
+使用了3种正则化：residual dropout，label smoothing。
 
 ## 6 results
 分别在英德机器翻译核英法机器翻译任务中表现优秀。
