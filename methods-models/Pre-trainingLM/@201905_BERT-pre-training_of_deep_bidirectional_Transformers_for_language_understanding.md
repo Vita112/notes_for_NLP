@@ -42,7 +42,7 @@ model is feature-based and not deeply bidirectional。向量拼接这种形式�
 近期，可以从unlabelled text中预训练 产生contextual token representations的 sentence or document encoders，然后，进行微调用于a supervised downstream task。基于微调的方法的优点是:只需要学习少量的参数。基于此，GPT got state-of-the-art results on many sentence-level tasks。
 
 相当于原始Transformer architecture的decoder，因其使用的是 constrained self-attention，所有的token都只关注其左侧的上下文信息。
-## 2.3 transfer learning from supervised data
+### 2.3 transfer learning from supervised data
 使用大规模数据，可以从监督任务中进行高效的迁移学习。CV领域的研究以表明：从大型预训练模型中迁移学习的重要性。
 
 ## 3 BERT：pre-training and fine-funing
@@ -54,13 +54,28 @@ BERT的一个区别于其他模型的特征是：**BERT的跨不同任务的统�
 
 + **model architecture** 
 
+![overall_pre-training_and_fine-tuning_procedures_for_BERT](https://github.com/Vita112/notes_for_NLP/blob/master/methods-models/Pre-trainingLM/img/overall_pre-training_and_fine-tuning_procedures_for_BERT.png)
 a multi-layer bidirectional Transformer encoder based on the original Transformer in 《attention is all you need》。
 
 + **input/output representations**
 
 *a sentence*:连续文本的任意span，而不是一个真正意义上的语言学上的句子；*a sequence*:BERT的输入token序列，可能是一个句子，也可能是打包在一起的2个句子。
 
-每一个sequence的第一个token总是一个特殊的分类token(【CLS】)，对应于这个token的最终隐藏状态 被看作聚集序列表示，用于分类任务。
+每一个sequence的第一个token总是一个特殊的分类token(【CLS】)，对应于这个token的最终隐藏状态 被看作聚集序列表示，用于分类任务。input embeddings是
+token embeddings，segmentation embeddings和position embeddings的加和，即下图：
+![BERT_input_representations](https://github.com/Vita112/notes_for_NLP/blob/master/methods-models/Pre-trainingLM/img/BERT_input_representations.png)
+### 3.1 pre-training BERT
+### 3.2 fine-tuning BERT
+
+## 4 experiments
+### 4.1 GLUE:general language understanding evaluation benchmark
+### 4.2 SQuAD v1.1:Stanford Question Answering Dataset 
+### 4.2 SQuAD v2.0
+### 4.3 SWAG: Situation With Adversarial Generation dataset
+## 5 ablation study
+### 5.1 effect of Pre-training tasks
+### 5.2 effect of Model size
+## 6 conclusion
 
 
 
