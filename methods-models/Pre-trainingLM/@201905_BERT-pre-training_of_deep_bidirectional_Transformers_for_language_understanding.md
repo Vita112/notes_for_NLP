@@ -2,9 +2,8 @@ BERT-pre-training_of_deep_bidirectional_Transformers_for_language_understanding
 
 google AI language
 
-## 摘要
-提出一种新的语言表示模型-BERT:Bidirectional Encoder Repressentations from Transformers,**旨在通过基于所有层的左、右上下文，to pretrain deep bidirectional
-representations from unlabeled text**.是对fine-tuninig based approaches的改进。
+## abstract
+提出一种新的语言表示模型-BERT:Bidirectional Encoder Repressentations from Transformers,**旨在通过基于所有层的左、右上下文，to pretrain deep bidirectional representations from unlabeled text**.是对fine-tuninig based approaches的改进。
 
 可以仅在一个额外的输入层上进行fine-tuning，便可以在很多NLP任务上获得优秀的表现。实验证明：BERT在11项NLP任务中获得了state-of-the-art的表现。
 
@@ -16,22 +15,42 @@ representations from unlabeled text**.是对fine-tuninig based approaches的改�
 
 + 将预训练语言模型应用于下游任务的2种策略：feature-based 和 fine-tuning.
 
-feature-based：例如 ELMo
+feature-based：例如 ELMo from [paper](https://arxiv.org/pdf/1802.05365.pdf)
 
-fine-tuning：例如 OpenAI GPT(Generative Pre-training Transformer)
+fine-tuning：例如 OpenAI GPT(Generative Pre-trained Transformer)
 
-两种方法在预训练阶段使用相同的objective function，即 使用单项语言模型unidirechtional language models来学习通用语言表示。这种标准的语言模型的主要限制在于：
-单向模型限制了 预训练阶段的构架的选择。
+两种方法在预训练阶段使用相同类型的objective function，即 使用单向语言模型unidirechtional language models来学习通用语言表示。这种标准的语言模型的主要限制在于：单向模型限制了 预训练阶段的构架选择。
 
-+ **本文贡献**
++ **contributions in this paper**
 
 1. 提出BERT，使用MLM(masked language model)来预训练深度双向表示；提出了NSP：next sentence prediction。
 
-2. 表明 预训练表示减少了 对许多精心设计的特定于某个任务的构架的需求。
+2. 表明 预训练表示弱化了 对许多精心设计的特定于某个任务的构架的需求。
 
 3. code and pre-trained models are available：https://github.com/google-research/bert.
 
 4. **知乎文章[《从word embedding到BERT》](https://zhuanlan.zhihu.com/p/49271699)对BERT的来龙去脉进行了梳理(此处点赞，看完后有种通了的感觉)**，参见文章末尾附录。
+
+## 2 related work
+### 2.1 unsupervised feature-based approaches
+**ELMo** extract context-sensitive features from a left-to-right and a right-to-left language model.每一个token的上下文表示是这两个方向的表示的拼接。
+
+model is feature-based and not deeply bidirectional。
+
+### 2.2 unsupervised fine-tuning approaches
+近期，可以从unlabelled text中预训练 产生contextual token representations的 sentence or document encoders，然后，进行微调用于a supervised downstream task。基于微调的方法的优点是:只需要学习少量的参数。基于此，GPT got state-of-the-art results on many sentence-level tasks。
+
+## 2.3 transfer learning from supervised data
+使用大规模数据，可以从监督任务中进行高效的迁移学习。CV领域的研究以表明：从大型预训练模型中迁移学习的重要性。
+
+## 3 BERT：pre-training and fine-funing
+> *step1-pre-training*:model is trained on unlabelled data over different pre-training tasks
+
+> *step2-fine-tuning*: model is first initialized with pre-trained parameters,then all of the parameters are fine-tuned using labelled data from the downstream tasks.
+
+BERT的一个区别于其他模型的特征是：**BERT的跨不同任务的统一的框架，在预训练阶段和微调阶段的模型之间只有很小的差别**。
+
+**model architecture** is a multi-layer bidirectional Transformer encoder based on the original Transformer in <<attention is all you need>>.
 
 
 
