@@ -61,19 +61,42 @@ a multi-layer bidirectional Transformer encoder based on the original Transforme
 
 *a sentence*:连续文本的任意span，而不是一个真正意义上的语言学上的句子；*a sequence*:BERT的输入token序列，可能是一个句子，也可能是打包在一起的2个句子。
 
-每一个sequence的第一个token总是一个特殊的分类token(【CLS】)，对应于这个token的最终隐藏状态 被看作聚集序列表示，用于分类任务。input embeddings是
+本文使用带有30,000个token的vocabulary的 Wordpiece embeddings。每一个sequence的第一个token总是一个特殊的分类token(【CLS】)，对应于这个token的最终隐藏状态 被看作聚集序列表示，用于分类任务。input embeddings是
 token embeddings，segmentation embeddings和position embeddings的加和，即下图：
 ![BERT_input_representations](https://github.com/Vita112/notes_for_NLP/blob/master/methods-models/Pre-trainingLM/img/BERT_input_representations.png)
-### 3.1 pre-training BERT
-### 3.2 fine-tuning BERT
 
+### 3.1 pre-training BERT
+pre-train BERT using 2 unsupervised tasks
++ TASK #1-Masked LM
+
+在预训练时，使用【mask】这个特殊的token 随机替代句子中的部分token，目标是 预测【mask】对应位置的单词。这个过程又被看做cloze任务，该任务中对应masked token的最终隐藏向量are fed into一个在词汇表上的output softmax 分布。
+
+由于在fine-tuning 阶段并没有出现【mask】token，这导致pre-training阶段和fine-tuning阶段产生了 mismatch。为缓解这种不匹配，在与训练阶段，我们并不总是使用实际的【mask】token来代替被遮蔽的words。具体地，模型首先随机选取15%的token positions用于预测，然后对于被选中的第i个token，模型有80%的概率会使用【mask】token 来替换，10%的概率使用一个随机token替换，10%的概率选择保持不变。
++ TASK #2-Next Sentence Prediction
+
+为训练一个可以理解句子间关系的模型，我们预训练一个 二值化的下一个句子预测任务（binarized next sentence prediction task），该任务可以从任意的单语语料库中生成。当为每一个预训练样本选择句子A和句子B时，50%的时候句子A的后一句真的是句子B，50%的时候不是这样。5.1的消融分析部分证明了 **预训练这个NSP任务对于QA & NLI 任务十分有益**。
+
+pre-training data 使用BooksCorpus的800M words和English Wikipedia。
+### 3.2 fine-tuning BERT
+对于每一个任务，我们将任务特定的input和output放入BERT中，然后端到端地微调所有参数。
 ## 4 experiments
-### 4.1 GLUE:general language understanding evaluation benchmark
-### 4.2 SQuAD v1.1:Stanford Question Answering Dataset 
+### 4.1 GLUE:general language understanding evaluation benchmark，sequence-level task
+
+### 4.2 SQuAD v1.1:Stanford Question Answering Dataset，token-level task
+是一个 100k众包 Q/A pairs的集合。给定一个问题和 来自维基百科的包含答案的 一个段落，任务是：预测在passage中的answer text span。
+
+将input question 和 passage表示为 a single packed sequence；在微调阶段，仅引入开始向量S 和 结束向量E；将Ti 和 S 点乘后，使用softmax计算
+wi成为 answer span首个单词的概率：
+$$P_{i}=\frac{e^{ST_{i}} }{\sum_{j}e^{ST_{j}}}$$
+answer span的结束单词的概率计算同上类似。
 ### 4.2 SQuAD v2.0
 ### 4.3 SWAG: Situation With Adversarial Generation dataset
+数据集包含113k sentence-pair completion examples，用于评估基于常识的推理。给定视频字幕数据集中的一个句子，任务是从4个选项中决定最合理的候选句子。
+
+微调阶段，我们构建4个input sequence，每个input sequence都包含给定句子（sentence A）和可能的后续句子（sentence B）的拼接。引入新参数向量 V∈R^H，它和最终聚集表示C_i∈R^H 的点积的softmax分布，就是每一个选择的得分。
 ## 5 ablation study
 ### 5.1 effect of Pre-training tasks
+ 
 ### 5.2 effect of Model size
 ## 6 conclusion
 
