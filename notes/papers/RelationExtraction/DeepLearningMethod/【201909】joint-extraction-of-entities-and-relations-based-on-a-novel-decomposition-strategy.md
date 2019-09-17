@@ -46,7 +46,9 @@ nueral joint models：don't pay much attention to overlapping relations
 
 > 序列标注子任务2:tags the end word of the tail-entity。
 
-see the following figure：![an-example-of-proposed-tagging-scheme](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/RelationExtraction/DeepLearningMethod/imgs/an-example-of-proposed-tagging-scheme.jpg)
+see the following figure：
+
+![an-example-of-proposed-tagging-scheme](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/RelationExtraction/DeepLearningMethod/imgs/an-example-of-proposed-tagging-scheme.jpg)
 ### 2.2 hierarchical boundary tagger
 在上述2个 extractors中均加入一个通用模块-HBT，即hierarchical boundary tagger。
 
@@ -55,6 +57,7 @@ $$p(t,l|S)=p(s_{t}^{l}|S)p(e_{t}^{l}|s_{t}^{l},S)$$
 其中，$s_{t}^{l}$表示 带有标签l的target t 的start index。该公式表明：*start positions的预测结果，将有益于预测end positions*。
 
 下图的右侧部分（HBT）显示了本文的分层标注结构,使用一个任务将每层联系起来，并使用来自low-level task的tagging results和hidden states作为high-level task的input.
+
 ![an-illustration-of-model-proposed-in-this-paper](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/RelationExtraction/DeepLearningMethod/imgs/an-illustration-of-model-proposed-in-this-paper.jpg)
 + 使用BiLSTM作为base encoder
 
@@ -72,6 +75,7 @@ $$L_{HBT}=-\frac{1}{n}\sum_{i=1}^{n}(logP(y_{i}^{sta}=\hat{y}\_{i}^{sta})+logP(y
 其中，$\hat{y}\_{i}^{sta}$和$\hat{y}\_{i}^{end}$是第i个单词真正的start和end tags。
 
 + use multi-span decoding algorithm to adapt to the multi-target extraction task
+
 ![multi-span decoding algorithm](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/RelationExtraction/DeepLearningMethod/imgs/multi-span%20decoding%20algorithm.jpg)
 ### 2.3 extraction system
 使用span-based tagging scheme 和 hierarchical boundary tagger，本文提出一种end-to-end neural architecture 来联合抽取实体和重叠关系。
