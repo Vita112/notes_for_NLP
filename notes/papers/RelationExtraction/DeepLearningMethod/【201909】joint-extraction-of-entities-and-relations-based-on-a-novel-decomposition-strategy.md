@@ -54,15 +54,74 @@ see the following figure：![an-example-of-proposed-tagging-scheme]()
 $$p(t,l|S)=p(s_{t}^{l}|S)p(e_{t}^{l}|s_{t}^{l},S)$$
 其中，$s_{t}^{l}$表示 带有标签l的target t 的start index。该公式表明：*start positions的预测结果，将有益于预测end positions*。
 
-下图显示了本文的分层标注结构,使用一个任务将每层联系起来，并使用来自low-level task的tagging results和hidden states作为high-level task的input
+下图的右侧部分（HBT）显示了本文的分层标注结构,使用一个任务将每层联系起来，并使用来自low-level task的tagging results和hidden states作为high-level task的input.
 ![an-illustration-of-model-proposed-in-this-paper]()
++ 使用BiLSTM作为base encoder
 
++ HBT_HE:当标注start position时,预测单词xi的标签sta_tag(xi),如下：
 
+![HBT_HE]()
++ HBT_TER:预测单词xi的end tag,如下:
+![HBT_TER]()
+此处，在BiLSTM_end层中，引入了位置嵌入信息$p_{i}^{se}$,它通过在一个可训练的position embedding matrix中查找得到，即
+
+![p_i^se]()
++ 定义training loss of HBT:真正的strat和end tags的负log概率的加和：
+
+$$L_{HBT}=-\frac{1}{n}\sum_{i=1}^{n}(logP(y_{i}^{sta}=\hat{y}\_{i}^{sta})+logP(y_{i}^{end}=\hat{y}\_{i}^{end}))$$
+其中，$\hat{y}\_{i}^{sta}$和$\hat{y}\_{i}^{end}$是第i个单词真正的start和end tags。
+
++ use multi-span decoding algorithm to adapt to the multi-target extraction task
+![multi-span decoding algorithm]()
 ### 2.3 extraction system
+使用span-based tagging scheme 和 hierarchical boundary tagger，本文提出一种end-to-end neural architecture 来联合抽取实体和重叠关系。
++ Shared Encoder
+
+input word representation 包括pre-trained embeddings 和 在单词xi的character
+sequence上使用CNN得到的character-based word representations。
++ HE Extractor
+
+拼接hi和g得到feature vector $\tilde{x_{i}}=\[h_{i};g]$,其中，hi是an input token representation，g是在所有hidden states上进行max pooling后得到的global contextual embedding。
+
+将H_HE喂入HBT来抽取head-entities：
+$$H_{HE}={\tilde{x_{1}},\cdots ,\tilde{x_{N}}}$$
+$$R_{HE}=HBT_{HE}(H_{HE}),R_{HE}={(h_{j},type_{h_{j}})}\_{j=1}^{m}$$
+$R_{HE}$包含了句子S中所有的head-entities 和 对应的entity type tags。
++ TER Extractor
+
+$$\tilde{x_{i}}=\[h_{i};g;h^{h};p_{i}^{ht}]$$
+其中，$h^{h}=\[h_{sh};h_{eh}]$指 representation of head-entity h，是h在start index和end index上的hidden state 的拼接。$p_{i}^{ht}$是position embedding，编码了从当前word xi到h的relative distance。
+$$H_{TER}={\tilde{x_{1}},\cdots ,\tilde{x_{N}}}$$
+$$R_{TER}=HBT_{TER}(H_{TER}),R_{TER}={(t_{o},rel_{o})}\_{o=1}^{z}$$
++ training of joint extractor
+
+joint loss is as follow:
+$$L=\lambda L_{HE}+(1-\lambda )L_{TER}$$
 ## 3 experiments and its results
+DATASETS
++ NYT-single
+
++ NYT-multi
+
++ wiki-kBP
+EVALUATION
++ a triplet is marked correct when its relation type and 2 corresponding entities are all correct
+
+RESULTS
+
+![main-results-on-3-benchmark-datasets]()
 ## 4 ablation study
 ### 4.1 analysis on joint learnig
+HE extractor and TER extractor work in the mutual promotion way,which again confirms the effectiveness an rotionality of the decomposition strategy used in this paper.
 ### 4.2 analysis on overlapping relation extraction
+我们将NTY-multi的test set分为3个categories：Normal，singleEntityOverlap，EntityPairOverlap。
++ **Normal**：there is no triplets in a sentence has overlapping entities;
+
++ **EntityPairOverlap**:the entity pairs of 2 triplets are identical but the relations are different;
+
++ **singleEntityOverlap**:some of triplets in a sentence have an overlapped entity and these triplets don't have overlapped entity pair
+
+**本文的模型并没有解决entity pair overlapping problem**。
 
 ## main papers for references
 + \[PA-LSTM]Dai et al.@2019  *joint extraction of entities and overlappiing relations using positon-attentive sequence labelling*
