@@ -46,7 +46,7 @@ nueral joint models：don't pay much attention to overlapping relations
 
 > 序列标注子任务2:tags the end word of the tail-entity。
 
-see the following figure：![an-example-of-proposed-tagging-scheme]()
+see the following figure：![an-example-of-proposed-tagging-scheme](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/RelationExtraction/DeepLearningMethod/imgs/an-example-of-proposed-tagging-scheme.jpg)
 ### 2.2 hierarchical boundary tagger
 在上述2个 extractors中均加入一个通用模块-HBT，即hierarchical boundary tagger。
 
@@ -55,24 +55,24 @@ $$p(t,l|S)=p(s_{t}^{l}|S)p(e_{t}^{l}|s_{t}^{l},S)$$
 其中，$s_{t}^{l}$表示 带有标签l的target t 的start index。该公式表明：*start positions的预测结果，将有益于预测end positions*。
 
 下图的右侧部分（HBT）显示了本文的分层标注结构,使用一个任务将每层联系起来，并使用来自low-level task的tagging results和hidden states作为high-level task的input.
-![an-illustration-of-model-proposed-in-this-paper]()
+![an-illustration-of-model-proposed-in-this-paper](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/RelationExtraction/DeepLearningMethod/imgs/an-illustration-of-model-proposed-in-this-paper.jpg)
 + 使用BiLSTM作为base encoder
 
 + HBT_HE:当标注start position时,预测单词xi的标签sta_tag(xi),如下：
 
-![HBT_HE]()
+![HBT_HE](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/RelationExtraction/DeepLearningMethod/imgs/HBT_HE.jpg)
 + HBT_TER:预测单词xi的end tag,如下:
-![HBT_TER]()
+![HBT_TER](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/RelationExtraction/DeepLearningMethod/imgs/HBT_TER.jpg)
 此处，在BiLSTM_end层中，引入了位置嵌入信息$p_{i}^{se}$,它通过在一个可训练的position embedding matrix中查找得到，即
 
-![p_i^se]()
+![p_i^se](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/RelationExtraction/DeepLearningMethod/imgs/p_i%5Ese.jpg)
 + 定义training loss of HBT:真正的strat和end tags的负log概率的加和：
 
 $$L_{HBT}=-\frac{1}{n}\sum_{i=1}^{n}(logP(y_{i}^{sta}=\hat{y}\_{i}^{sta})+logP(y_{i}^{end}=\hat{y}\_{i}^{end}))$$
 其中，$\hat{y}\_{i}^{sta}$和$\hat{y}\_{i}^{end}$是第i个单词真正的start和end tags。
 
 + use multi-span decoding algorithm to adapt to the multi-target extraction task
-![multi-span decoding algorithm]()
+![multi-span decoding algorithm](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/RelationExtraction/DeepLearningMethod/imgs/multi-span%20decoding%20algorithm.jpg)
 ### 2.3 extraction system
 使用span-based tagging scheme 和 hierarchical boundary tagger，本文提出一种end-to-end neural architecture 来联合抽取实体和重叠关系。
 + Shared Encoder
@@ -104,12 +104,13 @@ DATASETS
 + NYT-multi
 
 + wiki-kBP
+
 EVALUATION
 + a triplet is marked correct when its relation type and 2 corresponding entities are all correct
 
 RESULTS
 
-![main-results-on-3-benchmark-datasets]()
+![main-results-on-3-benchmark-datasets](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/RelationExtraction/DeepLearningMethod/imgs/main-results-on-3-benchmark-datasets.jpg)
 ## 4 ablation study
 ### 4.1 analysis on joint learnig
 HE extractor and TER extractor work in the mutual promotion way,which again confirms the effectiveness an rotionality of the decomposition strategy used in this paper.
