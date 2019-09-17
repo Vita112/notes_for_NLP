@@ -65,6 +65,7 @@ $$p(t,l|S)=p(s_{t}^{l}|S)p(e_{t}^{l}|s_{t}^{l},S)$$
 
 ![HBT_HE](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/RelationExtraction/DeepLearningMethod/imgs/HBT_HE.jpg)
 + HBT_TER:预测单词xi的end tag,如下:
+
 ![HBT_TER](https://github.com/Vita112/notes_for_NLP/blob/master/notes/papers/RelationExtraction/DeepLearningMethod/imgs/HBT_TER.jpg)
 此处，在BiLSTM_end层中，引入了位置嵌入信息$p_{i}^{se}$,它通过在一个可训练的position embedding matrix中查找得到，即
 
