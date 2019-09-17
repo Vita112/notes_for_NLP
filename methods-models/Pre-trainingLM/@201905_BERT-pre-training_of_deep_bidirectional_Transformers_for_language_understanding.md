@@ -2,9 +2,9 @@ BERT-pre-training_of_deep_bidirectional_Transformers_for_language_understanding
 
 google AI language
 
-## 摘要
-提出一种新的语言表示模型-BERT:Bidirectional Encoder Repressentations from Transformers,**旨在通过基于所有层的左、右上下文，to pretrain deep bidirectional
-representations from unlabeled text**.是对fine-tuninig based approaches的改进。
+[paper link](https://arxiv.org/pdf/1810.04805.pdf)
+## abstract
+提出一种新的语言表示模型-BERT:Bidirectional Encoder Repressentations from Transformers,**旨在通过基于所有层的左、右上下文，to pretrain deep bidirectional representations from unlabeled text**.是对fine-tuninig based approaches的改进。
 
 可以仅在一个额外的输入层上进行fine-tuning，便可以在很多NLP任务上获得优秀的表现。实验证明：BERT在11项NLP任务中获得了state-of-the-art的表现。
 
@@ -16,23 +16,89 @@ representations from unlabeled text**.是对fine-tuninig based approaches的改�
 
 + 将预训练语言模型应用于下游任务的2种策略：feature-based 和 fine-tuning.
 
-feature-based：例如 ELMo
+feature-based：例如 ELMo from [paper](https://arxiv.org/pdf/1802.05365.pdf)
 
-fine-tuning：例如 OpenAI GPT(Generative Pre-training Transformer)
+fine-tuning：例如 OpenAI GPT(Generative Pre-trained Transformer)
 
-两种方法在预训练阶段使用相同的objective function，即 使用单项语言模型unidirechtional language models来学习通用语言表示。这种标准的语言模型的主要限制在于：
-单向模型限制了 预训练阶段的构架的选择。
+两种方法在预训练阶段使用相同类型的objective function，即 使用单向语言模型unidirechtional language models来学习通用语言表示。这种标准的语言模型的主要限制在于：单向模型限制了 预训练阶段的构架选择。
 
-+ **本文贡献**
++ **contributions in this paper**
 
 1. 提出BERT，使用MLM(masked language model)来预训练深度双向表示；提出了NSP：next sentence prediction。
 
-2. 表明 预训练表示减少了 对许多精心设计的特定于某个任务的构架的需求。
+2. 表明 预训练表示弱化了 对许多精心设计的特定于某个任务的构架的需求。
 
 3. code and pre-trained models are available：https://github.com/google-research/bert.
 
 4. **知乎文章[《从word embedding到BERT》](https://zhuanlan.zhihu.com/p/49271699)对BERT的来龙去脉进行了梳理(此处点赞，看完后有种通了的感觉)**，参见文章末尾附录。
 
+## 2 related work
+### 2.1 unsupervised feature-based approaches
+**ELMo** extract context-sensitive features from a left-to-right and a right-to-left language model.每一个token的上下文表示是这两个方向的表示的拼接。
+
+model is feature-based and not deeply bidirectional。向量拼接这种形式只能捕获浅层特征。
+
+### 2.2 unsupervised fine-tuning approaches
+近期，可以从unlabelled text中预训练 产生contextual token representations的 sentence or document encoders，然后，进行微调用于a supervised downstream task。基于微调的方法的优点是:只需要学习少量的参数。基于此，GPT got state-of-the-art results on many sentence-level tasks。
+
+相当于原始Transformer architecture的decoder，因其使用的是 constrained self-attention，所有的token都只关注其左侧的上下文信息。
+### 2.3 transfer learning from supervised data
+使用大规模数据，可以从监督任务中进行高效的迁移学习。CV领域的研究以表明：从大型预训练模型中迁移学习的重要性。
+
+## 3 BERT：pre-training and fine-funing
+> *step1-pre-training*:model is trained on unlabelled data over different pre-training tasks
+
+> *step2-fine-tuning*: model is first initialized with pre-trained parameters,then all of the parameters are fine-tuned using labelled data from the downstream tasks.
+
+BERT的一个区别于其他模型的特征是：**BERT的跨不同任务的统一的框架，在预训练阶段和微调阶段的模型之间只有很小的差别**。
+
++ **model architecture** 
+
+![overall_pre-training_and_fine-tuning_procedures_for_BERT](https://github.com/Vita112/notes_for_NLP/blob/master/methods-models/Pre-trainingLM/img/overall_pre-training_and_fine-tuning_procedures_for_BERT.png)
+a multi-layer bidirectional Transformer encoder based on the original Transformer in 《attention is all you need》。
+
++ **input/output representations**
+
+*a sentence*:连续文本的任意span，而不是一个真正意义上的语言学上的句子；*a sequence*:BERT的输入token序列，可能是一个句子，也可能是打包在一起的2个句子。
+
+本文使用带有30,000个token的vocabulary的 Wordpiece embeddings。每一个sequence的第一个token总是一个特殊的分类token(【CLS】)，对应于这个token的最终隐藏状态 被看作聚集序列表示，用于分类任务。input embeddings是
+token embeddings，segmentation embeddings和position embeddings的加和，即下图：
+![BERT_input_representations](https://github.com/Vita112/notes_for_NLP/blob/master/methods-models/Pre-trainingLM/img/BERT_input_representations.png)
+
+### 3.1 pre-training BERT
+pre-train BERT using 2 unsupervised tasks
++ TASK #1-Masked LM
+
+在预训练时，使用【mask】这个特殊的token 随机替代句子中的部分token，目标是 预测【mask】对应位置的单词。这个过程又被看做cloze任务，该任务中对应masked token的最终隐藏向量are fed into一个在词汇表上的output softmax 分布。
+
+由于在fine-tuning 阶段并没有出现【mask】token，这导致pre-training阶段和fine-tuning阶段产生了 mismatch。为缓解这种不匹配，在与训练阶段，我们并不总是使用实际的【mask】token来代替被遮蔽的words。具体地，模型首先随机选取15%的token positions用于预测，然后对于被选中的第i个token，模型有80%的概率会使用【mask】token 来替换，10%的概率使用一个随机token替换，10%的概率选择保持不变。
++ TASK #2-Next Sentence Prediction
+
+为训练一个可以理解句子间关系的模型，我们预训练一个 二值化的下一个句子预测任务（binarized next sentence prediction task），该任务可以从任意的单语语料库中生成。当为每一个预训练样本选择句子A和句子B时，50%的时候句子A的后一句真的是句子B，50%的时候不是这样。5.1的消融分析部分证明了 **预训练这个NSP任务对于QA & NLI 任务十分有益**。
+
+pre-training data 使用BooksCorpus的800M words和English Wikipedia。
+### 3.2 fine-tuning BERT
+对于每一个任务，我们将任务特定的input和output放入BERT中，然后端到端地微调所有参数。
+## 4 experiments
+### 4.1 GLUE:general language understanding evaluation benchmark，sequence-level task
+
+### 4.2 SQuAD v1.1:Stanford Question Answering Dataset，token-level task
+是一个 100k众包 Q/A pairs的集合。给定一个问题和 来自维基百科的包含答案的 一个段落，任务是：预测在passage中的answer text span。
+
+将input question 和 passage表示为 a single packed sequence；在微调阶段，仅引入开始向量S 和 结束向量E；将Ti 和 S 点乘后，使用softmax计算
+wi成为 answer span首个单词的概率：
+$$P_{i}=\frac{e^{ST_{i}} }{\sum_{j}e^{ST_{j}}}$$
+answer span的结束单词的概率计算同上类似。
+### 4.2 SQuAD v2.0
+### 4.3 SWAG: Situation With Adversarial Generation dataset
+数据集包含113k sentence-pair completion examples，用于评估基于常识的推理。给定视频字幕数据集中的一个句子，任务是从4个选项中决定最合理的候选句子。
+
+微调阶段，我们构建4个input sequence，每个input sequence都包含给定句子（sentence A）和可能的后续句子（sentence B）的拼接。引入新参数向量 V∈R^H，它和最终聚集表示C_i∈R^H 的点积的softmax分布，就是每一个选择的得分。
+## 5 ablation study
+### 5.1 effect of Pre-training tasks
+ 
+### 5.2 effect of Model size
+## 6 conclusion
 
 
 
