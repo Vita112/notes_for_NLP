@@ -28,16 +28,16 @@ nueral joint models：don't pay much attention to overlapping relations
 > **one head-entity can interact with multiple tail-entities to form overlapping relations**.
 
 **step 2**:further decompose HE and TER  extraction with a span-based tagging scheme，即model 上述2个子任务in a unified span-based extraction framework.具体地，
-> 1.HE extraction：在每一个head-entity的开始和结束位置标注entity type；
-> 2.TER extraction: 对于所有的与给定的head-entity存在关系的tail-entities，在这些tail-entities的开始和结束位置标注relation types。
+>1. HE extraction：在每一个head-entity的开始和结束位置标注entity type；
+>2. TER extraction: 对于所有的与给定的head-entity存在关系的tail-entities，在这些tail-entities的开始和结束位置标注relation types。
 
 + 为增强boundary positions之间的联系，本文使用一个**hierarchical boundary tagger**，在一个级联结构中分别标注开始和结束位置，并使用一个**multi-span decoding algorithm**一起进行解码。
 ### 2.1 tagging scheme
 > 此处为个人理解：<br>
-这里的标注方案主要指 span-based tagging,对于HE extraction 和 TER extraction来说，它们分别被分解为2个sequence labeling subtasks。
+这里主要指 span-based 的标注方案,span很好地对应了 实体&实体对间的overlapping relations situation。对于同一个head-entity，可能对应有2个tail-entity，存在2种不同的关系类型。 对于HE extraction 和 TER extraction来说，它们分别被分解为2个sequence labeling subtasks。
 + HE extraction
 
-> 序列标注子任务1: identify the start position of one head-entity。对于一个token，如果是实体的start word，那么便标注出其对应的entity type，否则，标注为O(Outside)
+> 序列标注子任务1: identify the start position of one head-entity。对于一个token，如果是实体的start word，那么便标注出其对应的entity type，否则，标注为O(Outside)；
 
 > 序列标注子任务2:identify the end position of one head-entity.
 + TER extraction for each identified head-entity,利用 span boundaries来同时抽取tail-entities和预测relationos。
@@ -48,6 +48,16 @@ nueral joint models：don't pay much attention to overlapping relations
 
 see the following figure：![an-example-of-proposed-tagging-scheme]()
 ### 2.2 hierarchical boundary tagger
+在上述2个 extractors中均加入一个通用模块-HBT，即hierarchical boundary tagger。
+
+本节中，对head-entity和tail-entity不做区分，均被视为targets。于是，从句子S中抽取带有标签l的taeget t 的概率为：
+$$p(t,l|S)=p(s_{t}^{l}|S)p(e_{t}^{l}|s_{t}^{l},S)$$
+其中，$s_{t}^{l}$表示 带有标签l的target t 的start index。该公式表明：*start positions的预测结果，将有益于预测end positions*。
+
+下图显示了本文的分层标注结构,使用一个任务将每层联系起来，并使用来自low-level task的tagging results和hidden states作为high-level task的input
+![an-illustration-of-model-proposed-in-this-paper]()
+
+
 ### 2.3 extraction system
 ## 3 experiments and its results
 ## 4 ablation study
