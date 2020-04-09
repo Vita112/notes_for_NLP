@@ -1,5 +1,6 @@
 ## 基于[blog：the illustrated transformer](https://jalammar.github.io/illustrated-transformer/)的note
 ### key notes
+> **本篇blog对Transformer的讲解真的十分详细，图文并茂，且逻辑清晰，原文后面附有参考资料，十分棒！！**
 > * Encoders和Decoders中 各包含6个子层，每个子层内的结构相同；
 > * 使用8个attention headers，对于每一个encoders 和 decoders都有8个随机初始化的矩阵集合，每个集合都被用于将input word embedding(或者来自较低decoder/decoder的向量)投影到不同的representation subspaces，投影过程就是self-attention过程，最后，8个header将得到8个矩阵，将其拼接为一个矩阵(即每个单词的组合表示向量)，然后与 权重矩阵W相乘**得到融合所有注意力头信息的矩阵Z，将其送到FFNN**。
 > * 为每个单词的word embedding中加入positional encodinig，以理解输入序列的单词顺序。
@@ -34,5 +35,15 @@ multi-head的加入，**在2方面提高了自注意力层的性能**：
 ### 3 decoder side
 * 分2大块，一个是 6层decoder堆栈起来的decoders，每层decoder的内部结构相同，包含3个子层- self-attention、encoder-decoder attetion和ffnn；一个是 linear + softmax层；
 
-* 解码的每个时间步都会输出 输出序列的一个元素，该元素会在下一个时间步被提供给底端解码器，此外还会拼接表示每个单词位置的position embedding信息，送入decoders中，经过linear transformation 和 softmax处理，得到该时间步的输出。**一个时间步 表示这样一个完整的过程：encoder side结束输入序列的编码过程后，得到堆栈encoder的multi-head self-attention输出，该输出被转化为一个包含 键向量k和值向量v的注意力向量集合(K,V)；该注意力向量集合将被送入每一层decoder的encoder-decoder attention sublayer中，经过6层decoder过程得到decoders的输出；然后先对该输出进行一个简单的线性变化得到该位置的score list，softmax将score变为概率，获取概率最高的索引，其对应的单词就是 该时间步的输出**。
+* 解码的每个时间步都会输出 输出序列的一个元素，该元素会在下一个时间步被提供给底端解码器，此外还会拼接表示每个单词位置的position embedding信息，送入decoders中，经过linear transformation 和 softmax处理，得到该时间步的输出。
+
+> **一个时间步 表示这样一个完整的过程：encoder side结束输入序列的编码过程后，得到堆栈encoder的multi-head self-attention输出，该输出被转化为一个包含 键向量k和值向量v的注意力向量集合(K,V)；该注意力向量集合将被送入每一层decoder的encoder-decoder attention sublayer中，经过6层decoder过程得到decoders的输出；然后先对该输出进行一个简单的线性变化得到该位置的score list，softmax将score变为概率，获取概率最高的索引，其对应的单词就是 该时间步的输出**。
+
+* decoders的输出是一个实数向量，① 线性变换层是一个全连接神经网络，它把实数向量投射到 logits向量(对数几率)。*假设训练集词表大小为1万，则对数几率向量将是一个 1万个单元格长度的向量，每个单元格对应都一个单词的分数*。  ②softmax layer把分数变为概率，概率最高的单元格将被选中，它对应的单词则是本次时间步的输出。
+
+### 3 残差The Residuals
+
+注意到不管是在encoder side，还是decoder side，他们各自的sublayer的周围都有一个残差连接，并跟随一个layer-normalization step。
+
+在层归一化步骤中，会对 (word embeddiing X + the output of multi-head self-attention Z)进行归一化。
 
