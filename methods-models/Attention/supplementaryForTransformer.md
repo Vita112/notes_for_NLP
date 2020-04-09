@@ -11,7 +11,9 @@
 
 > **decoder side** 所有decoder在结构上也都相同，内部有3个子层- self-attention、encoder-decoder attention和ffnn;  堆栈decoder的输出将被送一个简单的全连接神经网络，经过映射变为一个更大的vector,即对数几率向量logits vector(向量长度为词表大小，每个维度的数字对应某一个单词的分数)。   softmax层将把分数变为概率，获取概率最高的单元格的索引，找到该索引对应的单词，并将它作为这个时间步的输出。
 ### 2 Encoder side
-只有最底层encoder的输入为word embedding + position embedding。positional encoding不需要训练，它有产生规则。
+只有最底层encoder的输入为word embedding + position embedding。
+
+positional encoding有助于确定每个单词的位置，或者序列中不同单词之间的距离，不需要训练，它有产生规则。
 #### 2.1 如何计算selt-attention？
 * 通过查看输入序列中的其他单词，来获得更好的当前单词表示，是通过上下文理解当前单词的一种办法。*自注意力的另一种解释：编码某个位置单词时，将输入序列中所有单词的表示进行加权求和(因为在计算softmax分数时，某个位置单词的查询向量q会与序列中其他位置的k点乘)，来得到在该位置的输出*。
 > step 1: 对于每个单词，创建q，k，v：将带有位置信息的单词嵌入 × 各自的权重矩阵，例：q =  X · W^Q
@@ -27,8 +29,10 @@
 multi-head的加入，**在2方面提高了自注意力层的性能**：
 > 1. 扩展了模型专注于不同位置的能力。在coreference resolution任务中可看到其发挥的作用；
 
-> 2. 可以得到自注意力层的多个representation subspace。
+> 2. 可以得到自注意力层的多个representation subspace。Transformer有 8个attention head，因此，对于每个encoder/decoder都有 8个矩阵集合；且对于每一个head，都有独立的Q、K、V矩阵，都分别独立执行相同的self-attention（在8个时间点来计算这些不同的权值矩阵），得到8个不同的z矩阵；将8个z矩阵拼接为一个矩阵，乘以 权值矩阵W^O，*得到multi-head self-attention layer的输出*。
 
+### 3 decoder side
+* 分2大块，一个是 6层decoder堆栈起来的decoders，每层decoder的内部结构相同，包含3个子层- self-attention、encoder-decoder attetion和ffnn；一个是 linear + softmax层；
 
-
+* 解码的每个时间步都会输出 输出序列的一个元素，该元素会在下一个时间步被提供给底端解码器，此外还会拼接表示每个单词位置的position embedding信息，送入decoders中，经过linear transformation 和 softmax处理，得到该时间步的输出。**一个时间步 表示这样一个完整的过程：encoder side结束输入序列的编码过程后，得到堆栈encoder的multi-head self-attention输出，该输出被转化为一个包含 键向量k和值向量v的注意力向量集合(K,V)；该注意力向量集合将被送入每一层decoder的encoder-decoder attention sublayer中，经过6层decoder过程得到decoders的输出；然后先对该输出进行一个简单的线性变化得到该位置的score list，softmax将score变为概率，获取概率最高的索引，其对应的单词就是 该时间步的输出**。
 
