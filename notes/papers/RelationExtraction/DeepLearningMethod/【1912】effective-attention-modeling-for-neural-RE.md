@@ -30,4 +30,15 @@ $$v_{g}=\[c_{max}^{1},c_{max}^{2},\cdots ,c_{max}^{f^{g}}]$$
 ### 3.2 attention modeling
 使用a linear form of attention来找到 句子中关于entities的 有语义意义的words，这些能够为实体间的关系提供证据。
 
-使用entities作为attention queries；命名实体大多数由multiple tokens组成；一个实体的nearby words可以提供关于这个实体的有用信息。**本文使用the tokens of an entity and its nearby tokens 来得到entity representation vector，使用CNN with max-pooling in the context of an entity来获得其表示**。具体的，cnn网络层的输入不是一个完整的自然句，而是句子中包含an entity and its neighboring context的sequence，分别经过 $f_{e}$个filters得到实体的向量表示
+使用entities作为attention queries；命名实体大多数由multiple tokens组成；一个实体的nearby words可以提供关于这个实体的有用信息。**本文使用the tokens of an entity and its nearby tokens 来得到entity representation vector，使用CNN with max-pooling in the context of an entity来获得其表示**。具体的，cnn网络层的输入不是一个完整的自然句，而是句子中包含an entity and its neighboring context的sequence，分别经过 $f_{e}$个filters得到2个实体的向量表示$v_{e}^{1}$和$v_{e}^{2}$。
+
+ues a linear function to measure the semantic similarity of words with the given entities：
+$$f_{score}^{1}(h_{i},v_{e}^{1})=h_{i}^{T}W_{a}^{1}v_{e}^{1}$$
+其中，$W_{a}^{1}$是可训练的权重向量，$$f_{score}^{1}(h_{i},v_{e}^{1})$表示第i个单词和实体$v_{e}^{1}$的语义相似度。
+
+
+由于靠近实体的单词，对于找到2个实体间的关系更为重要，因此**本文提出incorporate the syntactic structure of a sentence in the attention mechanism**:
+> 句法结构通过句子的dependency parse tree得到，我们将 从实体的head token(last token)到每个单词的dependency distance 定义为沿着依赖路径的边数。我们使用一个距离窗口大小ws，且依存距离在这个窗口大小内的words will receive attention，其他的单词将被忽略。我们遮蔽了那些 距离2个实体的平均依存距离大于ws的words.*此时，得到了在特定窗口内进行attention的 包含句子依存距离信息的attention scores*,然后进行normalization。
+
+> 同时使用words的词义和他们距离2个实体的依存距离，结合上一步得到的normalized attention score，得到了**the attention feature vector $v_{a}^{1}$, $v_{a}^{1}$ with respect to the two entities**:
+$$v_{a}^{1}=\sum_{i=1}^{n}p_{i}^{1}h_{i}$$
