@@ -50,3 +50,56 @@ the number of factors 是一个hyper-parameter，the model replace the attention
 
 拼接$v_{g},v_{ma},v_{e}^{1},v_{e}^{2}$后，将其送入 a feed-forward layer with softmax activation，来预测relation labels的normalied probabilities。
 $$r= softmax(W_{r}(v_{g}||v_{ma}||v_{e}^{1}||v_{e}^{2})+b_{r})$$
+
+### 3.5 loss function
+use negative log-likelihood as our objective function:
+$$L=-\frac{1}{B}\sum_{i=1}^{B}log(p(r_{i}|s_{i},e_{i}^{1},e_{i}^{2},\theta ))$$
+## 4 experiments
+### 4.1 datasets
+New York Times (NYT) corpus with 2 versions:
+> The original NYT corpus created by Riedel et al. (2010) which has 52 valid relations and a None relation. We name this dataset NYT10. 
+
+>Another version
+created by Hoffmann et al. (2011) which has 24 valid relations and a None relation. We name this dataset NYT11. 
+### 4.2 evaluation metrics
+
+### 4.3 parameter settings
+
+### 4.4 comparison to prior work
+(1) CNN (Zeng et al., 2014): 
+
+(2) PCNN (Zeng et al., 2015):
+
+(3) Entity Attention (EA) (Shen and Huang,2016): 
+
+a model which is a combination of a CNN with max-pooling and an attention mechanism. CNN with max-pooling 被用于抽取global features；
+
+每个word的tvector representation 将和 last token of the entity 的word embedding进行拼接。
+
+拼接后的representation 被送入a feed-forward layer with tanh activation，以及另一个feed-forward layer来获得 a scalar attention score for every word。原始的word representations 将基于attention scores进行平均得到attentive feature vectors.
+
+基于CNN抽取的全局特征和 2个关于2个实体的attentive feature vectors进行拼接后，送入一个带有softmax的前向反馈层，来决定relation。
+
+(4) BiGRU Word Attention (BGWA) (Jat et al.,2017):
+
+(5) BiLSTM-CNN: baseline
+
+### 4.5 experimental results
+
+## 5 analysis and discussion
+### 5.1 varying the number of factors
+
+### 5.2 effectiveness of model components
+
+### 5.3 performance with varying sentence length and varying entity pair distance
+随着句子长度变长，以及2个实体间距离越来越远，所有模型的表现都下降了。与其他模型相比，本文的multi-factor attention model with dependency-distance weight factor 提高了F1 score。
+
+## 6 related work
+*　关于intra-sentence 和 cross-sentece
+Surdeanu et al. (2012), Lin et al.(2016), Vashishth et al. (2018), Wu et al. (2019),and Ye and Ling (2019) used multiple sentences in a **multi-instance relation extraction** setting to *capture the features located in multiple sentences for a pair of entities*. 他们将拥有相同实体对的多个句子作为一个测试实例来评估模型表现。
+
+本文独立地在每个句子上进行训练，在sentence level上评估。**未来的工作将考虑将本文的模型扩展至multi-instance relation extraction framework中**。
+
+* 关于结合一个句子的 dependency structure info 用于RE
+
+* attention-based NN的应用： NMT,answer span extraction等
