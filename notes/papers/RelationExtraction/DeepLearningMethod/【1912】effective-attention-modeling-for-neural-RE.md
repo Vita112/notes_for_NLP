@@ -28,4 +28,6 @@
 使用CNN来抽取sentence-level global features：拼接**u1**，**u2**和$h_{t}$；use CNN with max-pooling on concatenated vectors 来抽取全局特征向量$v_{g}$, 即每经过一个convolutional filtr evector $f_{i}$和max-pooling operation后将得到一个scale value $c_{max}^{i}$,我们有$f_{g}$个filter，最终得到a global feature vector
 $$v_{g}=\[c_{max}^{1},c_{max}^{2},\cdots ,c_{max}^{f^{g}}]$$
 ### 3.2 attention modeling
- 
+使用a linear form of attention来找到 句子中关于entities的 有语义意义的words，这些能够为实体间的关系提供证据。
+
+使用entities作为attention queries；命名实体大多数由multiple tokens组成；一个实体的nearby words可以提供关于这个实体的有用信息。**本文使用the tokens of an entity and its nearby tokens 来得到entity representation vector，使用CNN with max-pooling in the context of an entity来获得其表示**。具体的，cnn网络层的输入不是一个完整的自然句，而是句子中包含an entity and its neighboring context的sequence，分别经过 $f_{e}$个filters得到实体的向量表示
