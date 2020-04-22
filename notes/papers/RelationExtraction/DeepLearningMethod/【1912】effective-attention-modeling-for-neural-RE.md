@@ -42,3 +42,11 @@ $$f_{score}^{1}(h_{i},v_{e}^{1})=h_{i}^{T}W_{a}^{1}v_{e}^{1}$$
 
 > 同时使用words的词义和他们距离2个实体的依存距离，结合上一步得到的normalized attention score，得到了**the attention feature vector $v_{a}^{1}$, $v_{a}^{1}$ with respect to the two entities**:
 $$v_{a}^{1}=\sum_{i=1}^{n}p_{i}^{1}h_{i}$$
+
+### 3.3 multi-factor attention
+the number of factors 是一个hyper-parameter，the model replace the attention matrix $W_{a}$ with an attention tensor $W_{a}^{1:m}$,此处m是factor count,$W_{a}^{1:m} \in \mathbb{R}^{m\times 2(d_{w}+d_{z})\times 2f_{e}}$.然后，得到关于每个实体的m个attention vectors，拼接所有特征向量得到multi-attentive feature vector $v_{ma}\in \mathbb{R}^{4m(d_{w}+d_{z})}$.
+
+### 3.4 relation extraction
+
+拼接$v_{g},v_{ma},v_{e}^{1},v_{e}^{2}$后，将其送入 a feed-forward layer with softmax activation，来预测relation labels的normalied probabilities。
+$$r= softmax(W_{r}(v_{g}||v_{ma}||v_{e}^{1}||v_{e}^{2})+b_{r})$$
