@@ -16,8 +16,12 @@ large scale pretrained model such as ELMo, GPT, and BERT在a wide range of NLP t
 
 > then,**recontextualized** the entity-span representations with  **word-to-entity atttention** ，来允许contextual word representations 和上下文中所有实体跨度之间的 long range interactions。
 
-**整个KAR被插入在BERT的中间两层之间(inserted between 2 layers in the middle of BERT)**.
+**整个KAR被插入在BERT的中间两层之间(inserted between 2 layers in the middle of BERT)；在未标注数据上学习entity linkers with self-supervision**。benefits of our approach are as follow：
+> 1. 没有改变the top layers of the original model，因此在训练KAR时，**可以保留输出损失层，并在未标记语料库上进行微调，这允许在任何下游应用中都可以简单地从BERT切换到KnowBert**。
+> 2. 利用原始模型的已有的高容量层，KAR是轻量级的，只添加了最少的额外参数和运行时间。
+> 3. 吸收其他额外的KBs十分容易，只需要将他们插入到另外的locations。
 
+使用a mix of intrinsic and extrinsic tasks 来评估KnowBert，外部评估显示在关系抽取，实体类型和词义消岐等任务上，任务表现有提升。
 ## 2 related work
 ## 3 KnowBert
 ### 3.1 pre-trained BERT
