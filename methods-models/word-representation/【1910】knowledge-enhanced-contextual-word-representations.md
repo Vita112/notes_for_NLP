@@ -23,9 +23,28 @@ large scale pretrained model such as ELMo, GPT, and BERT在a wide range of NLP t
 
 使用a mix of intrinsic and extrinsic tasks 来评估KnowBert，外部评估显示在关系抽取，实体类型和词义消岐等任务上，任务表现有提升。
 ## 2 related work
-## 3 KnowBert
-### 3.1 pre-trained BERT
-### 3.2 Knowledge Bases
+* 2.1 pretrained word representations: *learning context-sensitive embeddings*
+
+notes of reference paper link [1-EMLo-deep-contextualized-word-representations](https://github.com/Vita112/notes_for_NLP/blob/master/methods-models/Pre-trainingLM/%E3%80%901802-ELMo%E3%80%91deep-contextualized-word-representations.md)  [2-BERT-pre-training-of-deep-bidirectional-transformers-for-language-understanding](https://github.com/Vita112/notes_for_NLP/blob/master/methods-models/Pre-trainingLM/%40201905_BERT-pre-training_of_deep_bidirectional_Transformers_for_language_understanding.md)
+
+* 2.2 entity embeddings:*从外部知识源 生成 连续向量表示*
+
+基于知识图谱的方法优化知识图谱中观察到的三元组的得分，通过2个主要的策略：**translational distance models which use a distance-based scoring function**和**linear models which use a similarity-based scoring function**
+
+TuckER是啥？
+
+* 2.3 entity-aware language models
+
+adding KBs to generative LMs：[Reference-Aware-Language-Models](https://arxiv.org/pdf/1611.01628.pdf)
+> 模型将 reference视为explicit stochasitic latent variable，该构架允许模型通过访问external databases和internal state来创建实体及其属性的mentions。**这有助于将 可在数据库上或语篇上下文中的可预测位置上能访问的信息合并在一起，即使the targets of the reference are rare words。论文的模型变体是基于确定性注意力的**。
+
+building entity-centric LMs：[Dynamic entity representations in neural language models](https://arxiv.org/pdf/1708.00781.pdf)
+> 提出一个语言模型EntityNLM：可以显式地建模实体，动态地更新它们的表示，并在上下文中生成它们的mentions。可以在上下文中对任意数量的实体建模，同时以任意长度生成每个实体。
+
+**这种关注实体的语言模型引入了隐变量，这些变量要求训练全标注，或者边缘化**
+* 2.4 task-specific KB architecture
+intergrate KBs into neural architecture for specific downstream tasks
+
 ### 3.3 KAR-knowledge attention and recontextualizztion
 ### 3.4 training procedure
 ## 4 experiments
