@@ -56,8 +56,11 @@ in this paper，the attention mechanisms of KAR(knowledge aided reader) is named
 **the architecture of KAR**
 
 >> **lexicon embedding layer**:*maps the words to the lexicon embeddings,which is composed of its word embedding(obtained via pre-trained GloVe) and character embedding(obtained via CNN operation*;拼接后送入a shared dense layer with ReLU activation;得到$L_{P}$,$L_{Q}$
+
 >> **context embedding layer**:*process the lexicon embeddings with a shared bidirectional LSTM*.得到$C_{P}$,$C_{Q}$
+
 >> **Coarse memory layer** to obtain the question-aware passage representations:使用**knowledge aided mutual attention**将$C_{Q}$融入进$C_{P}$，具体的，需要计算each passage context embedding 和 each question context embedding的similarity。其output表示为$\bar{G}$;使用BiLSTM处理$\bar{G}$，拼接前向LSTM和反向LSTM的outputs得到coarse memories $G\in \mathbb{R}^{d\times n}$
+
 >>**refined memory layer** to obtain final passage representations:使用**knowledge aided self attention**将 G 融入进它本身，其输出表示为$\bar{H}\in \mathbb{R}^{d \times n}$;使用BiLSTM处理$\bar{H}$，拼接前向LSTM和反向LSTM的outputs得到refined memories $H\in \mathbb{R}^{d\times n}$
 
 文中对两种知识辅助注意力都有详细的描述，出于2个原因：不太理解公式中某些变量的具体含义导致没看懂为什么是这样操作 和  跟本文关系不太大， 在此省略。
