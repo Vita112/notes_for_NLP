@@ -25,7 +25,7 @@ large scale pretrained model such as ELMo, GPT, and BERT在a wide range of NLP t
 ## 2 related work
 * 2.1 pretrained word representations: *learning context-sensitive embeddings*
 
-notes of reference paper link [1-EMLo-deep-contextualized-word-representations](https://github.com/Vita112/notes_for_NLP/blob/master/methods-models/Pre-trainingLM/%E3%80%901802-ELMo%E3%80%91deep-contextualized-word-representations.md)  [2-BERT-pre-training-of-deep-bidirectional-transformers-for-language-understanding](https://github.com/Vita112/notes_for_NLP/blob/master/methods-models/Pre-trainingLM/%40201905_BERT-pre-training_of_deep_bidirectional_Transformers_for_language_understanding.md)
+notes of reference paper link [1-EMLo-deep-contextualized-word-representations](https://github.com/Vita112/notes_for_NLP/blob/master/methods-models/Pre-trainingLM/%E3%80%901802-ELMo%E3%80%91deep-contextualized-word-representations.md) ， [2-BERT-pre-training-of-deep-bidirectional-transformers-for-language-understanding](https://github.com/Vita112/notes_for_NLP/blob/master/methods-models/Pre-trainingLM/%40201905_BERT-pre-training_of_deep_bidirectional_Transformers_for_language_understanding.md)
 
 * 2.2 entity embeddings:*从外部知识源 生成 连续向量表示*
 
@@ -45,7 +45,14 @@ building entity-centric LMs：[Dynamic entity representations in neural language
 * 2.4 task-specific KB architecture
 intergrate KBs into neural architecture for specific downstream tasks
 
-### 3.3 KAR-knowledge attention and recontextualizztion
+[Explicit utilization of general knowledge in machine reading comprehension](https://arxiv.org/pdf/1809.03449)
+> **MRC模型和人类的阅读理解之间存在的gap表现在：对大量带有answer spans的passage-question pairs的需求 和 对noise的鲁棒性上。MRC models对noisy data十分敏感，鲁棒性差。**。该论文explore how to intergrate the neural networks of MRC models with the general knowledge: **使用WordNet从每一个给定的passage-question pair中抽取inter-word semantic connections 作为general knowledge**；**提出一个end-to-end MRC named as Knowledge Aided Reader，它显性地使用上面抽取到的general knowledge来帮助模型的注意力机制**。
+
+*KBs中存在着 大量以机构化形式存储的general knowledge。常见的KBs有：①WordNet storing semantic knowledge；② ConceptNet storing commonsense knowledge；③ FreeBase storing factoid knowledge*
+> 如何理解显性利用抽取到的 general knowledge来帮助模型的attention mechanisims？
+
+
+### 3 KAR-knowledge attention and recontextualizztion
 ### 3.4 training procedure
 ## 4 experiments
 ### 4.1 setup
