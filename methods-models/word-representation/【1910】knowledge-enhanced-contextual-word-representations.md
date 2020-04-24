@@ -49,12 +49,23 @@ intergrate KBs into neural architecture for specific downstream tasks
 > **MRC模型和人类的阅读理解之间存在的gap表现在：对大量带有answer spans的passage-question pairs的需求 和 对noise的鲁棒性上。MRC models对noisy data十分敏感，鲁棒性差。**。该论文explore how to intergrate the neural networks of MRC models with the general knowledge: **使用WordNet从每一个给定的passage-question pair中抽取inter-word semantic connections 作为general knowledge**；**提出一个end-to-end MRC named as Knowledge Aided Reader，它显性地使用上面抽取到的general knowledge来帮助模型的注意力机制**。
 
 *KBs中存在着 大量以机构化形式存储的general knowledge。常见的KBs有：①WordNet storing semantic knowledge；② ConceptNet storing commonsense knowledge；③ FreeBase storing factoid knowledge*
-> 如何理解显性利用抽取到的 general knowledge来帮助模型的attention mechanisims？
+> **Q:如何理解显性利用抽取到的 general knowledge来帮助模型的attention mechanisims？**
 
+in this paper，the attention mechanisms of KAR(knowledge aided reader) is named as knowledge aided mutual attention and knowledge aided self attention separately.
 
+**the architecture of KAR**
+
+>> **lexicon embedding layer**:*maps the words to the lexicon embeddings,which is composed of its word embedding(obtained via pre-trained GloVe) and character embedding(obtained via CNN operation*;拼接后送入a shared dense layer with ReLU activation;得到$L_{P}$,$L_{Q}$
+>> **context embedding layer**:*process the lexicon embeddings with a shared bidirectional LSTM*.得到$C_{P}$,$C_{Q}$
+>> **Coarse memory layer** to obtain the question-aware passage representations:使用**knowledge aided mutual attention**将$C_{Q}$融入进$C_{P}$，具体的，需要计算each passage context embedding 和 each question context embedding的similarity。其output表示为$\bar{G}$;使用BiLSTM处理$\bar{G}$，拼接前向LSTM和反向LSTM的outputs得到coarse memories $G\in \mathbb{R}^{d\times n}$
+>>**refined memory layer** to obtain final passage representations:使用**knowledge aided self attention**将 G 融入进它本身，其输出表示为$\bar{H}\in \mathbb{R}^{d \times n}$;使用BiLSTM处理$\bar{H}$，拼接前向LSTM和反向LSTM的outputs得到refined memories $H\in \mathbb{R}^{d\times n}$
+
+文中对两种知识辅助注意力都有详细的描述，出于2个原因：不太理解公式中某些变量的具体含义导致没看懂为什么是这样操作 和  跟本文关系不太大， 在此省略。
+>> **answer span prediction layer**:预测answer start position 和 answer end position
 ### 3 KAR-knowledge attention and recontextualizztion
 ### 3.4 training procedure
 ## 4 experiments
+
 ### 4.1 setup
 ### 4.2 intrinsic evauation
 ### 4.3 downstream tasks
