@@ -65,7 +65,15 @@ in this paper，the attention mechanisms of KAR(knowledge aided reader) is named
 
 文中对两种知识辅助注意力都有详细的描述，出于2个原因：不太理解公式中某些变量的具体含义导致没看懂为什么是这样操作 和  跟本文关系不太大， 在此省略。
 >> **answer span prediction layer**:预测answer start position 和 answer end position
-### 3 KAR-knowledge attention and recontextualizztion
+## 3 KAR-knowledge attention and recontextualizztion
+### 3.1 pretrained BERT
+BERT accepts input a sequence of N WordPiece tokens;
+
+computes L layers of D-dimensional contextual representations Hi by applying non-linear functions Hi=Fi(Hi-1), here Fi 是一个multi-headed self-attention layer followed by a position-wise multilayer perception。multi-headed self-attention允许每个vector关注到其他每个vetor。
+
+BERT的训练目标是：最小化$L_{NSP}+L_{MLM}$. MLM使用一个特殊的\[MASK]token 来替代 随机选择的一部分input word pieces，然后在所有可能的word pieces上使用一个linear layer和softmax 来计算the negative log-likelihood of the missing token。
+### 3.2 knowledge bases
+
 ### 3.4 training procedure
 ## 4 experiments
 
