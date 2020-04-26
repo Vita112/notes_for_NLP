@@ -65,7 +65,7 @@ in this paper，the attention mechanisms of KAR(knowledge aided reader) is named
 
 文中对两种知识辅助注意力都有详细的描述，出于2个原因：不太理解公式中某些变量的具体含义导致没看懂为什么是这样操作 和  跟本文关系不太大， 在此省略。
 >> **answer span prediction layer**:预测answer start position 和 answer end position
-## 3 KAR-knowledge attention and recontextualizztion
+## 3 knowBert
 ### 3.1 pretrained BERT
 BERT accepts input a sequence of N WordPiece tokens;
 
@@ -73,6 +73,39 @@ computes L layers of D-dimensional contextual representations Hi by applying non
 
 BERT的训练目标是：最小化$L_{NSP}+L_{MLM}$. MLM使用一个特殊的\[MASK]token 来替代 随机选择的一部分input word pieces，然后在所有可能的word pieces上使用一个linear layer和softmax 来计算the negative log-likelihood of the missing token。
 ### 3.2 knowledge bases
+knowledgs bases adopted in this paper includes KBs with a typical(subj,rel,obj) graph structure,KBs that contain only entity metadata without a graph,and those that combine both a graph and entity metadata.*本文没有假设实体已经定型，这允许 通过使用从实体描述中计算得到的embeddings来直接连接到维基百科页面without a graph*。
+> entity candidate selector：take some text as input，return a list of C potential entity links，列表包含Mm个候选实体，每一个都由potential mention span的start 和 end indices组成。
+
+本文选择性地允许 candidate selector 为每一个entity condidate返回 关联先验概率；本文的entity candidate selector 是固定的，但是他们的output被送入一个 可学习的上下文相关的entity linker，来消除candidate mentions的歧义。
+### 3.3 KAR-knowledge attention and recontextualizztion
+> overflow and 4 key componets:
+>> 1. the contextual representations $H_i$ is accepted as input at a particular layer,then projected to $H_{i}^{proj}$;
+>> 2. pooled over candidate mentions spans to compute S;
+>> 3. contextualized into $S^{e}$ using mention-span self-attention;
+>> 4. weighted average entity embeddings $\tilde{E}$ computed by an interated entity linker;
+>> 5. $\tilde{E}$ are used to enhance the span representations with knowledge from KB to compute $S'^{e}$
+>> 6. recontextualizing the BERT word piece representaitons with word-to-entity-span attention;
+>> 7. result of 6 are projected back to the BERT dimension resulting in $H_{i}^{'}$
+
+**4 key componets**: mention-span representations, retrieval of relevant entity embeddings using an entity linker, update of mension-span embeddings with retrieved information, recontextualization of entity-span embeddings with word-to-entity-span attention.
+> **key componet 1:mention-span representations**
+
+$H_i$ → projection → $H_{i}^{proj}$ → pooling in a mention-span using self-attentive span pooling   →  stacked into S
+> **key componet 2:entity linker**:entity disambiguation for each potential mention from among the available candidates
+
+$S^{e}=TransformerBlock(S)$ using mention-span self-attention,**这允许KnowBert将 global information吸收进每一个linking decision，以便于利用entity-entity cooccurrece，解决几个重叠的candidate mentions中哪一个应该被link的问题**
+
+$S^{e}$被用于 当从KB中吸收candidate entity prior时，为每一个condidate entity进行打分。**每一个candidate span $m$ 都有 ①an associated mention-span vetor $s_{m}^{e}$ , ②Mm个带embedding $e_{mk}$的candidate entities , ③ 先验概率 $p_{mk}$** ；我们对 （先验、entity-span vectors和entity embeddings之间的点乘） 使用a 2-layer MLP 来计算出Mm个分数：$$\varphi \_{mk}=MLP(p_{mk},s_{m}^{e}\cdot e_{mk})$$
+> **key componet 3:knowledge enhanced entity-span representations**:inject KB entity information into the mention-span representations to form entity-span representations
+
+对于每一个给定的span m，首先忽略那些在 fixed threshold之下的 candidate entities，并使用softmax对剩下的scores正则化得到$\tilde{\varphi \_{mk}}$;
+
+得到weighted entity embedding: 
+$$ \tilde{e_{m}}=\sum_{k}\tilde{\varphi \_{mk}}e_{mk}$$
+
+
+> **key componet 4:recontextualization**
+
 
 ### 3.4 training procedure
 ## 4 experiments
@@ -81,3 +114,4 @@ BERT的训练目标是：最小化$L_{NSP}+L_{MLM}$. MLM使用一个特殊的\[M
 ### 4.2 intrinsic evauation
 ### 4.3 downstream tasks
 ## 5 conclusion
+
