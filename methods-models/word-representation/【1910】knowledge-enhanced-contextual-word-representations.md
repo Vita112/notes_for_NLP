@@ -118,10 +118,19 @@ $$H_{i}^{'proj}=MLP(MultiHeadAtt(H_{i}^{proj},S'^{e},S'^{e}))$$
 
 由于KnowBert没有对entity embeddings做任何限制，因此十分有必要将entity embeddings 与 pretrained BERT contextual representations对齐，于是，我们将 $W_{2}^{proj}$初始化为 $W_{1}^{proj}$的逆矩阵。
 ### 3.4 training procedure
+training 在多任务设置中微调所有可训练的parameters之前，通过设置任何可提供的EL supervision，逐步预训练越来越多的KnowBert。
+
+假设可以使用一个预训练的BERT模型和一个或多个带有entity candidate selectors的KBs。为添加the first KB，首先预训练entity embeddings；然后在所有接下来的training中冻结他们；如果提供了 EL supervision，则它被用于预训练 特定KB的EL 参数，同时冻结剩下的网络；最终，通过最小化下述公式微调entire network 直至收敛：
+$$L_{KnowBert}=L_{BERT}+L_{EL}$$
+然后，将梯度更新应用于 从未标记语料库或者EL supervision中随机采样的同质批次。
+
+When adding the second KB，上面的BERT layers在训练初期将经历较大的梯度，因为它们受到与new KB相关联的随机初始化参数的影响。
+
+为防止泄露进到 masked word pieces，文中使用BERT策略，且如果candidate mention span与masked word piece重叠，将使用一个特殊的\[MASK]entity来替代来自selector的所有entity candidates。这阻止了KnowBert去依赖selected candidates来预测masked word pieces。
 
 ## 4 experiments
-
 ### 4.1 setup
+3 versions of KnowBert： KnowBert-Wiki, KnowBertWordNet, and KnowBert-W+W that includes both Wikipedia and WordNet。
 ### 4.2 intrinsic evauation
 ### 4.3 downstream tasks
 ## 5 conclusion
