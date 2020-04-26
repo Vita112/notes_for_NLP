@@ -107,12 +107,12 @@ $$ \tilde{e_{m}}=\sum_{k}\tilde{\varphi \_{mk}}e_{mk}$$
 如果所有的entity linking scores 都在threshold 之下，我们将使用一个特殊的NULL来代替$ \tilde{e_{m}}$
 
 使用weighted entity embeddings 来更新entity-span representations：
-$$s'\_{m}^{e}=s_{m}^{e}+\tilde{e}\_{m}$$
+$$s_{m}^{'e}=s_{m}^{e}+\tilde{e}\_{m}$$
 
-$s'\_{m}^{e}$被打包进a matrix $S'^{e}\in \mathbb{R}^{C\times E}$
+$s_{m}^{'e}$被打包进a matrix $S'^{e}\in \mathbb{R}^{C\times E}$
 > **key componet 4:recontextualization with word-to-entity-span attention**
 When recontextualizing the word piece representations, we *use a modified transformer layer that **substitutes the multi-headed self-attention with a multi-headed attention between the projected word piece representations and knowledge enhanced entity-span vectors***.,which means use $H_{i}^{proj}$ for the query, $S'^{e}$ for both the key and value.
-$$H'\_{i}^{proj}=MLP(MultiHeadAtt(H_{i}^{proj},S'^{e},S'^{e}))$$
+$$H_{i}^{'proj}=MLP(MultiHeadAtt(H_{i}^{proj},S'^{e},S'^{e}))$$
 这允许each word piece 可以关注到 上下文中的所有entity-spans，使得模型可以在long contexts上传播entity information。
 > **alignment of BERT and entity vectors**
 
