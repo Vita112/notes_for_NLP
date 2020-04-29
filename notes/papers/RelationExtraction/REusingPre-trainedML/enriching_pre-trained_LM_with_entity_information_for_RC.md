@@ -19,4 +19,6 @@ RC任务依赖于来自 the sentence 和 the 2 target entities两方面的信息
 
 * ablation studies
 
+分析结果显示：the special separate tokens can identify the locations of the 2 target entities and transfer the information into the BERT model。
 
+* future work： to extend the model to apply to distant supervision。
