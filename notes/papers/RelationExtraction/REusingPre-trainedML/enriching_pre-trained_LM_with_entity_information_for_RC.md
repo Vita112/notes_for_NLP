@@ -9,7 +9,7 @@ RC任务依赖于来自 the sentence 和 the 2 target entities两方面的信息
 
 * methodology：model architecture
 
-在插入\[CLS]和special tokens之后，一个句子表示为：*“\[cls] The $ kichen $ is the last renovated part of the # house #.”* 
+在插入\[CLS]和special tokens之后，一个句子表示为：*“\[cls] The $kichen$ is the last renovated part of the # house #.”* 
 
 **\[CLS]对应的BERT输出向量为整篇文档的语义表示，它融合了句子中每个字\词的semantic information**
 
