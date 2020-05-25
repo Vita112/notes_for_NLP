@@ -3,6 +3,9 @@ BERT-pre-training_of_deep_bidirectional_Transformers_for_language_understanding
 google AI language
 
 [paper link](https://arxiv.org/pdf/1810.04805.pdf)
+* reference
+
+[blog1-【NLP】彻底搞懂BERT](https://www.cnblogs.com/rucwxb/p/10277217.html)
 ## abstract
 提出一种新的语言表示模型-BERT:Bidirectional Encoder Repressentations from Transformers,**旨在通过基于所有层的左、右上下文，to pretrain deep bidirectional representations from unlabeled text**.是对fine-tuninig based approaches的改进。
 
