@@ -1,0 +1,35 @@
+[A Survey on Knowledge Graphs: Representation, Acquisition and Applications](https://arxiv.org/pdf/2002.00388.pdf)
+## 论文阅读笔记-综合知乎、CSDN等资料篇
+### 1 导言
+**知识图谱是什么？**
+
+一种用图模型(probabilistic graphic models)来描述知识和建模世界万物之间的关联关系的技术方法。由节点和边组成。
+
+由一些相互连接的实体及其属性构成。由一条条知识组成，每条知识表示为SPO三元组(Subject, Predicate, Object).
+
+一种关于事物关系的可计算模型，从unstructured data，structured data，multimedia以及Crowds中提取出knowledge(concepts,entities,relations,facts,rules),*可辅助搜索 、问答 、 人机交互语言理解 、设备互联等*。 
+
+**构建一个知识图谱的技术流程**
+
+* 采用更规范、更标准的概念模型、本体术语和语法格式来建模，描述数据
+* 通过语义链接来增强数据之间的关系
+
+> 知识来源：非机构化数据，结构化数据，多媒体数据，物联网传感器，众包
+
+> 技术要素
+
+知识表示：向量表示  符号表示
+
+知识获取：概念抽取，实体识别&抽取，关系抽取，规则抽取
+
+知识融合：实体匹配&对齐，实体消歧，本体对齐(**概念模糊，需查资料去理解**)
+
+知识推理：知识补全，关系预测，模型检测(**概念模糊，需查资料去理解**)，预测推理
+
+知识检索：语义搜索，查询存储，智能问答
+
+知识分析：数据分析，图谱可视化，模型解释
+
+> 领域应用
+
+电商 医疗 金融……
